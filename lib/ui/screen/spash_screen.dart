@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:medication_book/utils/secure_store.dart';
-import 'dart:convert';
-import 'package:provider/provider.dart';
+import 'package:medication_book/ui/screen/login_screen.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -19,7 +18,11 @@ class _SplashState extends State<SplashPage> {
           child: Column(
         children: <Widget>[
           Expanded(
-            child: Image(image: AssetImage('assets/image/splash_logo.png')),
+            child: Image(
+              image: AssetImage('assets/image/splash_logo.png'),
+              width: 256,
+              height: 256,
+            ),
             flex: 6,
           ),
           Expanded(
@@ -53,7 +56,10 @@ class _SplashState extends State<SplashPage> {
         password == '' ||
         token == null ||
         token == '') {
-      // not login tey
+      setState(() {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => LoginScreen()));
+      });
     } else {
 //      var result = await ChatWorkAPI().reLoginToChatwork(email, password, token);
 //      var bodyResult = json.decode(result.body);
