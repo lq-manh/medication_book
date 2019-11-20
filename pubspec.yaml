@@ -1,4 +1,4 @@
-name: medicationn_book
+name: medication_book
 description: Pill reminder and alarm for medication. 
 
 # The following defines the version and build number for your application.
@@ -23,6 +23,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  cached_network_image: ^1.1.3
+  provider: ^3.1.0+1
+  flutter_spinkit: ^4.0.0
+  fluttertoast: ^3.1.3
+  flutter_secure_storage: ^3.3.1+1
+  simple_animations: ^1.3.3
+  easy_localization: ^1.3.1
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +46,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/image/
+    - resources/langs/en-US.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

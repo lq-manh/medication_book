@@ -1,4 +1,4 @@
-package io.teneocto.medicationn_book
+package io.teneocto.medication_book
 
 import android.os.Bundle
 

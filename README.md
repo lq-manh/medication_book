@@ -1,4 +1,4 @@
-# medicationn_book
+# medication_book
 
 Pill reminder and alarm for medication. 
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.teneocto.medicationn_book">
+    package="io.teneocto.medication_book">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -8,7 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="medicationn_book"
+        android:label="medication_book"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
