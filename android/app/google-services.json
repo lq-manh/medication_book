@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "10913609360",
+    "firebase_url": "https://medicationbook.firebaseio.com",
+    "project_id": "medicationbook",
+    "storage_bucket": "medicationbook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10913609360:android:71037512985f0f15c7ca15",
+        "android_client_info": {
+          "package_name": "io.teneocto.medication_book"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10913609360-f9iadpt5t9fc7p174p50o8g6iapar27b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.teneocto.medication_book",
+            "certificate_hash": "c9402253e20a1370a29fab2f95a55c54496af03c"
+          }
+        },
+        {
+          "client_id": "10913609360-vqr88uvd3eb13dg85uecj6ie2mb1enmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzAwg_fKhSdAa__NuOIqJnALqqPQoqA20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10913609360-vqr88uvd3eb13dg85uecj6ie2mb1enmg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

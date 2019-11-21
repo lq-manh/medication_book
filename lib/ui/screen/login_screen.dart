@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:medication_book/bloc/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
-  State createState() => LoginState();
+  State createState() => _LoginState();
 }
 
-class LoginState extends State<LoginScreen> {
-  bool isLoadingGoogle = false;
-  bool isLoadingFacebook = false;
+class _LoginState extends State<LoginScreen> {
+  LoginBloc _loginBloc = new LoginBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -44,63 +44,71 @@ class LoginState extends State<LoginScreen> {
               width: 300,
               height: 60,
               margin: EdgeInsets.only(top: 20, bottom: 20),
-              child: new RaisedButton(
-                  padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
-                  color: Colors.white,
-                  onPressed: () {},
-                  child: isLoadingGoogle
-                      ? CircularProgressIndicator()
-                      : new Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            new Image.asset(
-                              'assets/image/google-48.png',
-                              height: 36.0,
-                            ),
-                            new Container(
-                                padding:
-                                    EdgeInsets.only(left: 30.0, right: 10.0),
-                                child: new Text(
-                                  "Sign in with Google",
-                                  textScaleFactor: 1.15,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ],
-                        )),
+              child: StreamBuilder(
+                  stream: _loginBloc.googleLoginStream,
+                  builder: (context, snapshot) => new RaisedButton(
+                      padding:
+                          EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
+                      color: Colors.white,
+                      onPressed: _loginBloc.loginViaGoogle,
+                      child: (snapshot.hasData &&
+                              snapshot.data == LoginStatus.START_LOGIN)
+                          ? CircularProgressIndicator()
+                          : new Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                new Image.asset(
+                                  'assets/image/google-48.png',
+                                  height: 36.0,
+                                ),
+                                new Container(
+                                    padding: EdgeInsets.only(
+                                        left: 30.0, right: 10.0),
+                                    child: new Text(
+                                      "Sign in with Google",
+                                      textScaleFactor: 1.15,
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                              ],
+                            ))),
             ),
             new Container(
               width: 300,
               height: 60,
               margin: EdgeInsets.only(top: 20, bottom: 20),
-              child: new RaisedButton(
-                  padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
-                  color: Color(0xff3b5998),
-                  onPressed: () {},
-                  child: isLoadingFacebook
-                      ? CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                        )
-                      : new Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            new Image.asset(
-                              'assets/image/facebook-logo.png',
-                              height: 36.0,
-                            ),
-                            new Container(
-                                padding:
-                                    EdgeInsets.only(left: 30.0, right: 10.0),
-                                child: new Text(
-                                  "Sign in with Facebook",
-                                  textScaleFactor: 1.15,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                          ],
-                        )),
+              child: StreamBuilder(
+                  stream: _loginBloc.facebookLoginStream,
+                  builder: (context, snapshot) => new RaisedButton(
+                      padding:
+                          EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
+                      color: Color(0xff3b5998),
+                      onPressed: _loginBloc.loginViaFacebook,
+                      child: (snapshot.hasData &&
+                              snapshot.data == LoginStatus.START_LOGIN)
+                          ? CircularProgressIndicator(
+                              backgroundColor: Colors.white,
+                            )
+                          : new Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                new Image.asset(
+                                  'assets/image/facebook-logo.png',
+                                  height: 36.0,
+                                ),
+                                new Container(
+                                    padding: EdgeInsets.only(
+                                        left: 30.0, right: 10.0),
+                                    child: new Text(
+                                      "Sign in with Facebook",
+                                      textScaleFactor: 1.15,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                              ],
+                            ))),
             )
           ],
         ),

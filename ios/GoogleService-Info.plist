@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>10913609360-5dt8j1el4dspd1pbn9m5bvhpkmr0081u.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.10913609360-5dt8j1el4dspd1pbn9m5bvhpkmr0081u</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>10913609360-f9iadpt5t9fc7p174p50o8g6iapar27b.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAkv0vp3YHg4lqsnsMh6feEXbgTvQStJec</string>
+	<key>GCM_SENDER_ID</key>
+	<string>10913609360</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>io.teneocto.medicationBook</string>
+	<key>PROJECT_ID</key>
+	<string>medicationbook</string>
+	<key>STORAGE_BUCKET</key>
+	<string>medicationbook.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:10913609360:ios:0a6faf9dc41bea73c7ca15</string>
+	<key>DATABASE_URL</key>
+	<string>https://medicationbook.firebaseio.com</string>
+</dict>
+</plist>
