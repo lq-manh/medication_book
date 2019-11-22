@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'dart:convert';
 
-// enum status
+// login status
 enum LoginStatus { START_LOGIN, FINISH_LOGIN, LOGIN_ERROR }
 
 // login bloc
@@ -21,6 +21,7 @@ class LoginBloc {
 
   /// login via Google
   void loginViaGoogle() async {
+    _googleLoginStream.sink.add(LoginStatus.START_LOGIN);
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     try {
       final GoogleSignInAuthentication googleAuth =
@@ -38,11 +39,14 @@ class LoginBloc {
           .collection('users')
           .document(user.email)
           .setData(json.decode(user.toString()));
-    } catch (err) {}
+    } catch (err) {
+      _googleLoginStream.sink.add(LoginStatus.LOGIN_ERROR);
+    }
   }
 
   /// login via Facebook
   void loginViaFacebook() async {
+    _facebookLoginStream.sink.add(LoginStatus.START_LOGIN);
     final facebookLogin = FacebookLogin();
     final result = await facebookLogin.logIn(['email']);
     switch (result.status) {
@@ -54,12 +58,11 @@ class LoginBloc {
 
         final FirebaseUser user =
             (await _auth.signInWithCredential(credential)).user;
+
+        _facebookLoginStream.sink.add(LoginStatus.FINISH_LOGIN);
         break;
-      case FacebookLoginStatus.cancelledByUser:
-        print('cancelled by user');
-        break;
-      case FacebookLoginStatus.error:
-        print('error');
+      default:
+        _facebookLoginStream.sink.add(LoginStatus.LOGIN_ERROR);
         break;
     }
   }

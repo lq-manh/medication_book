@@ -10,6 +10,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginState extends State<LoginScreen> {
   LoginBloc _loginBloc = new LoginBloc();
 
+
+  @override
+  void dispose() {
+    _loginBloc.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,4 +121,6 @@ class _LoginState extends State<LoginScreen> {
       ),
     );
   }
+
+
 }
