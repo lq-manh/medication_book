@@ -10,7 +10,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginState extends State<LoginScreen> {
   LoginBloc _loginBloc = new LoginBloc();
 
-
   @override
   void dispose() {
     _loginBloc.dispose();
@@ -121,6 +120,4 @@ class _LoginState extends State<LoginScreen> {
       ),
     );
   }
-
-
 }
