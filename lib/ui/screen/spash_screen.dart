@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:medication_book/utils/secure_store.dart';
 import 'package:medication_book/ui/screen/login_screen.dart';
+import 'package:medication_book/ui/screen/home_screen.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -42,39 +43,19 @@ class _SplashState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-
     checkLogin();
   }
 
   void checkLogin() async {
-    String email = await SecureStorage.instance.read(key: 'email');
-    String password = await SecureStorage.instance.read(key: 'password');
-    String token = await SecureStorage.instance.read(key: 'token');
-    if (email == null ||
-        email == '' ||
-        password == null ||
-        password == '' ||
-        token == null ||
-        token == '') {
+    String uid = await SecureStorage.instance.read(key: 'uid');
+    if (uid == null || uid == '') {
       setState(() {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => LoginScreen()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LoginScreen()));
       });
     } else {
-//      var result = await ChatWorkAPI().reLoginToChatwork(email, password, token);
-//      var bodyResult = json.decode(result.body);
-//      bool isSuccess = bodyResult['status']['success'];
-//      if (isSuccess) {
-//        setState(() {
-//          Navigator.of(context).pushReplacement(
-//              MaterialPageRoute(builder: (context) => ChatRoomScreen( cwData: bodyResult['result'],)));
-//        });
-//      } else {
-//        setState(() {
-//          Navigator.of(context).pushReplacement(
-//              MaterialPageRoute(builder: (context) => LoginScreen()));
-//        });
-//      }
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomeScreen()));
     }
   }
 }

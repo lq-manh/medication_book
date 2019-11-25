@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:medication_book/bloc/login_bloc.dart';
+import 'package:medication_book/ui/screen/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _LoginState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    super.dispose();
     _loginBloc.dispose();
   }
 
@@ -55,7 +57,15 @@ class _LoginState extends State<LoginScreen> {
                       padding:
                           EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
                       color: Colors.white,
-                      onPressed: _loginBloc.loginViaGoogle,
+                      onPressed: () {
+                        _loginBloc.loginViaGoogle().then((result) {
+                          if (result == LoginStatus.FINISH_LOGIN) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) => HomeScreen()));
+                          }
+                        });
+                      },
                       child: (snapshot.hasData &&
                               snapshot.data == LoginStatus.START_LOGIN)
                           ? CircularProgressIndicator()
@@ -89,7 +99,15 @@ class _LoginState extends State<LoginScreen> {
                       padding:
                           EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
                       color: Color(0xff3b5998),
-                      onPressed: _loginBloc.loginViaFacebook,
+                      onPressed: () {
+                        _loginBloc.loginViaFacebook().then((result) {
+                          if (result == LoginStatus.FINISH_LOGIN) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) => HomeScreen()));
+                          }
+                        });
+                      },
                       child: (snapshot.hasData &&
                               snapshot.data == LoginStatus.START_LOGIN)
                           ? CircularProgressIndicator(
