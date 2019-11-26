@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/ui/screen/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,6 +23,16 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ColorPalette.blue.withOpacity(0.2),
+                ColorPalette.green.withOpacity(0.2),
+              ],
+            ),
+          ),
           child: TabBarView(
             controller: _tabController,
             children: <Widget>[
@@ -33,9 +45,7 @@ class HomeScreenState extends State<HomeScreen>
               Text(
                 'Alarm',
               ),
-              Text(
-                'Profile',
-              )
+              ProfileScreen(),
             ],
           ),
         ),
