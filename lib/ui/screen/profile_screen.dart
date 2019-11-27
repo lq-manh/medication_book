@@ -24,16 +24,19 @@ class ProfileScreen extends StatelessWidget {
           child: CircleAvatar(backgroundColor: ColorPalette.white),
         ),
       ),
-      main: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: RoundedCard(
-              child: Container(width: 300, height: 300),
-            ),
-          )
-        ],
+      main: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          child: RoundedCard(child: _Profile()),
+        ),
       ),
     );
+  }
+}
+
+class _Profile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 500);
   }
 }
