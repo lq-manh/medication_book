@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/configs/colors.dart';
 import 'package:medication_book/ui/screen/dashboard_screen.dart';
+import 'package:medication_book/ui/screen/history_screen.dart';
+import 'package:medication_book/ui/screen/notes_screen.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
 import 'package:medication_book/ui/animation/quick_action_menu.dart';
 
@@ -97,8 +99,8 @@ class _HomeScreenBody extends StatelessWidget {
               controller: this.tabController,
               children: <Widget>[
                 DashboardScreen(),
-                Text('Note'),
-                Text('Alarm'),
+                NotesScreen(),
+                HistoryScreen(),
                 ProfileScreen(),
               ],
             ),
