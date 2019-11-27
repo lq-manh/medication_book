@@ -14,10 +14,10 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   final dynamic cwData;
-  HomeScreenState({this.cwData});
   TabController _tabController;
+  bool _blurred = false;
 
-  bool blur = false;
+  HomeScreenState({this.cwData});
 
   @override
   void initState() {
@@ -29,107 +29,150 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                ColorPalette.blue.withOpacity(0.2),
-                ColorPalette.green.withOpacity(0.2),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: _FloatingActionButton(
+          onPressed: () => this.setState(() {
+            this._blurred = !this._blurred;
+          }),
+        ),
+        body: _HomeScreenBody(
+          tabController: this._tabController,
+          blurred: this._blurred,
+        ),
+        bottomNavigationBar: _HomeScreenBottom(
+          tabController: this._tabController,
+        ),
+      ),
+    );
+  }
+}
+
+class _FloatingActionButton extends StatelessWidget {
+  final Function() onPressed;
+
+  _FloatingActionButton({@required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: FloatingActionButton(
+          backgroundColor: ColorPalette.blue,
+          elevation: 5,
+          child: Icon(Icons.add),
+          onPressed: this.onPressed,
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeScreenBody extends StatelessWidget {
+  final TabController tabController;
+  final bool blurred;
+
+  _HomeScreenBody({@required this.tabController, this.blurred = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            ColorPalette.blue.withOpacity(0.2),
+            ColorPalette.green.withOpacity(0.2),
+          ],
+        ),
+      ),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            child: TabBarView(
+              controller: this.tabController,
+              children: <Widget>[
+                DashboardScreen(),
+                Text('Note'),
+                Text('Alarm'),
+                ProfileScreen(),
               ],
             ),
           ),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: <Widget>[
-                    DashboardScreen(),
-                    Text('Note'),
-                    Text('Alarm'),
-                    ProfileScreen(),
-                  ],
-                ),
-              ),
-              blur
-                  ? ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade200.withOpacity(0.5)),
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 50, horizontal: 40),
-                                  child: QuickActionMenu())
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.end,
-                          ),
+          if (this.blurred)
+            ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200.withOpacity(0.5),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 50,
+                          horizontal: 40,
                         ),
-                      ),
-                    )
-                  : Container()
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Container(
-          width: 80,
-          height: 80,
-          decoration:
-              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: FloatingActionButton(
-              backgroundColor: Color(0xFF42A3E3),
-              elevation: 5,
-              child: Icon(Icons.add),
-              onPressed: () {
-                blur = !blur;
-                setState(() {});
-              },
-            ),
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-            elevation: 0,
-            color: Colors.white,
-            child: Container(
-              height: 60,
-              child: Theme(
-                data: ThemeData(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent),
-                child: TabBar(
-                  controller: _tabController,
-                  labelColor: Color(0xFF42A3E3),
-                  unselectedLabelColor: Colors.black26,
-                  indicatorColor: Colors.transparent,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  tabs: <Widget>[
-                    Icon(FontAwesomeIcons.home),
-                    Row(
-                      children: <Widget>[
-                        Icon(FontAwesomeIcons.calendar),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Icon(FontAwesomeIcons.clock),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.end,
-                    ),
-                    Icon(FontAwesomeIcons.user),
-                  ],
+                        child: QuickActionMenu(),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            )),
+            ),
+        ],
       ),
     );
+  }
+}
+
+class _HomeScreenBottom extends StatelessWidget {
+  final TabController tabController;
+
+  _HomeScreenBottom({@required this.tabController});
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+        elevation: 0,
+        color: Colors.white,
+        child: Container(
+          height: 60,
+          child: Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            child: TabBar(
+              controller: this.tabController,
+              labelColor: ColorPalette.blue,
+              unselectedLabelColor: Colors.black26,
+              indicatorColor: Colors.transparent,
+              indicatorSize: TabBarIndicatorSize.label,
+              tabs: <Widget>[
+                Icon(FontAwesomeIcons.home),
+                Row(
+                  children: <Widget>[
+                    Icon(FontAwesomeIcons.calendar),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Icon(FontAwesomeIcons.clock),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.end,
+                ),
+                Icon(FontAwesomeIcons.user),
+              ],
+            ),
+          ),
+        ));
   }
 }
