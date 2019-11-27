@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:medication_book/configs/colors.dart';
 
-class TopBar extends StatelessWidget {
+class TopBar extends StatefulWidget {
+  final Widget leading;
+  final String title;
+  final Widget action;
+  final Widget bottom;
+
+  TopBar({this.leading, @required this.title, this.action, this.bottom});
+
+  @override
+  _TopBarState createState() {
+    return _TopBarState(
+      leading: this.leading,
+      title: this.title,
+      action: this.action,
+      bottom: this.bottom,
+    );
+  }
+}
+
+class _TopBarState extends State<TopBar> {
   Widget leading;
   final String title;
   Widget action;
   final Widget bottom;
 
-  TopBar({
-    this.leading,
-    @required this.title,
-    this.action,
-    this.bottom,
-  }) {
+  _TopBarState({this.leading, @required this.title, this.action, this.bottom}) {
     if (this.leading == null)
       this.leading = IconButton(
         icon: Icon(Icons.arrow_back),
@@ -32,6 +46,7 @@ class TopBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
+        boxShadow: [commonBoxShadow],
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
