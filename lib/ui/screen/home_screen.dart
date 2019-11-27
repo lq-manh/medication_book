@@ -1,7 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/ui/screen/profile_screen.dart';
 import 'package:medication_book/ui/animation/quick_action_menu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,56 +28,61 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Container(
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  Container(
-                    child: Center(
-                      child: Image(
-                        image: AssetImage('assets/image/splash_logo.png'),
-                        width: 192,
-                        height: 192,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Note',
-                  ),
-                  Text(
-                    'Alarm',
-                  ),
-                  Text(
-                    'Profile',
-                  )
-                ],
-              ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ColorPalette.blue.withOpacity(0.2),
+                ColorPalette.green.withOpacity(0.2),
+              ],
             ),
-            blur
-                ? ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade200.withOpacity(0.5)),
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 50, horizontal: 40),
-                              child: QuickActionMenu()
-                            )
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.end,
+          ),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    Container(
+                      child: Center(
+                        child: Image(
+                          image: AssetImage('assets/image/splash_logo.png'),
+                          width: 192,
+                          height: 192,
                         ),
                       ),
                     ),
-                  )
-                : Container()
-          ],
+                    Text('Note'),
+                    Text('Alarm'),
+                    ProfileScreen(),
+                  ],
+                ),
+              ),
+              blur
+                  ? ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200.withOpacity(0.5)),
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 50, horizontal: 40),
+                                  child: QuickActionMenu())
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.end,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container()
+            ],
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
