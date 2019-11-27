@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
       main: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          child: RoundedCard(child: _Profile()),
+          // child: RoundedCard(child: _Profile()),
         ),
       ),
     );
