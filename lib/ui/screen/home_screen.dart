@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/ui/screen/dashboard_screen.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
 import 'package:medication_book/ui/animation/quick_action_menu.dart';
 
@@ -45,15 +46,7 @@ class HomeScreenState extends State<HomeScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    Container(
-                      child: Center(
-                        child: Image(
-                          image: AssetImage('assets/image/splash_logo.png'),
-                          width: 192,
-                          height: 192,
-                        ),
-                      ),
-                    ),
+                    DashboardScreen(),
                     Text('Note'),
                     Text('Alarm'),
                     ProfileScreen(),
@@ -122,7 +115,7 @@ class HomeScreenState extends State<HomeScreen>
                     Icon(FontAwesomeIcons.home),
                     Row(
                       children: <Widget>[
-                        Icon(FontAwesomeIcons.stickyNote),
+                        Icon(FontAwesomeIcons.calendar),
                       ],
                     ),
                     Row(
