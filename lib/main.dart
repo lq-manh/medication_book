@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashPage(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: Theme.of(context).copyWith(
+        textTheme: Theme.of(context).textTheme.apply(fontSizeFactor: 1.2),
       ),
     );
   }
