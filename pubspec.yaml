@@ -35,6 +35,11 @@ dependencies:
   google_sign_in: ^4.0.14
   flutter_facebook_login: ^3.0.0
   cloud_firestore: ^0.12.10+2
+  font_awesome_flutter: ^8.5.0
+  fast_qr_reader_view:
+    git:
+      url: git://github.com/facundomedica/fast_qr_reader_view.git
+  # permission_handler: ^3.1.0
 
 dev_dependencies:
   flutter_test:

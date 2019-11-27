@@ -1,6 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/configs/colors.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
+import 'package:medication_book/ui/animation/quick_action_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,6 +16,8 @@ class HomeScreenState extends State<HomeScreen>
   HomeScreenState({this.cwData});
   TabController _tabController;
 
+  bool blur = false;
+
   @override
   void initState() {
     super.initState();
@@ -21,7 +26,8 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -33,92 +39,104 @@ class HomeScreenState extends State<HomeScreen>
               ],
             ),
           ),
-          child: TabBarView(
-            controller: _tabController,
+          child: Stack(
             children: <Widget>[
-              Text(
-                'DashBoard',
+              Container(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    Container(
+                      child: Center(
+                        child: Image(
+                          image: AssetImage('assets/image/splash_logo.png'),
+                          width: 192,
+                          height: 192,
+                        ),
+                      ),
+                    ),
+                    Text('Note'),
+                    Text('Alarm'),
+                    ProfileScreen(),
+                  ],
+                ),
               ),
-              Text(
-                'Note',
-              ),
-              Text(
-                'Alarm',
-              ),
-              ProfileScreen(),
+              blur
+                  ? ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade200.withOpacity(0.5)),
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 50, horizontal: 40),
+                                  child: QuickActionMenu())
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.end,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container()
             ],
           ),
         ),
-        bottomNavigationBar: Container(
-          height: 60,
-          decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: Colors.grey, width: 0.25))),
-          child: TabBar(
-            labelColor: Color.fromRGBO(249, 66, 58, 1),
-            unselectedLabelColor: Colors.black54,
-            indicatorColor: Colors.transparent,
-            controller: _tabController,
-            tabs: <Widget>[
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Icon(Icons.home),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Text("Dashboard",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400)),
-                  ]),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Icon(Icons.event_note),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Text(
-                      "Note",
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-                    ),
-                  ]),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Icon(Icons.timer),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Text("Alarm",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400)),
-                  ]),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Icon(Icons.person_outline),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    new Text("Profile",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400)),
-                  ])
-            ],
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          width: 80,
+          height: 80,
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: FloatingActionButton(
+              backgroundColor: Color(0xFF42A3E3),
+              elevation: 5,
+              child: Icon(Icons.add),
+              onPressed: () {
+                blur = !blur;
+                setState(() {});
+              },
+            ),
           ),
-        ));
+        ),
+        bottomNavigationBar: BottomAppBar(
+            elevation: 0,
+            color: Colors.white,
+            child: Container(
+              height: 60,
+              child: Theme(
+                data: ThemeData(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent),
+                child: TabBar(
+                  controller: _tabController,
+                  labelColor: Color(0xFF42A3E3),
+                  unselectedLabelColor: Colors.black26,
+                  indicatorColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  tabs: <Widget>[
+                    Icon(FontAwesomeIcons.home),
+                    Row(
+                      children: <Widget>[
+                        Icon(FontAwesomeIcons.stickyNote),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(FontAwesomeIcons.clock),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.end,
+                    ),
+                    Icon(FontAwesomeIcons.user),
+                  ],
+                ),
+              ),
+            )),
+      ),
+    );
   }
 }
