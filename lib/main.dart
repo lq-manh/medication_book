@@ -2,6 +2,7 @@ import 'package:fast_qr_reader_view/fast_qr_reader_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 // import 'package:permission_handler/permission_handler.dart';
 
 List<CameraDescription> cameras;
@@ -16,9 +17,9 @@ Future<Null> main() async {
 
   cameras = await availableCameras();
 
-  // await PermissionHandler().requestPermissions([
-  //   PermissionGroup.camera
-  // ]);
+  await PermissionHandler().requestPermissions([
+    PermissionGroup.camera
+  ]);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {

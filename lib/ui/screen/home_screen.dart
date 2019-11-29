@@ -27,21 +27,19 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: _FloatingActionButton(
-          onPressed: () => this.setState(() {
-            this._blurred = !this._blurred;
-          }),
-        ),
-        body: _HomeScreenBody(
-          tabController: this._tabController,
-          blurred: this._blurred,
-        ),
-        bottomNavigationBar: _HomeScreenBottom(
-          tabController: this._tabController,
-        ),
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _FloatingActionButton(
+        onPressed: () => this.setState(() {
+          this._blurred = !this._blurred;
+        }),
+      ),
+      body: _HomeScreenBody(
+        tabController: this._tabController,
+        blurred: this._blurred,
+      ),
+      bottomNavigationBar: _HomeScreenBottom(
+        tabController: this._tabController,
       ),
     );
   }
@@ -142,7 +140,7 @@ class _HomeScreenBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
         elevation: 0,
-        color: Colors.white,
+        color: ColorPalette.white,
         child: Container(
           height: 60,
           child: Theme(

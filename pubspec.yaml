@@ -39,7 +39,10 @@ dependencies:
   fast_qr_reader_view:
     git:
       url: git://github.com/facundomedica/fast_qr_reader_view.git
-  # permission_handler: ^3.1.0
+  automapper_dart:
+    git:
+      url: git://github.com/lqmanh/automapper_dart.git
+  permission_handler: ^4.0.0
 
 dev_dependencies:
   flutter_test:
