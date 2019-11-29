@@ -23,7 +23,7 @@ class TopBar extends StatefulWidget {
 class _TopBarState extends State<TopBar> {
   Widget leading;
   final String title;
-  Widget action;
+  final Widget action;
   final Widget bottom;
 
   _TopBarState({this.leading, @required this.title, this.action, this.bottom}) {
@@ -31,9 +31,8 @@ class _TopBarState extends State<TopBar> {
       this.leading = IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () {},
-        color: ColorPalette.white,
+        color: Colors.transparent,
       );
-    if (this.action == null) this.action = Container();
   }
 
   @override
@@ -62,7 +61,10 @@ class _TopBarState extends State<TopBar> {
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[this.leading, this.action],
+                  children: <Widget>[
+                    this.leading,
+                    if (this.action != null) this.action,
+                  ],
                 ),
                 Text(
                   this.title,
