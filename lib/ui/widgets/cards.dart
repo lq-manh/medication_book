@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/configs/theme.dart';
 
 class RoundedCard extends StatelessWidget {
   final Widget child;
@@ -8,13 +8,19 @@ class RoundedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: ColorPalette.white,
-      elevation: 10,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [commonBoxShadow],
       ),
-      child: this.child,
+      child: Card(
+        color: ColorPalette.white,
+        elevation: 0, // disabled to use custom box shadow
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: this.child,
+      ),
     );
   }
 }
