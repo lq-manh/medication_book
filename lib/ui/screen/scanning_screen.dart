@@ -2,11 +2,9 @@ import 'package:fast_qr_reader_view/fast_qr_reader_view.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:medication_book/bloc/scanning_bloc.dart';
-import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/prescription.dart';
-import 'package:medication_book/ui/screen/prescription_details.dart';
-
-import '../../main.dart';
+import 'package:medication_book/ui/screen/prescription_details_screen.dart';
 
 class Scanning extends StatefulWidget {
   @override
@@ -18,6 +16,7 @@ class _ScanningState extends State<Scanning>
   ScanningBloc scanningBloc = new ScanningBloc();
 
   QRReaderController scanQRCodeController;
+  List<CameraDescription> cameras;
 
   @override
   void initState() {
@@ -27,6 +26,8 @@ class _ScanningState extends State<Scanning>
   }
 
   initScanner() async {
+    cameras = await availableCameras();
+
     if (cameras.length > 0) {
       scanQRCodeController = new QRReaderController(
           cameras[0], ResolutionPreset.medium, [CodeFormat.qr],
@@ -157,7 +158,7 @@ class _ScanningState extends State<Scanning>
 
           await Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => PrescriptionDetails(prescription))
+            MaterialPageRoute(builder: (context) => PrescriptionDetailsScreen(prescription))
           );
 
           initScanner();

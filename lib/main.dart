@@ -1,22 +1,10 @@
-import 'package:fast_qr_reader_view/fast_qr_reader_view.dart';
+// import 'package:fast_qr_reader_view/fast_qr_reader_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:permission_handler/permission_handler.dart';
-
-List<CameraDescription> cameras;
-
-/// Application EntryPoint
-//void main() => runApp(MyApp());
 
 Future<Null> main() async {
-  // SystemChrome.setSystemUIOverlayStyle(new SystemUiOverlayStyle(
-  //     statusBarColor: Color(0xFF1980BA) // set status bar color
-  // ));
-
-  cameras = await availableCameras();
-
   await PermissionHandler().requestPermissions([
     PermissionGroup.camera
   ]);
@@ -34,8 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashPage(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: Theme.of(context).copyWith(
+        textTheme: Theme.of(context).textTheme.apply(fontSizeFactor: 1.2),
       ),
     );
   }

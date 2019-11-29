@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/scanning_screen.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 
@@ -97,8 +98,9 @@ class _ItemActionState extends State<ItemAction> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                          color: Color(0xFF505050),
-                          fontWeight: FontWeight.w300),
+                          color: ColorPalette.blacklight,
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14),
                     )
                   ],
                 ),
