@@ -68,6 +68,7 @@ class _TopBarState extends State<TopBar> {
                   this.title,
                   style: TextStyle(
                     color: ColorPalette.white,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
