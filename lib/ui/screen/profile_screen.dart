@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/configs/theme.dart';
 
 class RoundedCard extends StatelessWidget {
   final Widget child;

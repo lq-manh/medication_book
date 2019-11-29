@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medication_book/configs/colors.dart';
+import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/dashboard_screen.dart';
 import 'package:medication_book/ui/screen/history_screen.dart';
 import 'package:medication_book/ui/screen/notes_screen.dart';
