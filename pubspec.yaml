@@ -41,6 +41,7 @@ dependencies:
       url: git://github.com/facundomedica/fast_qr_reader_view.git
   flutter_local_notifications: ^0.8.4+3
   permission_handler: ^4.0.0
+  rxdart: ^0.22.6
 
 dev_dependencies:
   flutter_test:

@@ -74,11 +74,12 @@ class _TopBarState extends State<TopBar> {
               ],
             ),
           ),
-          if (this.bottom != null)
-            Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: SizedBox(height: 128, child: this.bottom),
-            ),
+          // if (this.bottom != null)
+          //   Padding(
+          //     padding: EdgeInsets.only(bottom: 20),
+          //     child: SizedBox(height: 128, child: this.bottom),
+          //   ),
+          if (widget.bottom != null) widget.bottom
         ],
       ),
     );

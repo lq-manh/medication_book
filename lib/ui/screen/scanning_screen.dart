@@ -152,8 +152,18 @@ class _ScanningState extends State<Scanning>
   renderDetailBtn(Prescription prescription) {
     return Container(
       height: 50,
-      child: RaisedButton(
-        onPressed: () async {
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            ColorPalette.blue,
+            ColorPalette.green,
+          ],
+        ),
+      ),
+      child: InkWell(
+        onTap: () async {
           scanQRCodeController?.dispose();
 
           await Navigator.pushReplacement(
@@ -163,7 +173,6 @@ class _ScanningState extends State<Scanning>
 
           initScanner();
         },
-        color: ColorPalette.blue,
         child: Row(
           children: <Widget>[
             Text(

@@ -6,6 +6,7 @@ class ColorPalette {
   static const Color green = Color(0xFF58D6B4);
   static const Color white = Colors.white;
   static const Color blacklight = Color(0xFF505050);
+  static const Color bluelight = Color(0xFFA0D1F1);
 }
 
 final BoxShadow commonBoxShadow = BoxShadow(

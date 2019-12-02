@@ -15,21 +15,24 @@ String prescriptionToJson(Prescription data) {
 class Prescription {
   String userId;
   String desc;
+  String date;
 
   DrugStore drugStore;
   List<Drug> listDrug;
   
 
-  Prescription({this.userId, this.desc});
+  Prescription({this.userId, this.desc, this.date});
 
   factory Prescription.fromMap(Map<String, dynamic> json) => new Prescription(
     userId: json["userId"],
-    desc: json["desc"]
+    desc: json["desc"],
+    date: json["date"]
   );
 
   Map<String, dynamic> toMap() => {
     "userId": userId,
     "desc": desc,
+    "date": date
   };
 }
 
@@ -43,7 +46,7 @@ class DrugStore {
   factory DrugStore.fromMap(Map<String, dynamic> json) => new DrugStore(
     name: json["name"],
     address: json["address"],
-    phoneNumber: json["phoneNumber"]
+    phoneNumber: json["phoneNumber"],
   );
 
   Map<String, dynamic> toMap() => {
