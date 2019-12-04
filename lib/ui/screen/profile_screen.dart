@@ -8,6 +8,7 @@ import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/secure_store.dart';
 
 enum _MenuButtons { edit, logOut }
+enum _Modes { viewing, editing }
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  _Modes _mode = _Modes.viewing;
   final Future<String> _uid = SecureStorage.instance.read(key: 'uid');
 
   _ProfileScreenState();
@@ -23,13 +25,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return ContentLayout(
       topBar: TopBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {},
-          color: ColorPalette.white,
-        ),
         title: 'Profile',
-        action: _Menu(),
+        action: _Menu(onSelected: (_MenuButtons button) {
+          if (button == _MenuButtons.edit) this._mode = _Modes.editing;
+          this.setState(() {});
+        }),
         bottom: FutureBuilder(
           future: this._uid,
           builder: (BuildContext context, AsyncSnapshot<String> snap) {
@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundColor: ColorPalette.blue,
                 );
 
-              return _ProfileCard(uid: snap.data);
+              return _Profile(mode: this._mode, uid: snap.data);
             },
           ),
         ),
@@ -91,19 +91,27 @@ class _Menu extends StatelessWidget {
   }
 }
 
-class _ProfileCard extends StatelessWidget {
-  final CollectionReference _users = Firestore.instance.collection('users');
+class _Profile extends StatefulWidget {
+  final _Modes mode;
   final String uid;
 
-  _ProfileCard({@required this.uid});
+  _Profile({@required this.mode, @required this.uid});
 
   @override
-  Widget build(BuildContext context) {
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<_Profile> {
+  final CollectionReference _users = Firestore.instance.collection('users');
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Widget _viewingWidget() {
     return RoundedCard(
       hasBorder: true,
       hasShadow: false,
       child: StreamBuilder(
-        stream: this._users.where('uid', isEqualTo: this.uid).snapshots(),
+        stream:
+            this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
           if (snap.hasError || !snap.hasData)
             return CircularProgressIndicator(
@@ -129,6 +137,46 @@ class _ProfileCard extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _editingWidget() {
+    return Column(
+      children: <Widget>[
+        RoundedCard(
+          hasBorder: true,
+          hasShadow: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Column(children: <Widget>[
+              _InfoRow(fieldName: 'Name', value: 'Enter your name'),
+              _InfoRow(fieldName: 'Date of Birth', value: 'DD/MM/YYYY'),
+            ]),
+          ),
+        ),
+        Padding(padding: const EdgeInsets.only(top: 20)),
+        FractionallySizedBox(
+          widthFactor: 1,
+          child: RaisedButton(
+            color: ColorPalette.blue,
+            padding: EdgeInsets.symmetric(vertical: 16),
+            onPressed: () {},
+            textColor: ColorPalette.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text('Save'),
+          ),
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (this.widget.mode == _Modes.viewing)
+      return this._viewingWidget();
+    else
+      return this._editingWidget();
   }
 }
 
