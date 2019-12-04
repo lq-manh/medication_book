@@ -7,6 +7,8 @@ import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/secure_store.dart';
 
+enum _MenuButtons { edit, logOut }
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -27,11 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: ColorPalette.white,
         ),
         title: 'Profile',
-        action: IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: () {},
-          color: ColorPalette.white,
-        ),
+        action: _Menu(),
         bottom: FutureBuilder(
           future: this._uid,
           builder: (BuildContext context, AsyncSnapshot<String> snap) {
@@ -66,6 +64,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+class _Menu extends StatelessWidget {
+  final void Function(_MenuButtons) onSelected;
+
+  _Menu({this.onSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<_MenuButtons>(
+      icon: Icon(Icons.menu, color: ColorPalette.white),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      onSelected: this.onSelected,
+      itemBuilder: (BuildContext context) => [
+        PopupMenuItem(value: _MenuButtons.edit, child: Text('Edit profile')),
+        PopupMenuItem(
+          value: _MenuButtons.logOut,
+          child: Text(
+            'Log out',
+            style: TextStyle(color: ColorPalette.textBody.withOpacity(0.75)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _ProfileCard extends StatelessWidget {
   final CollectionReference _users = Firestore.instance.collection('users');
   final String uid;
@@ -80,7 +105,7 @@ class _ProfileCard extends StatelessWidget {
       child: StreamBuilder(
         stream: this._users.where('uid', isEqualTo: this.uid).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-          if (!snap.hasData)
+          if (snap.hasError || !snap.hasData)
             return CircularProgressIndicator(
               backgroundColor: ColorPalette.blue,
             );
