@@ -17,7 +17,7 @@ class _ContentLayoutState extends State<ContentLayout> {
     return Column(
       children: <Widget>[
         widget.topBar,
-        // if (widget.main != null) Expanded(child: widget.main),
+        if (widget.main != null) Expanded(child: widget.main),
       ],
     );
   }

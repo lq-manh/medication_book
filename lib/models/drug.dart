@@ -1,41 +1,30 @@
-import 'dart:convert';
-
+import 'package:json_annotation/json_annotation.dart';
 import 'package:medication_book/models/reminder.dart';
 
-Drug prescriptionFromJson(String str) {
-  final jsonData = json.decode(str);
-  return Drug.fromMap(jsonData);
-}
+part 'drug.g.dart';
 
-String prescriptionToJson(Drug data) {
-  final dyn = data.toMap();
-  return json.encode(dyn);
-}
+enum SESSIONS { MORNING, EVENING }
 
+@JsonSerializable()
 class Drug {
   String presId;
   String name;
   String unit;
-  String amount;
+  double totalAmount;
+  double dosage;
   String note;
   List<Reminder> listReminder;
-  
+  List<SESSIONS> sessions;
 
-  Drug({this.presId, this.name, this.unit, this.amount, this.note});
-
-  factory Drug.fromMap(Map<String, dynamic> json) => new Drug(
-    presId: json["presId"],
-    name: json["name"],
-    unit: json["unit"],
-    amount: json["amount"],
-    note: json["note"],
-  );
-
-  Map<String, dynamic> toMap() => {
-    "presId": presId,
-    "name": name,
-    "unit": unit,
-    "amount": amount,
-    "note": note,
-  };
+  Drug(
+      {this.sessions,
+      this.presId,
+      this.unit,
+      this.totalAmount,
+      this.dosage,
+      this.note,
+      this.listReminder,
+      this.name});
+  factory Drug.fromJson(Map<String, dynamic> json) => _$DrugFromJson(json);
+  Map<String, dynamic> toJson() => _$DrugToJson(this);
 }

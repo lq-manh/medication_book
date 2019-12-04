@@ -1,15 +1,8 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
-Reminder reminderFromJson(String str) {
-  final jsonData = json.decode(str);
-  return Reminder.fromMap(jsonData);
-}
+part 'reminder.g.dart';
 
-String prescriptionToJson(Reminder data) {
-  final dyn = data.toMap();
-  return json.encode(dyn);
-}
-
+@JsonSerializable()
 class Reminder {
   bool isActive;
   int hour;
@@ -18,17 +11,7 @@ class Reminder {
 
   Reminder({this.isActive, this.hour, this.minute, this.content});
 
-  factory Reminder.fromMap(Map<String, dynamic> json) => new Reminder(
-    isActive: json["isActive"],
-    hour: json["hour"],
-    minute: json["minute"],
-    content: json["content"]
-  );
-
-  Map<String, dynamic> toMap() => {
-    "isActive": isActive,
-    "hour": hour,
-    "minute": minute,
-    "content": content
-  };
+  factory Reminder.fromJson(Map<String, dynamic> json) =>
+      _$ReminderFromJson(json);
+  Map<String, dynamic> toJson() => _$ReminderToJson(this);
 }

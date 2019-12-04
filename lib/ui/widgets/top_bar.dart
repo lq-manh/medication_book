@@ -10,36 +10,24 @@ class TopBar extends StatefulWidget {
   TopBar({this.leading, @required this.title, this.action, this.bottom});
 
   @override
-  _TopBarState createState() {
-    return _TopBarState(
-      leading: this.leading,
-      title: this.title,
-      action: this.action,
-      bottom: this.bottom,
-    );
-  }
+  _TopBarState createState() => _TopBarState();
 }
 
 class _TopBarState extends State<TopBar> {
-  Widget leading;
-  final String title;
-  Widget action;
-  final Widget bottom;
-
-  _TopBarState({this.leading, @required this.title, this.action, this.bottom}) {
-    if (this.leading == null)
-      this.leading = IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {},
-        color: ColorPalette.white,
-      );
-    if (this.action == null) this.action = Container();
-  }
+  // _TopBarState({widget.leading, @required this.title, this.action, this.bottom}) {
+  //   if (this.leading == null)
+  //     this.leading = IconButton(
+  //       icon: Icon(Icons.arrow_back),
+  //       onPressed: () {},
+  //       color: ColorPalette.white,
+  //     );
+  //   if (this.action == null) this.action = Container();
+  // }
 
   @override
   Widget build(BuildContext context) {
     BorderRadiusGeometry borderRadius;
-    if (this.bottom != null) {
+    if (widget.bottom != null) {
       borderRadius = BorderRadius.vertical(bottom: Radius.circular(16));
     }
 
@@ -62,10 +50,10 @@ class _TopBarState extends State<TopBar> {
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[this.leading, this.action],
+                  children: <Widget>[widget.leading, widget.action],
                 ),
                 Text(
-                  this.title,
+                  widget.title,
                   style: TextStyle(
                     color: ColorPalette.white,
                     fontWeight: FontWeight.bold,

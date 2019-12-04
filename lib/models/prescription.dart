@@ -1,41 +1,36 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
-import 'package:medication_book/models/drug.dart';
+import 'drug.dart';
 
-Prescription prescriptionFromJson(String str) {
-  final jsonData = json.decode(str);
-  return Prescription.fromMap(jsonData);
-}
+part 'prescription.g.dart';
 
-String prescriptionToJson(Prescription data) {
-  final dyn = data.toMap();
-  return json.encode(dyn);
-}
-
+@JsonSerializable()
 class Prescription {
   String userId;
+  String name;
   String desc;
   String date;
+  double duration;
+  String notice;
 
   DrugStore drugStore;
   List<Drug> listDrug;
-  
 
-  Prescription({this.userId, this.desc, this.date});
+  Prescription(this.name,
+      {this.duration,
+      this.notice,
+      this.userId,
+      this.desc,
+      this.date,
+      this.drugStore,
+      this.listDrug});
 
-  factory Prescription.fromMap(Map<String, dynamic> json) => new Prescription(
-    userId: json["userId"],
-    desc: json["desc"],
-    date: json["date"]
-  );
-
-  Map<String, dynamic> toMap() => {
-    "userId": userId,
-    "desc": desc,
-    "date": date
-  };
+  factory Prescription.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionFromJson(json);
+  Map<String, dynamic> toJson() => _$PrescriptionToJson(this);
 }
 
+@JsonSerializable()
 class DrugStore {
   String name;
   String address;
@@ -43,15 +38,7 @@ class DrugStore {
 
   DrugStore({this.name, this.address, this.phoneNumber});
 
-  factory DrugStore.fromMap(Map<String, dynamic> json) => new DrugStore(
-    name: json["name"],
-    address: json["address"],
-    phoneNumber: json["phoneNumber"],
-  );
-
-  Map<String, dynamic> toMap() => {
-    "name": name,
-    "address": address,
-    "phoneNumber": phoneNumber
-  };
+  factory DrugStore.fromJson(Map<String, dynamic> json) =>
+      _$DrugStoreFromJson(json);
+  Map<String, dynamic> toJson() => _$DrugStoreToJson(this);
 }
