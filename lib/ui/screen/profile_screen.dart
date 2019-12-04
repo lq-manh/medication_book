@@ -77,15 +77,20 @@ class _ProfileCard extends StatelessWidget {
     return RoundedCard(
       hasBorder: true,
       hasShadow: false,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: StreamBuilder(
-          stream: this._users.where('uid', isEqualTo: this.uid).snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-            final DocumentSnapshot doc = snap.data.documents[0];
-            final User user = User.fromJson(doc.data);
+      child: StreamBuilder(
+        stream: this._users.where('uid', isEqualTo: this.uid).snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
+          if (!snap.hasData)
+            return CircularProgressIndicator(
+              backgroundColor: ColorPalette.blue,
+            );
 
-            return Column(
+          final DocumentSnapshot doc = snap.data.documents[0];
+          final User user = User.fromJson(doc.data);
+
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
               children: <Widget>[
                 _InfoRow(fieldName: 'Name', value: user.name),
                 _InfoRow(fieldName: 'Date of Birth', value: user.dateOfBirth),
@@ -94,9 +99,9 @@ class _ProfileCard extends StatelessWidget {
                 _InfoRow(fieldName: 'Weight', value: user.weight, unit: 'kg'),
                 _InfoRow(fieldName: 'Blood Type', value: user.bloodType),
               ],
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
