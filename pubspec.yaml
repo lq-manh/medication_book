@@ -43,6 +43,7 @@ dependencies:
   permission_handler: ^4.0.0
   rxdart: ^0.22.6
   json_serializable: ^3.2.3
+  flutter_datetime_picker: ^1.2.8
 
 
 dev_dependencies:

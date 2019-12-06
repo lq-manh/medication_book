@@ -81,62 +81,66 @@ class _HomeScreenBody extends StatelessWidget {
   final bool blurred;
   final Function onTapCancel;
 
-  _HomeScreenBody({@required this.tabController, this.blurred = false, this.onTapCancel});
+  _HomeScreenBody(
+      {@required this.tabController, this.blurred = false, this.onTapCancel});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ColorPalette.blue.withOpacity(0.2),
-            ColorPalette.green.withOpacity(0.2),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            child: TabBarView(
-              controller: this.tabController,
-              children: <Widget>[
-                DashboardScreen(),
-                NotesScreen(),
-                HistoryScreen(),
-                ProfileScreen(),
-              ],
-            ),
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorPalette.blue.withOpacity(0.2),
+              ColorPalette.green.withOpacity(0.2),
+            ],
           ),
-          if (this.blurred)
-            GestureDetector(
-              onTap: onTapCancel,
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200.withOpacity(0.5),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 50,
-                            horizontal: 40,
-                          ),
-                          child: QuickActionMenu(),
-                        )
-                      ],
+        ),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              child: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: this.tabController,
+                children: <Widget>[
+                  DashboardScreen(),
+                  NotesScreen(),
+                  HistoryScreen(),
+                  ProfileScreen(),
+                ],
+              ),
+            ),
+            if (this.blurred)
+              GestureDetector(
+                onTap: onTapCancel,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200.withOpacity(0.5),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 50,
+                              horizontal: 40,
+                            ),
+                            child: QuickActionMenu(),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
-        ],
+              )
+          ],
+        ),
       ),
     );
   }
