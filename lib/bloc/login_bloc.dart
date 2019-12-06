@@ -1,10 +1,8 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medication_book/utils/secure_store.dart';
 import 'dart:async';
-import 'dart:convert';
 
 // login status
 enum LoginStatus { START_LOGIN, FINISH_LOGIN, LOGIN_ERROR }

@@ -13,6 +13,8 @@ import 'package:medication_book/utils/secure_store.dart';
 enum _MenuButtons { edit, logOut }
 enum _Modes { viewing, editing }
 
+final _dateFormatter = DateFormat("MMMM dd, yyyy");
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -116,41 +118,30 @@ class _ProfileState extends State<_Profile> {
   final CollectionReference _users = Firestore.instance.collection('users');
   FormBuilderState _formState;
 
-  Widget _viewingWidget() {
+  Widget _viewingWidget(User user) {
     return RoundedCard(
       hasBorder: true,
       hasShadow: false,
-      child: StreamBuilder(
-        stream:
-            this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-          if (snap.hasError || !snap.hasData)
-            return CircularProgressIndicator(
-              backgroundColor: ColorPalette.blue,
-            );
-
-          final DocumentSnapshot doc = snap.data.documents[0];
-          final User user = User.fromJson(doc.data);
-
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Column(
-              children: <Widget>[
-                _InfoRow(fieldName: 'Name', value: user.name),
-                _InfoRow(fieldName: 'Date of Birth', value: user.dateOfBirth),
-                _InfoRow(fieldName: 'Gender', value: user.gender),
-                _InfoRow(fieldName: 'Height', value: user.height, unit: 'cm'),
-                _InfoRow(fieldName: 'Weight', value: user.weight, unit: 'kg'),
-                _InfoRow(fieldName: 'Blood Type', value: user.bloodType),
-              ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          children: <Widget>[
+            _InfoRow(fieldName: 'Name', value: user.name),
+            _InfoRow(
+              fieldName: 'Date of Birth',
+              value: _dateFormatter.format(user.dateOfBirth),
             ),
-          );
-        },
+            _InfoRow(fieldName: 'Gender', value: user.gender),
+            _InfoRow(fieldName: 'Height', value: user.height, unit: 'cm'),
+            _InfoRow(fieldName: 'Weight', value: user.weight, unit: 'kg'),
+            _InfoRow(fieldName: 'Blood Type', value: user.bloodType),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _editingWidget() {
+  Widget _editingWidget(DocumentReference docRef, User user) {
     return Column(
       children: <Widget>[
         RoundedCard(
@@ -158,10 +149,13 @@ class _ProfileState extends State<_Profile> {
           hasShadow: false,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: _ProfileForm(onChanged: (FormBuilderState state) {
-              this._formState = state;
-              this.setState(() {});
-            }),
+            child: _ProfileForm(
+              initialState: user.toFormJson(),
+              onChanged: (FormBuilderState state) {
+                this._formState = state;
+                this.setState(() {});
+              },
+            ),
           ),
         ),
         ButtonBar(
@@ -174,8 +168,8 @@ class _ProfileState extends State<_Profile> {
             ),
             CustomRaisedButton(
               onPressed: () {
-                if (this._formState.saveAndValidate())
-                  print(this._formState.value);
+                this._formState.save();
+                docRef.updateData(this._formState.value);
               },
               text: 'Save',
             ),
@@ -187,10 +181,20 @@ class _ProfileState extends State<_Profile> {
 
   @override
   Widget build(BuildContext context) {
-    if (this.widget.mode == _Modes.viewing)
-      return this._viewingWidget();
-    else
-      return this._editingWidget();
+    return StreamBuilder(
+      stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
+        if (snap.hasError || !snap.hasData)
+          return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
+
+        final DocumentSnapshot doc = snap.data.documents[0];
+        final User user = User.fromJson(doc.data);
+        if (this.widget.mode == _Modes.viewing) {
+          return this._viewingWidget(user);
+        }
+        return this._editingWidget(doc.reference, user);
+      },
+    );
   }
 }
 
@@ -235,9 +239,10 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ProfileForm extends StatefulWidget {
+  final Map<String, dynamic> initialState;
   final Function(FormBuilderState) onChanged;
 
-  _ProfileForm({this.onChanged});
+  _ProfileForm({this.initialState = const {}, this.onChanged});
 
   @override
   _ProfileFormState createState() => _ProfileFormState();
@@ -249,11 +254,12 @@ class _ProfileFormState extends State<_ProfileForm> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
+      autovalidate: true,
+      initialValue: this.widget.initialState,
       key: this._key,
       onChanged: (Map<String, dynamic> _) {
         this.widget.onChanged(this._key.currentState);
       },
-      initialValue: {},
       child: Column(
         children: <Widget>[
           FormBuilderTextField(
@@ -268,7 +274,7 @@ class _ProfileFormState extends State<_ProfileForm> {
             attribute: 'dateOfBirth',
             decoration: InputDecoration(labelText: 'Date of Birth'),
             inputType: InputType.date,
-            format: DateFormat("MMMM dd, yyyy"),
+            format: _dateFormatter,
             validators: [FormBuilderValidators.required()],
           ),
           FormBuilderDropdown(
@@ -289,6 +295,13 @@ class _ProfileFormState extends State<_ProfileForm> {
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),
             ],
+            valueTransformer: (dynamic val) {
+              try {
+                return double.parse(val);
+              } on FormatException {
+                return '';
+              }
+            },
           ),
           FormBuilderTextField(
             attribute: 'weight',
@@ -298,6 +311,13 @@ class _ProfileFormState extends State<_ProfileForm> {
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),
             ],
+            valueTransformer: (dynamic val) {
+              try {
+                return double.parse(val);
+              } on FormatException {
+                return '';
+              }
+            },
           ),
           FormBuilderDropdown(
             attribute: 'bloodType',
