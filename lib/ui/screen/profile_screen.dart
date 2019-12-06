@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/user.dart';
+import 'package:medication_book/ui/widgets/buttons.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
@@ -57,7 +58,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundColor: ColorPalette.blue,
                 );
 
-              return _Profile(mode: this._mode, uid: snap.data);
+              return _Profile(
+                mode: this._mode,
+                uid: snap.data,
+                onModeChanged: (_Modes mode) {
+                  this._mode = mode;
+                  this.setState(() {});
+                },
+              );
             },
           ),
         ),
@@ -85,7 +93,7 @@ class _Menu extends StatelessWidget {
           value: _MenuButtons.logOut,
           child: Text(
             'Log out',
-            style: TextStyle(color: ColorPalette.textBody.withOpacity(0.75)),
+            style: TextStyle(color: ColorPalette.textBody.withOpacity(0.85)),
           ),
         ),
       ],
@@ -96,8 +104,9 @@ class _Menu extends StatelessWidget {
 class _Profile extends StatefulWidget {
   final _Modes mode;
   final String uid;
+  final void Function(_Modes) onModeChanged;
 
-  _Profile({@required this.mode, @required this.uid});
+  _Profile({@required this.mode, @required this.uid, this.onModeChanged});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -105,6 +114,7 @@ class _Profile extends StatefulWidget {
 
 class _ProfileState extends State<_Profile> {
   final CollectionReference _users = Firestore.instance.collection('users');
+  FormBuilderState _formState;
 
   Widget _viewingWidget() {
     return RoundedCard(
@@ -148,23 +158,29 @@ class _ProfileState extends State<_Profile> {
           hasShadow: false,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: _ProfileForm(),
+            child: _ProfileForm(onChanged: (FormBuilderState state) {
+              this._formState = state;
+              this.setState(() {});
+            }),
           ),
         ),
-        Padding(padding: const EdgeInsets.only(top: 20)),
-        FractionallySizedBox(
-          widthFactor: 1,
-          child: RaisedButton(
-            color: ColorPalette.blue,
-            padding: EdgeInsets.symmetric(vertical: 16),
-            onPressed: () {},
-            textColor: ColorPalette.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+        ButtonBar(
+          children: <Widget>[
+            CustomRaisedButton(
+              onPressed: () => this.widget.onModeChanged(_Modes.viewing),
+              text: 'Cancel',
+              color: ColorPalette.white,
+              textColor: ColorPalette.textBody.withOpacity(0.85),
             ),
-            child: Text('Save'),
-          ),
-        )
+            CustomRaisedButton(
+              onPressed: () {
+                if (this._formState.saveAndValidate())
+                  print(this._formState.value);
+              },
+              text: 'Save',
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -219,7 +235,7 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ProfileForm extends StatefulWidget {
-  final Function(Map<String, dynamic>) onChanged;
+  final Function(FormBuilderState) onChanged;
 
   _ProfileForm({this.onChanged});
 
@@ -234,7 +250,9 @@ class _ProfileFormState extends State<_ProfileForm> {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: this._key,
-      onChanged: this.widget.onChanged,
+      onChanged: (Map<String, dynamic> _) {
+        this.widget.onChanged(this._key.currentState);
+      },
       initialValue: {},
       child: Column(
         children: <Widget>[
