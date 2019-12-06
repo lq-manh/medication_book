@@ -10,24 +10,35 @@ class TopBar extends StatefulWidget {
   TopBar({this.leading, @required this.title, this.action, this.bottom});
 
   @override
-  _TopBarState createState() => _TopBarState();
+  _TopBarState createState() {
+    return _TopBarState(
+      leading: this.leading,
+      title: this.title,
+      action: this.action,
+      bottom: this.bottom,
+    );
+  }
 }
 
 class _TopBarState extends State<TopBar> {
-  // _TopBarState({widget.leading, @required this.title, this.action, this.bottom}) {
-  //   if (this.leading == null)
-  //     this.leading = IconButton(
-  //       icon: Icon(Icons.arrow_back),
-  //       onPressed: () {},
-  //       color: ColorPalette.white,
-  //     );
-  //   if (this.action == null) this.action = Container();
-  // }
+  Widget leading;
+  final String title;
+  final Widget action;
+  final Widget bottom;
+
+  _TopBarState({this.leading, @required this.title, this.action, this.bottom}) {
+    if (this.leading == null)
+      this.leading = IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {},
+        color: Colors.transparent,
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
     BorderRadiusGeometry borderRadius;
-    if (widget.bottom != null) {
+    if (this.bottom != null) {
       borderRadius = BorderRadius.vertical(bottom: Radius.circular(16));
     }
 
@@ -50,24 +61,27 @@ class _TopBarState extends State<TopBar> {
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[widget.leading, widget.action],
+                  children: <Widget>[
+                    this.leading,
+                    if (this.action != null) this.action,
+                  ],
                 ),
                 Text(
-                  widget.title,
+                  this.title,
                   style: TextStyle(
                     color: ColorPalette.white,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
-          // if (this.bottom != null)
-          //   Padding(
-          //     padding: EdgeInsets.only(bottom: 20),
-          //     child: SizedBox(height: 128, child: this.bottom),
-          //   ),
-          if (widget.bottom != null) widget.bottom
+          if (this.bottom != null)
+            Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: SizedBox(height: 128, child: this.bottom),
+            ),
         ],
       ),
     );
