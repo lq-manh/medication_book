@@ -6,7 +6,14 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContentLayout(
-      topBar: TopBar(title: 'Reminders', bottom: Container()),
+      topBar: TopBar(
+        title: 'Reminders',
+        bottom: Container(),
+        leading: Container(),
+        action: Container(),
+      ),
+      main: Container()
     );
+    // return Container();
   }
 }

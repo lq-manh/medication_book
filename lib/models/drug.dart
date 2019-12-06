@@ -1,9 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:medication_book/models/reminder.dart';
+import 'package:medication_book/models/session.dart';
 
 part 'drug.g.dart';
-
-enum SESSIONS { MORNING, EVENING }
 
 @JsonSerializable()
 class Drug {
@@ -14,7 +13,7 @@ class Drug {
   double dosage;
   String note;
   List<Reminder> listReminder;
-  List<SESSIONS> sessions;
+  List<Session> sessions;
 
   Drug(
       {this.sessions,

@@ -87,20 +87,18 @@ class _ItemActionState extends State<ItemAction> {
           child: Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                width: 60,
                 child: Column(
                   children: <Widget>[
                     Image(
                       image: AssetImage(widget.image),
                       width: 50,
-                      height: 50,
                     ),
                     Text(
                       widget.title,
                       style: TextStyle(
                           color: ColorPalette.blacklight,
                           fontWeight: FontWeight.w300,
-                          fontSize: 14),
+                          fontSize: 12),
                     )
                   ],
                 ),

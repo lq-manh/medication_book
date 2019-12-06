@@ -9,7 +9,7 @@ part of 'drug.dart';
 Drug _$DrugFromJson(Map<String, dynamic> json) {
   return Drug(
     sessions: (json['sessions'] as List)
-        ?.map((e) => _$enumDecodeNullable(_$SESSIONSEnumMap, e))
+        ?.map((e) => _$enumDecodeNullable(_$SessionEnumMap, e))
         ?.toList(),
     presId: json['presId'] as String,
     unit: json['unit'] as String,
@@ -32,7 +32,7 @@ Map<String, dynamic> _$DrugToJson(Drug instance) => <String, dynamic>{
       'dosage': instance.dosage,
       'note': instance.note,
       'listReminder': instance.listReminder,
-      'sessions': instance.sessions?.map((e) => _$SESSIONSEnumMap[e])?.toList(),
+      'sessions': instance.sessions?.map((e) => _$SessionEnumMap[e])?.toList(),
     };
 
 T _$enumDecode<T>(
@@ -67,7 +67,7 @@ T _$enumDecodeNullable<T>(
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$SESSIONSEnumMap = {
-  SESSIONS.MORNING: 'MORNING',
-  SESSIONS.EVENING: 'EVENING',
+const _$SessionEnumMap = {
+  Session.MORNING: 'MORNING',
+  Session.EVENING: 'EVENING',
 };

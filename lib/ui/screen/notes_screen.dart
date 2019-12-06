@@ -6,7 +6,13 @@ class NotesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContentLayout(
-      topBar: TopBar(title: 'Notes'),
+      topBar: TopBar(
+        title: 'Notes',
+        bottom: Container(),
+        leading: Container(),
+        action: Container(),
+      ),
+      main: Container()
     );
   }
 }

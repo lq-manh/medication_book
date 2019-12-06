@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
+import 'package:medication_book/models/session.dart';
 import 'package:medication_book/ui/screen/reminder_settings_screen.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
@@ -147,7 +149,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
                 children: <Widget>[
                   Text("Date",
                       style: TextStyle(color: Colors.white60, fontSize: 18)),
-                  Text(widget.prescription.date,
+                  Text(widget.prescription.date.toString(),
                       style: TextStyle(color: Colors.white60, fontSize: 14)),
                 ],
               ),
@@ -226,7 +228,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
                           drug.unit)),
                       DataCell(Row(
                         children: drug.sessions.map((s) {
-                          if (s == SESSIONS.MORNING)
+                          if (s == Session.MORNING)
                             return Icon(
                               FontAwesomeIcons.sun,
                               size: 14,
@@ -250,7 +252,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
   renderRemindBtn() {
     return LargeButton(
       title: "Save & Remind Me",
-      onPressed: () {
+      onPressed: () async {
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -259,37 +261,4 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
       },
     );
   }
-  // bool isOnreminder = true;
-
-  // renderReminderSettings() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-  //     child: Column(
-  //       children: <Widget>[
-  //         Row(
-  //           children: <Widget>[
-  //             Text("Reminder Settings"),
-  //             Switch(
-  //               value: isOnreminder,
-  //               onChanged: (value) {
-  //                 setState(() {
-  //                   isOnreminder = value;
-  //                 });
-  //               },
-  //               activeTrackColor: ColorPalette.bluelight,
-  //               activeColor: ColorPalette.blue,
-  //             ),
-  //           ],
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         ),
-  //         Container(
-  //           padding: EdgeInsets.all(20),
-  //           decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(16),
-  //               border: Border.all(color: ColorPalette.blue, width: 2)),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 }

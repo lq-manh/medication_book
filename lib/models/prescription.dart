@@ -6,18 +6,21 @@ part 'prescription.g.dart';
 
 @JsonSerializable()
 class Prescription {
+  String id;
   String userId;
   String name;
   String desc;
-  String date;
+  DateTime date;
   double duration;
   String notice;
 
   DrugStore drugStore;
   List<Drug> listDrug;
 
-  Prescription(this.name,
-      {this.duration,
+  Prescription(
+      {this.id,
+      this.name,
+      this.duration,
       this.notice,
       this.userId,
       this.desc,

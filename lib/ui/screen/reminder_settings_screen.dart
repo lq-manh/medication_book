@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/bloc/reminder_settings_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
+import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
+import 'package:medication_book/models/reminder.dart';
+import 'package:medication_book/models/session.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
+import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 
@@ -17,11 +22,14 @@ class ReminderSettingsScreen extends StatefulWidget {
 }
 
 class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
+  ReminderSettingsBloc reminderBloc = new ReminderSettingsBloc();
+  List<Reminder> listReminder;
+  
   @override
   void initState() {
     super.initState();
 
-    widget.prescription.name = "Presc 1";
+    listReminder = reminderBloc.analyzePresc(widget.prescription);
   }
 
   @override
@@ -61,9 +69,18 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
                 SizedBox(
                   height: 30,
                 ),
-                renderReminderItem(),
+                renderReminderItem(listReminder[0]),
                 // SizedBox(height: 20),
-                renderReminderItem(),
+                renderReminderItem(listReminder[1]),
+                SizedBox(
+                  height: 30,
+                ),
+                LargeButton(
+                  title: "Done",
+                  onPressed: () async {
+                    await reminderBloc.savePrescReminders(listReminder, widget.prescription);
+                  },
+                )
               ],
             ),
           ),
@@ -80,15 +97,15 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
     return Container(child: Text("Prescription 1"));
   }
 
-  renderReminderItem() {
+  renderReminderItem(Reminder re) {
     return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: <Widget>[
-              Text("Morning"),
-              Text("8:00"),
+              Text(re.session.toString()),
+              Text(TimeOfDay(hour: re.hour, minute: re.minute).format(context)),
               Switch(
                 value: true,
                 activeColor: ColorPalette.blue,
@@ -99,45 +116,78 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
           ),
         ),
         Container(
-          height: 200,
+          height: 150,
           // color: Colors.blue,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 0),
-            itemCount: 2,
+            itemCount: re.listDrug.length,
             itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                    top: 10, left: 10, right: 10, bottom: 20),
-                child: RoundedCard(
+              Drug drug = re.listDrug[index];
+                return Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10, left: 10, right: 10, bottom: 20),
+                  child: RoundedCard(
+                      child: Container(
+                    width: 250,
                     child: Container(
-                  width: 300,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          child: Row(children: <Widget>[
-                            Column(children: <Widget>[
-
-                            ],),
-                            Expanded(child: Column(children: <Widget>[
-                              Icon(FontAwesomeIcons.pills),
-                              Text("1 pills")
-                            ],),)
-                          ],),
-                        ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  drug.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: ColorPalette.blue,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  drug.note,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: ColorPalette.blacklight,
+                                      fontWeight: FontWeight.w300),
+                                )
+                              ],
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                            ),
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Image.asset(
+                                "assets/image/medicineIcon.png",
+                                height: 40,
+                              ),
+                              Text(
+                                (drug.dosage > drug.dosage.floor()
+                                        ? drug.dosage.toString()
+                                        : drug.dosage.floor().toString()) +
+                                    " " +
+                                    drug.unit,
+                                style: TextStyle(
+                                  color: ColorPalette.blacklight,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          )
+                        ],
                       ),
-                      Container(
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
-                          color: ColorPalette.blue,
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-              );
+                    ),
+                  )),
+                );
             },
           ),
         )

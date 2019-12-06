@@ -6,7 +6,13 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContentLayout(
-      topBar: TopBar(title: 'Scanning History'),
+      topBar: TopBar(
+        title: 'Histories',
+        bottom: Container(),
+        leading: Container(),
+        action: Container(),
+      ),
+      main: Container()
     );
   }
 }
