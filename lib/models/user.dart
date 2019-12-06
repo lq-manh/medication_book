@@ -26,7 +26,7 @@ class User {
     this.bloodType,
   });
 
-  static DateTime _parseDate(Timestamp val) => val.toDate();
+  static DateTime _parseDate(Timestamp val) => val?.toDate();
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
