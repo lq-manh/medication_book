@@ -170,6 +170,7 @@ class _ProfileState extends State<_Profile> {
               onPressed: () {
                 this._formState.save();
                 docRef.updateData(this._formState.value);
+                this.widget.onModeChanged(_Modes.viewing);
               },
               text: 'Save',
             ),
