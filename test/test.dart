@@ -8,7 +8,7 @@ void main(List<String> args) {
   var pre = jsonDecode(json);
 
   Prescription pres = Prescription.fromJson(pre["data"]["prescription"]);
-  print(pres.listDrug[0].sessions[0]);
+  print(pres.listDrugs[0].sessions[0]);
   print(jsonEncode(pres.toJson()));
   print(DateTime.now().toString());
 }

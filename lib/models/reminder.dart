@@ -10,6 +10,7 @@ class Reminder {
   String id;
   String prescID;
   String userID;
+  int notiID;
   bool isActive;
   int hour;
   int minute;
@@ -21,6 +22,7 @@ class Reminder {
       {this.id,
       this.prescID,
       this.userID,
+      this.notiID,
       this.isActive,
       this.hour,
       this.minute,

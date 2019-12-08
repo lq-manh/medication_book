@@ -1,20 +1,26 @@
+import 'dart:math';
+
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
+import 'package:medication_book/utils/reminder_controller.dart';
 
-class ReminderSettingsBloc {
+class ReminderAnalyzerBloc {
+  ReminderAPI reminderAPI = new ReminderAPI();
+  PrescriptionApi prescAPI = new PrescriptionApi();
+  ReminderController reCtrl = new ReminderController();
+
   List<Reminder> analyzePresc(Prescription presc) {
-    List<Drug> listDrug = presc.listDrug;
+    List<Drug> listDrug = presc.listDrugs;
+    Random ran = new Random();
 
     Reminder morningReminder = new Reminder(
-      isActive: true,
-      content: "It's time to take your medicine ${presc.name}",
+      notiID: ran.nextInt(99999),
+      isActive: false,
       hour: 8,
       minute: 0,
       session: Session.MORNING,
@@ -22,8 +28,8 @@ class ReminderSettingsBloc {
     );
 
     Reminder eveningReminder = new Reminder(
-      isActive: true,
-      content: "It's time to take your medicine ${presc.name}",
+      notiID: ran.nextInt(99999) + 1,
+      isActive: false,
       hour: 20,
       minute: 0,
       session: Session.EVENING,
@@ -42,18 +48,26 @@ class ReminderSettingsBloc {
       }
     }
 
+    if (morningReminder.listDrug.length > 0) morningReminder.isActive = true;
+    if (eveningReminder.listDrug.length > 0) eveningReminder.isActive = true;
+
     return [morningReminder, eveningReminder];
   }
 
+  Future<List<Reminder>> getReminders(Prescription presc) async {
+    return await reminderAPI.getRemindersByPrescID(presc.id);
+  } 
+
   savePrescReminders(List<Reminder> reminders, Prescription presc) async {
-    PrescriptionApi prescAPI = new PrescriptionApi();
+    await reCtrl.init();
     await prescAPI.addPresc(presc);
-    
-    ReminderAPI reminderAPI = new ReminderAPI();
     
     for (Reminder re in reminders) {
       re.prescID = presc.id;
-      await reminderAPI.addReminder(re);
+      re.content = "It's time to take medicine " + presc.name;
+      if (re.listDrug.length > 0) await reminderAPI.addReminder(re);
+
+      if (re.isActive) await reCtrl.addDailyReminder(re);
     }
   }
 }

@@ -16,10 +16,6 @@ Drug _$DrugFromJson(Map<String, dynamic> json) {
     totalAmount: (json['totalAmount'] as num)?.toDouble(),
     dosage: (json['dosage'] as num)?.toDouble(),
     note: json['note'] as String,
-    listReminder: (json['listReminder'] as List)
-        ?.map((e) =>
-            e == null ? null : Reminder.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
     name: json['name'] as String,
   );
 }
@@ -31,7 +27,6 @@ Map<String, dynamic> _$DrugToJson(Drug instance) => <String, dynamic>{
       'totalAmount': instance.totalAmount,
       'dosage': instance.dosage,
       'note': instance.note,
-      'listReminder': instance.listReminder,
       'sessions': instance.sessions?.map((e) => _$SessionEnumMap[e])?.toList(),
     };
 

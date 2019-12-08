@@ -49,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           },
         ),
+        leading: Container(),
       ),
       main: SingleChildScrollView(
         child: Padding(

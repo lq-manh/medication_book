@@ -41,7 +41,7 @@ class _DrugItemState extends State<DrugItem> {
                       height: 10,
                     ),
                     Text(
-                      widget.drug.note,
+                      widget.drug.note != null ? widget.drug.note : "No note",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

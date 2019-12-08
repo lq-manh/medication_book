@@ -10,30 +10,28 @@ class ScanningBloc {
   Stream get resultStream => _resultStream.stream;
 
   /// login via Google
-  Future<Prescription> detect(dynamic url) async {
+  Future<Prescription> detect(String url) async {
+    if (!url.contains("http://api-medical.teneocto.io/"))
+      return null;
 
     var res = await http.get(url);
-    var content;
+    Map data;
 
     try {
-      content = jsonDecode(res.body);
+      data = jsonDecode(res.body);
+
+      // pre-process data - hardcode
+      data.remove("id");
+      data["duration"] = 5;
+      data["desc"] = "Flu headache";
+
     } catch (e) {
       return null;
     }
 
-    if (content["domain"] == "medicationbook.teneocto.io") {
-      var presJson = content["data"]["prescription"];
+    Prescription prescription = Prescription.fromJson(data);
 
-      // DrugStore drugStore = DrugStore.fromMap(presJson["drugStore"]);
-      // Prescription prescription = Prescription.fromMap(presJson);
-      // prescription.drugStore = drugStore;
-      Prescription prescription = Prescription.fromJson(presJson);
-      
-      return prescription;
-    }
-    else {
-      return null;
-    }
+    return prescription;
   }
 
   void dispose() {

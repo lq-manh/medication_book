@@ -20,7 +20,7 @@ class LargeButton extends StatelessWidget {
         ),
         color: ColorPalette.blue,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(25),
         ),
       ),
     );

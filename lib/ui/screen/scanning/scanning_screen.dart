@@ -22,11 +22,14 @@ class _ScanningState extends State<Scanning>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
     initScanner();
   }
 
   initScanner() async {
     cameras = await availableCameras();
+
+    //await Future.delayed(Duration(milliseconds: 500));
 
     if (cameras.length > 0) {
       scanQRCodeController = new QRReaderController(
@@ -64,123 +67,151 @@ class _ScanningState extends State<Scanning>
             return true;
           },
           child: Container(
-              color: Colors.transparent,
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).canvasColor,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16)),
-                  ),
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 0),
-                              child: Text("Your Prescription",
-                                  style: TextStyle(
-                                      color: ColorPalette.blue,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            renderPrescription(prescription),
-                            renderDetailBtn(prescription)
-                          ])))),
+            // color: Colors.transparent,
+            width: MediaQuery.of(context).size.width,
+            // height: 500,
+            child: Container(
+              decoration: BoxDecoration(
+                // color: Theme.of(context).canvasColor,
+                // color: Colors.red,
+                image: DecorationImage(
+                  image: AssetImage("assets/image/background-scan.png"),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Text("Your Prescription",
+                      style: TextStyle(
+                          color: ColorPalette.blue,
+                          fontWeight: FontWeight.bold)),
+                  renderPrescription(prescription),
+                  renderDetailBtn(prescription),
+                  SizedBox(height: 10)
+                ],
+              ),
+            ),
+          ),
         );
       },
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
       ),
     );
   }
 
   Widget renderPrescription(Prescription prescription) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: Row(
-        children: <Widget>[
-          Image.asset(
-            "assets/image/medicine.png",
-            height: 100,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Column(children: <Widget>[
+                  Text(
+                    "Drug store: ",
+                    style: TextStyle(
+                      color: ColorPalette.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    prescription.drugStore.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(color: ColorPalette.blacklight),
+                  ),
+                ], crossAxisAlignment: CrossAxisAlignment.start),
+                SizedBox(height: 10),
+                Column(children: <Widget>[
+                  Text(
+                    "Address: ",
+                    style: TextStyle(
+                      color: ColorPalette.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    prescription.drugStore.address,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(color: ColorPalette.blacklight),
+                  ),
+                ], crossAxisAlignment: CrossAxisAlignment.start),
+                SizedBox(height: 10),
+                Column(children: <Widget>[
+                  Text(
+                    "Medicine description: ",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: ColorPalette.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    prescription.desc,
+                    style: TextStyle(color: ColorPalette.blacklight),
+                  ),
+                ], crossAxisAlignment: CrossAxisAlignment.start),
+                //Text(prescription.drugStore.name, style: TextStyle(color: Colors.black87, fontSize: 16),),
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
           ),
-          SizedBox(width: 25),
-          Column(
-            children: <Widget>[
-              Column(children: <Widget>[
-                Text(
-                  "Drug store: ",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                Text(
-                  prescription.drugStore.name,
-                  style: TextStyle(color: Colors.black38),
-                ),
-              ], crossAxisAlignment: CrossAxisAlignment.start),
-              SizedBox(height: 10),
-              Column(children: <Widget>[
-                Text(
-                  "Address: ",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                Text(
-                  prescription.drugStore.address,
-                  style: TextStyle(color: Colors.black38),
-                ),
-              ], crossAxisAlignment: CrossAxisAlignment.start),
-              SizedBox(height: 10),
-              Column(children: <Widget>[
-                Text(
-                  "Medicine description: ",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                Text(
-                  prescription.desc,
-                  style: TextStyle(color: Colors.black38),
-                ),
-              ], crossAxisAlignment: CrossAxisAlignment.start),
-              //Text(prescription.drugStore.name, style: TextStyle(color: Colors.black87, fontSize: 16),),
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
-          )
-        ],
-        //crossAxisAlignment: CrossAxisAlignment.start,
-      ),
+        ),
+      ],
     );
   }
 
   renderDetailBtn(Prescription prescription) {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            ColorPalette.blue,
-            ColorPalette.green,
-          ],
-        ),
-      ),
-      child: InkWell(
-        onTap: () async {
-          scanQRCodeController?.dispose();
+    return GestureDetector(
+      onTap: () async {
+        scanQRCodeController?.dispose();
 
-          await Navigator.pushReplacement(
+        await Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => PrescriptionDetailsScreen(prescription))
-          );
+            MaterialPageRoute(
+                builder: (context) => PrescriptionDetailsScreen(prescription, false)));
 
-          initScanner();
-        },
+        initScanner();
+      },
+      child: Container(
+        height: 40,
+        width: 150,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                ColorPalette.blue.withOpacity(0.8),
+                ColorPalette.green.withOpacity(0.8),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(25)),
         child: Row(
           children: <Widget>[
             Text(
-              "VIEW DETAILS",
-              style: TextStyle(fontSize: 16, color: ColorPalette.white),
+              "View Details",
+              style: TextStyle(fontSize: 14, color: ColorPalette.white),
             ),
-            SizedBox(width: 5,),
-            Icon(Icons.arrow_forward, color: ColorPalette.white)
+            SizedBox(
+              width: 5,
+            ),
+            Icon(
+              Icons.arrow_forward,
+              color: ColorPalette.white,
+              size: 14,
+            )
           ],
           mainAxisAlignment: MainAxisAlignment.center,
         ),
@@ -198,10 +229,14 @@ class _ScanningState extends State<Scanning>
           ),
         );
       } else {
-        return Container();
+        return Container(
+          color: Colors.white,
+        );
       }
     } else {
-      return Container();
+      return Container(
+        color: Colors.white,
+      );
     }
   }
 

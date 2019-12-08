@@ -10,6 +10,7 @@ class ColorPalette {
   static const Color bluelight = Color(0xFFA0D1F1);
   static const Color sunOrange = Color(0xFFFF9100);
   static const Color nightBlue = Color(0xFF42A3E3);
+  static const Color red = Color(0xFFFF3400);
 
   static const Color textBody = ColorPalette.darkGrey;
 }

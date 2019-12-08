@@ -12,13 +12,13 @@ Prescription _$PrescriptionFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     duration: (json['duration'] as num)?.toDouble(),
     notice: json['notice'] as String,
-    userId: json['userId'] as String,
+    userID: json['userID'] as String,
     desc: json['desc'] as String,
-    date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+    date: json['date'] as String,
     drugStore: json['drugStore'] == null
         ? null
         : DrugStore.fromJson(json['drugStore'] as Map<String, dynamic>),
-    listDrug: (json['listDrug'] as List)
+    listDrugs: (json['listDrugs'] as List)
         ?.map(
             (e) => e == null ? null : Drug.fromJson(e as Map<String, dynamic>))
         ?.toList(),
@@ -28,14 +28,14 @@ Prescription _$PrescriptionFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PrescriptionToJson(Prescription instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
+      'userID': instance.userID,
       'name': instance.name,
       'desc': instance.desc,
-      'date': instance.date?.toIso8601String(),
+      'date': instance.date,
       'duration': instance.duration,
       'notice': instance.notice,
       'drugStore': instance.drugStore,
-      'listDrug': instance.listDrug,
+      'listDrugs': instance.listDrugs,
     };
 
 DrugStore _$DrugStoreFromJson(Map<String, dynamic> json) {

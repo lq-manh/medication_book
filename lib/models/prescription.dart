@@ -7,26 +7,26 @@ part 'prescription.g.dart';
 @JsonSerializable()
 class Prescription {
   String id;
-  String userId;
+  String userID;
   String name;
   String desc;
-  DateTime date;
+  String date;
   double duration;
   String notice;
 
   DrugStore drugStore;
-  List<Drug> listDrug;
+  List<Drug> listDrugs;
 
   Prescription(
       {this.id,
       this.name,
       this.duration,
       this.notice,
-      this.userId,
+      this.userID,
       this.desc,
       this.date,
       this.drugStore,
-      this.listDrug});
+      this.listDrugs});
 
   factory Prescription.fromJson(Map<String, dynamic> json) =>
       _$PrescriptionFromJson(json);

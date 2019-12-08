@@ -12,7 +12,6 @@ class Drug {
   double totalAmount;
   double dosage;
   String note;
-  List<Reminder> listReminder;
   List<Session> sessions;
 
   Drug(
@@ -22,7 +21,6 @@ class Drug {
       this.totalAmount,
       this.dosage,
       this.note,
-      this.listReminder,
       this.name});
   factory Drug.fromJson(Map<String, dynamic> json) => _$DrugFromJson(json);
   Map<String, dynamic> toJson() => _$DrugToJson(this);

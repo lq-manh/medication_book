@@ -62,7 +62,10 @@ class _FloatingActionButton extends StatelessWidget {
     return Container(
       width: 80,
       height: 80,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: FloatingActionButton(
@@ -88,16 +91,6 @@ class _HomeScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              ColorPalette.blue.withOpacity(0.2),
-              ColorPalette.green.withOpacity(0.2),
-            ],
-          ),
-        ),
         child: Stack(
           children: <Widget>[
             Container(
@@ -106,8 +99,8 @@ class _HomeScreenBody extends StatelessWidget {
                 controller: this.tabController,
                 children: <Widget>[
                   DashboardScreen(),
-                  NotesScreen(),
                   HistoryScreen(),
+                  NotesScreen(),
                   ProfileScreen(),
                 ],
               ),
@@ -173,16 +166,16 @@ class _HomeScreenBottom extends StatelessWidget {
                 Icon(FontAwesomeIcons.home),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.calendar),
+                    Icon(FontAwesomeIcons.bookMedical),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.clock),
+                    Icon(FontAwesomeIcons.solidClipboard),
                   ],
                   mainAxisAlignment: MainAxisAlignment.end,
                 ),
-                Icon(FontAwesomeIcons.user),
+                Icon(FontAwesomeIcons.solidUser),
               ],
             ),
           ),

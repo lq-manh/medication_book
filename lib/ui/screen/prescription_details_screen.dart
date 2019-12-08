@@ -1,252 +1,202 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
-import 'package:medication_book/models/session.dart';
-import 'package:medication_book/ui/screen/reminder_settings_screen.dart';
-import 'package:medication_book/ui/widgets/cards.dart';
+import 'package:medication_book/ui/screen/scanning/reminder_analyzer_screen.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:medication_book/utils/utils.dart';
 
 class PrescriptionDetailsScreen extends StatefulWidget {
   final Prescription prescription;
+  final bool isView;
 
-  PrescriptionDetailsScreen(this.prescription);
+  PrescriptionDetailsScreen(this.prescription, this.isView);
 
   @override
   _PrescriptionDetailsScreenState createState() =>
       _PrescriptionDetailsScreenState();
 }
 
-class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  String _toTwoDigitString(int value) {
-    return value.toString().padLeft(2, '0');
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings();
-
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onSelectNotification: (String payload) async {
-        if (payload != null) {
-          debugPrint('notification payload: ' + payload);
-        }
-      },
-    );
-  }
-
+class _PrescriptionDetailsScreenState
+    extends State<PrescriptionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[renderSliverAppBar()];
-          },
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  ColorPalette.blue.withOpacity(0.2),
-                  ColorPalette.green.withOpacity(0.2),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        body: ContentLayout(
+          topBar: TopBar(
+            title: widget.prescription.drugStore.name,
+            action: Container(),
+            bottom: renderBottomAppBar(),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: ColorPalette.white,
               ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  renderListDrug(widget.prescription.listDrug),
-                  renderRemindBtn()
-                ],
-              ),
-            ),
-          )),
-    );
-  }
-
-  renderSliverAppBar() {
-    return SliverAppBar(
-      expandedHeight: 180,
-      floating: false,
-      pinned: true,
-      title: Text(
-        widget.prescription.drugStore.name,
-        style: TextStyle(color: Colors.white70, fontSize: 20),
-      ),
-      centerTitle: true,
-      elevation: 5,
-      backgroundColor: ColorPalette.blue,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          padding: EdgeInsets.only(top: 80, bottom: 10, right: 10, left: 10),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [ColorPalette.blue, ColorPalette.green],
-            ),
-            // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
           ),
-          child: renderPresBasicInfor(),
+          main: Container(
+            child: renderBody(),
+          ),
         ),
       ),
     );
   }
 
-  renderPresBasicInfor() {
-    return Column(
-      children: <Widget>[
-        SizedBox(height: 5),
-        Row(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Icon(FontAwesomeIcons.mapMarkerAlt,
-                    size: 14, color: Colors.white60),
-                SizedBox(width: 5),
-                Text(widget.prescription.drugStore.address,
-                    style: TextStyle(color: Colors.white60, fontSize: 14)),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Icon(FontAwesomeIcons.phoneAlt,
-                    size: 14, color: Colors.white60),
-                SizedBox(width: 5),
-                Text(widget.prescription.drugStore.phoneNumber,
-                    style: TextStyle(color: Colors.white60, fontSize: 14)),
-              ],
-            ),
-            //Text("01242351214", style: TextStyle(color: Colors.white60, fontSize: 14)),
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-        ),
-        SizedBox(height: 20),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Text("Date",
-                      style: TextStyle(color: Colors.white60, fontSize: 18)),
-                  Text(widget.prescription.date.toString(),
-                      style: TextStyle(color: Colors.white60, fontSize: 14)),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Text("Description",
-                      style: TextStyle(color: Colors.white60, fontSize: 18)),
-                  Text(
-                    widget.prescription.desc,
-                    style: TextStyle(color: Colors.white60, fontSize: 14),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-        //SizedBox(height: 10),
-      ],
+  renderBody() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          renderPrescBasicInfo(),
+          renderDrugTable(),
+          SizedBox(height: 20),
+          widget.isView ? Container() : renderRemindBtn(),
+        ],
+      ),
     );
   }
 
-  renderListDrug(List<Drug> listDrug) {
+  renderPrescBasicInfo() {
+    TextStyle fieldStyle = TextStyle(
+      color: ColorPalette.blue,
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+    );
+
+    TextStyle fieldStyle2 = TextStyle(
+        color: ColorPalette.blacklight,
+        fontSize: 14,
+        fontWeight: FontWeight.w300);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: <Widget>[
           Row(
             children: <Widget>[
-              Text("Duration"),
-              Text((widget.prescription.duration > widget.prescription.duration
-                      ? widget.prescription.duration.toString()
-                      : widget.prescription.duration.floor().toString()) +
-                  " days"),
+              Text("Description", style: fieldStyle),
+              Expanded(
+                child: Text(
+                  widget.prescription.desc,
+                  textAlign: TextAlign.right,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: fieldStyle2,
+                ),
+              )
             ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
-          SizedBox(
-            height: 5,
-          ),
+          SizedBox(height: 10),
           Row(
             children: <Widget>[
-              Text("Notice"),
-              Text("Take after the meal"),
+              Text("Date", style: fieldStyle),
+              Expanded(
+                child: Text(
+                  Utils.convertDatetime(context, widget.prescription.date),
+                  textAlign: TextAlign.right,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: fieldStyle2,
+                ),
+              )
             ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
-          SizedBox(
-            height: 15,
-          ),
-          DataTable(
-            columnSpacing: 15,
-            columns: <DataColumn>[
-              DataColumn(label: Text("Drug")),
-              DataColumn(label: Text("Amount")),
-              DataColumn(label: Text("Dosage")),
-              DataColumn(label: Text("Session"))
-            ],
-            rows: listDrug
-                .map((drug) => DataRow(cells: <DataCell>[
-                      DataCell(Text(
-                        drug.name,
-                      )),
-                      DataCell(Text((drug.totalAmount > drug.totalAmount.floor()
-                              ? drug.totalAmount.toString()
-                              : drug.totalAmount.floor().toString()) +
-                          " " +
-                          drug.unit)),
-                      DataCell(Text((drug.dosage > drug.dosage.floor()
-                              ? drug.dosage.toString()
-                              : drug.dosage.floor().toString()) +
-                          " " +
-                          drug.unit)),
-                      DataCell(Row(
-                        children: drug.sessions.map((s) {
-                          if (s == Session.MORNING)
-                            return Icon(
-                              FontAwesomeIcons.sun,
-                              size: 14,
-                            );
-                          else
-                            return Icon(
-                              FontAwesomeIcons.moon,
-                              size: 14,
-                            );
-                        }).toList(),
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      )),
-                    ]))
-                .toList(),
-          )
         ],
       ),
     );
+  }
+
+  renderDrugTable() {
+    List<Drug> listDrug = widget.prescription.listDrugs;
+
+    TextStyle fieldStyle = TextStyle(
+      color: ColorPalette.blue,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    );
+
+    return Container(
+      color: ColorPalette.white,
+      child: DataTable(
+        columnSpacing: 15,
+        columns: <DataColumn>[
+          DataColumn(
+            label: Text(
+              "Drug",
+              style: fieldStyle,
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Amount",
+              style: fieldStyle,
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Dosage",
+              style: fieldStyle,
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Session",
+              style: fieldStyle,
+            ),
+          )
+        ],
+        rows: renderDrudRows(listDrug),
+      ),
+    );
+  }
+
+  renderDrudRows(List<Drug> listDrug) {
+    TextStyle fieldStyle2 = TextStyle(
+        color: ColorPalette.blacklight,
+        fontSize: 12,
+        fontWeight: FontWeight.w300);
+
+    return listDrug.map((drug) {
+      return DataRow(
+        cells: <DataCell>[
+          DataCell(
+            Text(
+              drug.name,
+              style: fieldStyle2,
+            ),
+          ),
+          DataCell(
+            Text(
+              Utils.convertDoubletoString(drug.totalAmount) + " " + drug.unit,
+              style: fieldStyle2,
+            ),
+          ),
+          DataCell(
+            Text(
+              Utils.convertDoubletoString(drug.dosage) + " " + drug.unit,
+              style: fieldStyle2,
+            ),
+          ),
+          DataCell(
+            Row(
+              children: drug.sessions.map((s) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Utils.getSessionIcon(s, 14),
+                );
+              }).toList(),
+              mainAxisAlignment: MainAxisAlignment.start,
+            ),
+          ),
+        ],
+      );
+    }).toList();
   }
 
   renderRemindBtn() {
@@ -257,8 +207,60 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ReminderSettingsScreen(prescription: widget.prescription)));
+                    ReminderAnalyzerScreen(prescription: widget.prescription)));
       },
+    );
+  }
+
+  renderBottomAppBar() {
+    DrugStore drugStore = widget.prescription.drugStore;
+
+    TextStyle style =
+        TextStyle(color: ColorPalette.white, fontWeight: FontWeight.w300);
+
+    return Container(
+      // height: ,
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                FontAwesomeIcons.mapMarkerAlt,
+                color: ColorPalette.white,
+                size: 14,
+              ),
+              SizedBox(width: 5),
+              Text(
+                drugStore.address,
+                style: style,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Icon(
+                FontAwesomeIcons.phoneAlt,
+                color: ColorPalette.white,
+                size: 14,
+              ),
+              SizedBox(width: 5),
+              Text(
+                drugStore.phoneNumber,
+                style: style,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }
