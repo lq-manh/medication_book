@@ -17,13 +17,16 @@ class HistoryScreen extends StatefulWidget {
   _HistoryScreenState createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveClientMixin<HistoryScreen> {
   PrescriptionApi prescApi = new PrescriptionApi();
   ReminderAPI reminderApi = new ReminderAPI();
 
   List<Prescription> listPresc = [];
 
   bool loading = true;
+
+  @override 
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {

@@ -24,26 +24,24 @@ class _PrescriptionDetailsScreenState
     extends State<PrescriptionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ContentLayout(
-          topBar: TopBar(
-            title: widget.prescription.drugStore.name,
-            action: Container(),
-            bottom: renderBottomAppBar(),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: ColorPalette.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    return Scaffold(
+      body: ContentLayout(
+        topBar: TopBar(
+          title: widget.prescription.drugStore.name,
+          action: Container(),
+          bottom: renderBottomAppBar(),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: ColorPalette.white,
             ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          main: Container(
-            child: renderBody(),
-          ),
+        ),
+        main: Container(
+          child: renderBody(),
         ),
       ),
     );
@@ -219,7 +217,6 @@ class _PrescriptionDetailsScreenState
         TextStyle(color: ColorPalette.white, fontWeight: FontWeight.w300);
 
     return Container(
-      // height: ,
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: <Widget>[
@@ -258,7 +255,7 @@ class _PrescriptionDetailsScreenState
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
         ],
       ),
     );

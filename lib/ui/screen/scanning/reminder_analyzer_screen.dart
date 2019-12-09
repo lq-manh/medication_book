@@ -44,39 +44,37 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ContentLayout(
-          topBar: TopBar(
-            title: 'Reminder Settings',
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: ColorPalette.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    return Scaffold(
+      body: ContentLayout(
+        topBar: TopBar(
+          title: 'Reminder Settings',
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: ColorPalette.white,
             ),
-            action: Container(),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          main: Container(
-            width: MediaQuery.of(context).size.width,
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  renderPrescInfo(),
-                  renderReminderItem(listReminder[0]),
-                  renderReminderItem(listReminder[1]),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  renderDoneBtn(),
-                  SizedBox(
-                    height: 30,
-                  ),
-                ],
-              ),
+          action: Container(),
+        ),
+        main: Container(
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                renderPrescInfo(),
+                renderReminderItem(listReminder[0]),
+                renderReminderItem(listReminder[1]),
+                SizedBox(
+                  height: 20,
+                ),
+                renderDoneBtn(),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
             ),
           ),
         ),
@@ -260,7 +258,6 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
           ),
           Container(
             height: 150,
-            // color: Colors.blue,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 0),

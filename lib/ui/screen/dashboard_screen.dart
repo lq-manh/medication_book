@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/dashboard_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
@@ -12,6 +13,7 @@ import 'package:medication_book/ui/widgets/drug_item.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
+import 'package:medication_book/utils/date_slider.dart';
 import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/utils.dart';
 
@@ -20,30 +22,41 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAliveClientMixin<DashboardScreen> {
   DashBoardBloc bloc = new DashBoardBloc();
   List<Reminder> listReminder;
   List<Reminder> morningReminders;
   List<Reminder> eveningReminders;
   ReminderController reCtrl = new ReminderController();
 
+  ReminderAPI reminderAPI = new ReminderAPI();
+  PrescriptionApi prescApi = new PrescriptionApi();
+
   bool loading = true;
+
+  DateTime currentDay;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
+    currentDay = DateTime.now();
 
-    getData();
+    getData(currentDay);
   }
 
-  getData() async {
+  getData(DateTime day) async {
     loading = true;
     setState(() {});
+
+    
 
     listReminder = [];
     morningReminders = [];
     eveningReminders = [];
-    ReminderAPI reminderAPI = new ReminderAPI();
+    
     await reCtrl.cancelAllDailyReminder();
 
     listReminder = await reminderAPI.getActiveReminder();
@@ -67,7 +80,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ContentLayout(
       topBar: TopBar(
         title: 'Reminders',
-        // bottom: Container(),
+        bottom: Container(
+          height: 200,
+          child: DateSlider(),
+        ),
         leading: Container(),
         action: Container(),
       ),
@@ -77,6 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
+                    SizedBox(height: 30),
                     renderSessionReminder(Session.MORNING, morningReminders),
                     // SizedBox(height: 15),
                     renderSessionReminder(Session.EVENING, eveningReminders),
@@ -162,7 +179,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ReminderSettingScreen(prescription: presc)));
 
-        getData();
+        getData(currentDay);
       },
       child: Row(
         children: <Widget>[
