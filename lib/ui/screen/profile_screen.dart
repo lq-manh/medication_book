@@ -22,7 +22,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   _Modes _mode = _Modes.viewing;
-  final Future<String> _uid = SecureStorage.instance.read(key: 'uid');
+  // final Future<String> _uid = SecureStorage.instance.read(key: 'uid');
+  final Future<String> _uid = Future.value("PJY7EdCjoHdhoLPJtnESDklpOVb2");
 
   _ProfileScreenState();
 
@@ -48,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           },
         ),
+        leading: Container(),
       ),
       main: SingleChildScrollView(
         child: Padding(
@@ -183,7 +185,7 @@ class _ProfileState extends State<_Profile> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
+      stream: this._users.where('uid', isEqualTo: "PJY7EdCjoHdhoLPJtnESDklpOVb2").snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData)
           return CircularProgressIndicator(backgroundColor: ColorPalette.blue);

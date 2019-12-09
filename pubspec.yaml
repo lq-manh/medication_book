@@ -38,8 +38,12 @@ dependencies:
   fast_qr_reader_view:
     git:
       url: git://github.com/facundomedica/fast_qr_reader_view.git
+  flutter_local_notifications: ^0.8.4+3
+  permission_handler: ^4.0.0
+  rxdart: ^0.22.6
   json_serializable: ^3.2.3
-  # permission_handler: ^3.1.0
+  flutter_datetime_picker: ^1.2.8
+  intl: ^0.15.8
 
 dev_dependencies:
   build_runner: ^1.7.1
