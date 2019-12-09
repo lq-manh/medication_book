@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: SplashPage(),
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: ColorPalette.blue,
         fontFamily: "GoogleSans"
       )
     );
