@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/session.dart';
