@@ -17,14 +17,15 @@ class _ContentLayoutState extends State<ContentLayout> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ColorPalette.blue.withOpacity(0.2),
-            ColorPalette.green.withOpacity(0.2),
-          ],
-        ),
+        // gradient: LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   colors: [
+        //     ColorPalette.blue.withOpacity(0.2),
+        //     ColorPalette.green.withOpacity(0.2),
+        //   ],
+        // ),
+        color: Colors.white10
       ),
       child: Column(
         children: <Widget>[

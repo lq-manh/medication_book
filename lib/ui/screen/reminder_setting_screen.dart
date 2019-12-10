@@ -114,23 +114,23 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
         main: Container(
           width: MediaQuery.of(context).size.width,
           child: loading
-            ? LoadingCircle()
-            : SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    renderPrescInfo(),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    renderReminderItem(morningReminder),
-                    // SizedBox(height: 20),
-                    renderReminderItem(eveningReminder),
-                    SizedBox(
-                      height: 30,
-                    ),
-                  ],
+              ? LoadingCircle()
+              : SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      renderPrescInfo(),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      renderReminderItem(morningReminder),
+                      // SizedBox(height: 20),
+                      renderReminderItem(eveningReminder),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
         ),
       ),
     );
@@ -191,20 +191,21 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       controller: prescNameCtrl,
                       textAlign: TextAlign.end,
                       decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: ColorPalette.blue, width: 1),
+                        contentPadding: EdgeInsets.symmetric(vertical: 5),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: ColorPalette.blue, width: 1),
+                        ),
+                        enabledBorder: InputBorder.none,
+                        suffix: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Icon(
+                            Icons.edit,
+                            size: 14,
+                            color: ColorPalette.blue,
                           ),
-                          enabledBorder: InputBorder.none,
-                          suffix: Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: Icon(
-                              Icons.edit,
-                              size: 14,
-                              color: ColorPalette.blue,
-                            ),
-                          )),
+                        ),
+                      ),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w300,
@@ -236,51 +237,52 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 )
               ],
             ),
-            // SizedBox(height: 10),
-            // Row(
-            //   children: <Widget>[
-            //     Text("Duration", style: fieldStyle),
-            //     Expanded(
-            //       child: Text(
-            //         widget.prescription.duration.toString() + " days",
-            //         textAlign: TextAlign.right,
-            //         maxLines: 1,
-            //         overflow: TextOverflow.ellipsis,
-            //         style: fieldStyle2,
-            //       ),
-            //     )
-            //   ],
-            // ),
-            // SizedBox(height: 10),
-            // Row(
-            //   children: <Widget>[
-            //     Text("Start Date", style: fieldStyle),
-            //     Expanded(
-            //       child: Text(
-            //         widget.prescription.date.toString(),
-            //         textAlign: TextAlign.right,
-            //         maxLines: 1,
-            //         overflow: TextOverflow.ellipsis,
-            //         style: fieldStyle2,
-            //       ),
-            //     )
-            //   ],
-            // ),
-            // SizedBox(height: 10),
-            // Row(
-            //   children: <Widget>[
-            //     Text("End Date", style: fieldStyle),
-            //     Expanded(
-            //       child: Text(
-            //         widget.prescription.date.toString(),
-            //         textAlign: TextAlign.right,
-            //         maxLines: 1,
-            //         overflow: TextOverflow.ellipsis,
-            //         style: fieldStyle2,
-            //       ),
-            //     )
-            //   ],
-            // ),
+            SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                Text("Duration", style: fieldStyle),
+                Expanded(
+                  child: Text(
+                    widget.prescription.duration.toString() + " days",
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: fieldStyle2,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                Text("Start Date", style: fieldStyle),
+                Expanded(
+                  child: Text(
+                    Utils.convertDatetime(widget.prescription.date),
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: fieldStyle2,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                Text("End Date", style: fieldStyle),
+                Expanded(
+                  child: Text(
+                    Utils.getNextDay(widget.prescription.date,
+                        widget.prescription.duration),
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: fieldStyle2,
+                  ),
+                )
+              ],
+            ),
           ],
         ));
   }

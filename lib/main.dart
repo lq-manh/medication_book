@@ -12,6 +12,10 @@ Future<Null> main() async {
 
   Global.hasChangedData = false;
 
+  SystemChrome.setSystemUIOverlayStyle(new SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent // set status bar color
+  ));
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());

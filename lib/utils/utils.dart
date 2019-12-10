@@ -49,13 +49,29 @@ class Utils {
     return reminders;
   }
 
-  static String convertDatetime(BuildContext context, String dateTimeStr) {
+  // static String convertDatetime(BuildContext context, String dateTimeStr) {
+  //   var dateTimeInt = int.parse(dateTimeStr);
+
+  //   String formatedDateTime =
+  //       DateFormat.yMd(Localizations.localeOf(context).toString())
+  //           .format(DateTime.fromMillisecondsSinceEpoch(dateTimeInt));
+  //   return formatedDateTime;
+  // }
+
+  static String convertDatetime(String dateTimeStr) {
     var dateTimeInt = int.parse(dateTimeStr);
 
-    String formatedDateTime =
-        DateFormat.yMd(Localizations.localeOf(context).toString())
-            .format(DateTime.fromMillisecondsSinceEpoch(dateTimeInt));
+    String formatedDateTime = DateFormat.yMMMd()
+        .format(DateTime.fromMillisecondsSinceEpoch(dateTimeInt));
     return formatedDateTime;
+  }
+
+  // startDay is milisecond format
+  static String getNextDay(String startDay, int duration) {
+    DateTime start = convertStringToDate(startDay);
+    DateTime end = start.add(Duration(days: duration));
+
+    return convertDatetime(end.millisecondsSinceEpoch.toString());
   }
 
   // numberString is milisecond format
@@ -66,7 +82,9 @@ class Utils {
   }
 
   static String convertDoubletoString(double number) {
-    if (number > number.floor()) return number.toString();
-    else return number.floor().toString();
+    if (number > number.floor())
+      return number.toString();
+    else
+      return number.floor().toString();
   }
 }

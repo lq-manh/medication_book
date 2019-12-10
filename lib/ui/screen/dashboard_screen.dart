@@ -249,16 +249,17 @@ class _DashboardScreenState extends State<DashboardScreen>
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: StreamBuilder(
-                stream: bloc.prescNameStream(re),
-                builder: (context, snap) {
-                  if (snap.hasData) {
-                    Prescription presc = snap.data;
-                    return rendertimeRow(re, presc);
-                  } else
-                    return Container();
-                },
-              ),
+              // child: StreamBuilder(
+              //   stream: bloc.prescNameStream(re),
+              //   builder: (context, snap) {
+              //     if (snap.hasData) {
+              //       Prescription presc = snap.data;
+              //       return rendertimeRow(re, presc);
+              //     } else
+              //       return Container();
+              //   },
+              // ),
+              child: rendertimeRow(re),
             ),
             Container(
               height: 150,
@@ -280,7 +281,9 @@ class _DashboardScreenState extends State<DashboardScreen>
     }).toList();
   }
 
-  rendertimeRow(Reminder re, Prescription presc) {
+  rendertimeRow(Reminder re) {
+    Prescription presc = listAllPresc.firstWhere((p) => p.id == re.prescID);
+
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context).push(MaterialPageRoute(
@@ -326,9 +329,11 @@ class _DashboardScreenState extends State<DashboardScreen>
       child: Column(
         children: <Widget>[
           Image.asset(
-            "assets/image/schedule.png",
+            "assets/image/reminder.png",
             width: 120,
+            color: Colors.black26,
           ),
+          SizedBox(height: 10),
           Text(
             "No Reminder",
             style: TextStyle(

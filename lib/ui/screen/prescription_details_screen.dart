@@ -20,8 +20,7 @@ class PrescriptionDetailsScreen extends StatefulWidget {
       _PrescriptionDetailsScreenState();
 }
 
-class _PrescriptionDetailsScreenState
-    extends State<PrescriptionDetailsScreen> {
+class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,9 +95,55 @@ class _PrescriptionDetailsScreenState
               Text("Date", style: fieldStyle),
               Expanded(
                 child: Text(
-                  Utils.convertDatetime(context, widget.prescription.date),
+                  Utils.convertDatetime(widget.prescription.date),
                   textAlign: TextAlign.right,
                   maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: fieldStyle2,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Text("Duration", style: fieldStyle),
+              Expanded(
+                child: Text(
+                  widget.prescription.duration.toString() + " days",
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: fieldStyle2,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Text("Start Date", style: fieldStyle),
+              Expanded(
+                child: Text(
+                  Utils.convertDatetime(widget.prescription.date),
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: fieldStyle2,
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: <Widget>[
+              Text("End Date", style: fieldStyle),
+              Expanded(
+                child: Text(
+                  Utils.getNextDay(widget.prescription.date,
+                      widget.prescription.duration),
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: fieldStyle2,
                 ),

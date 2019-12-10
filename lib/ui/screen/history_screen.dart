@@ -68,9 +68,11 @@ class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveCl
     return Column(
       children: <Widget>[
         Image.asset(
-          "assets/image/invoice.png",
+          "assets/image/prescription.png",
           width: 120,
+          color: Colors.black26,
         ),
+        SizedBox(height: 10),
         Text(
           "No Prescription",
           style: TextStyle(
@@ -128,7 +130,7 @@ class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveCl
                       ),
                       SizedBox(height: 5),
                       Text(
-                        Utils.convertDatetime(context, presc.date),
+                        Utils.convertDatetime(presc.date),
                         style: TextStyle(
                             color: ColorPalette.blacklight,
                             fontWeight: FontWeight.w300,

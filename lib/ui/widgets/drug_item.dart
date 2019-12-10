@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
+import 'package:medication_book/utils/utils.dart';
 
 import 'cards.dart';
 
@@ -56,18 +57,14 @@ class _DrugItemState extends State<DrugItem> {
               Column(
                 children: <Widget>[
                   Image.asset(
-                    "assets/image/medicineIcon.png",
-                    height: 40,
+                    "assets/image/pill.png",
+                    height: 60,
                   ),
                   Text(
-                    (widget.drug.dosage > widget.drug.dosage.floor()
-                            ? widget.drug.dosage.toString()
-                            : widget.drug.dosage.floor().toString()) +
-                        " " +
-                        widget.drug.unit,
+                    "${Utils.convertDoubletoString(widget.drug.dosage)} ${widget.drug.unit}",
                     style: TextStyle(
                       color: ColorPalette.blacklight,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w300,
                     ),
                   )
                 ],

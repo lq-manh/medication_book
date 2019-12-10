@@ -67,34 +67,28 @@ class _ScanningState extends State<Scanning>
             return true;
           },
           child: Container(
-            // color: Colors.transparent,
             width: MediaQuery.of(context).size.width,
-            // height: 500,
-            child: Container(
-              decoration: BoxDecoration(
-                // color: Theme.of(context).canvasColor,
-                // color: Colors.red,
-                image: DecorationImage(
-                  image: AssetImage("assets/image/background-scan.png"),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16)),
+            decoration: BoxDecoration(
+              // color: Theme.of(context).canvasColor,
+              // color: Colors.red,
+              image: DecorationImage(
+                image: AssetImage("assets/image/background-scan.png"),
+                fit: BoxFit.cover,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SizedBox(height: 10),
-                  Text("Your Prescription",
-                      style: TextStyle(
-                          color: ColorPalette.blue,
-                          fontWeight: FontWeight.bold)),
-                  renderPrescription(prescription),
-                  renderDetailBtn(prescription),
-                  SizedBox(height: 10)
-                ],
-              ),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: 10),
+                Text("Your Prescription",
+                    style: TextStyle(
+                        color: ColorPalette.blue, fontWeight: FontWeight.bold)),
+                renderPrescription(prescription),
+                renderDetailBtn(prescription),
+                SizedBox(height: 10)
+              ],
             ),
           ),
         );
@@ -181,7 +175,8 @@ class _ScanningState extends State<Scanning>
         await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => PrescriptionDetailsScreen(prescription, false)));
+                builder: (context) =>
+                    PrescriptionDetailsScreen(prescription, false)));
 
         initScanner();
       },
@@ -266,8 +261,7 @@ class _ScanningState extends State<Scanning>
                     child: Column(
                   children: <Widget>[
                     Expanded(
-                      child:
-                          Container(color: Colors.black45.withOpacity(0.5)),
+                      child: Container(color: Colors.black45.withOpacity(0.5)),
                       flex: 1,
                     ),
                     Container(
@@ -288,8 +282,7 @@ class _ScanningState extends State<Scanning>
                       ),
                     ),
                     Expanded(
-                      child:
-                          Container(color: Colors.black45.withOpacity(0.5)),
+                      child: Container(color: Colors.black45.withOpacity(0.5)),
                       flex: 2,
                     ),
                   ],
@@ -324,7 +317,7 @@ class _ScanningState extends State<Scanning>
 class HeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container( 
+    return Container(
       padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
       color: Colors.black45.withOpacity(0.5),
       child: Row(
@@ -345,7 +338,7 @@ class HeaderBar extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.photo,
-              color: ColorPalette.white,
+              color: ColorPalette.white.withOpacity(0),
             ),
             onPressed: () {},
           ),
