@@ -11,7 +11,7 @@ class Prescription {
   String name;
   String desc;
   String date;
-  double duration;
+  int duration;
   String notice;
 
   DrugStore drugStore;

@@ -121,6 +121,7 @@ class _PrescriptionDetailsScreenState
 
     return Container(
       color: ColorPalette.white,
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
       child: DataTable(
         columnSpacing: 15,
         columns: <DataColumn>[

@@ -3,62 +3,54 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_book/configs/theme.dart';
-
-class MyDate {
-  MyDate(this.weekDay, this.date);
-
-  String weekDay;
-  String date;
-}
+import 'package:medication_book/models/listDate.dart';
 
 class DateSlider extends StatefulWidget {
+  final int index;
+  final ListDate listDate;
+  final Function onChanged;
+
+  const DateSlider({Key key, this.onChanged, this.listDate, this.index})
+      : super(key: key);
+
   @override
   _DateSliderState createState() => _DateSliderState();
 }
 
-class _DateSliderState extends State<DateSlider> {
-  List<DateTime> listDate = [];
+class _DateSliderState extends State<DateSlider>
+    with AutomaticKeepAliveClientMixin<DateSlider> {
   SwiperController _scrollController = SwiperController();
-  MyDate today;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  int todayIndex;
 
   @override
   void initState() {
     super.initState();
 
-    DateTime now = DateTime.now();
-
-    listDate.add(now.subtract(Duration(days: 7)));
-    listDate.add(now.subtract(Duration(days: 6)));
-    listDate.add(now.subtract(Duration(days: 5)));
-    listDate.add(now.subtract(Duration(days: 4)));
-    listDate.add(now.subtract(Duration(days: 3)));
-    listDate.add(now.subtract(Duration(days: 2)));
-    listDate.add(now.subtract(Duration(days: 1)));
-    listDate.add(now);
-    listDate.add(now.add(Duration(days: 1)));
-    listDate.add(now.add(Duration(days: 2)));
-    listDate.add(now.add(Duration(days: 3)));
-    listDate.add(now.add(Duration(days: 4)));
-    listDate.add(now.add(Duration(days: 5)));
-    listDate.add(now.add(Duration(days: 6)));
-    listDate.add(now.add(Duration(days: 7)));
-
-    // today = new MyDate(DateFormat('EEEE').format(now), now.day.toString());
+    todayIndex = (widget.listDate.list.length / 2).floor();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(height: 20),
-        Text(
-          "Today",
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: ColorPalette.white.withOpacity(0.65),
-            fontSize: 16,
+        if (widget.index != todayIndex)
+          renderGoTodayBtn()
+        else
+          Container(
+            height: 25,
+            child: Text(
+              "Today",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: ColorPalette.white.withOpacity(0.65),
+                fontSize: 16,
+              ),
+            ),
           ),
-        ),
         Expanded(
           child: Stack(
             children: <Widget>[
@@ -105,7 +97,11 @@ class _DateSliderState extends State<DateSlider> {
               Positioned(
                 right: 0,
                 left: 0,
-                child: Icon(FontAwesomeIcons.solidCircle, color: ColorPalette.white, size: 14,),
+                child: Icon(
+                  FontAwesomeIcons.solidCircle,
+                  color: ColorPalette.white,
+                  size: 14,
+                ),
               )
             ],
           ),
@@ -114,22 +110,49 @@ class _DateSliderState extends State<DateSlider> {
     );
   }
 
+  renderGoTodayBtn() {
+    return GestureDetector(
+      onTap: () {
+        _scrollController.move(todayIndex, animation: true);
+      },
+      child: Container(
+        height: 25,
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: ColorPalette.white.withOpacity(0.65), width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        padding: EdgeInsets.all(3),
+        child: Text(
+          "Go today",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: ColorPalette.white.withOpacity(0.65),
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+
   renderSwiper() {
+    var list = widget.listDate.list;
+
     return Swiper(
       itemBuilder: (BuildContext context, int index) {
-        DateTime date = listDate[index];
+        DateTime date = list[index];
         String weekday = DateFormat('EEE').format(date);
         String day = date.day.toString();
 
-        return renderDateItem(weekday, day);
+        return renderDateItem(weekday, day, index == widget.index);
       },
 
-      itemCount: listDate.length,
+      itemCount: list.length,
       viewportFraction: 0.2,
       scale: 1,
       loop: true,
-      index: (listDate.length / 2).floor(),
-      onIndexChanged: (index) {},
+      fade: 0.2,
+      index: widget.index,
+      onIndexChanged: widget.onChanged,
       onTap: (index) {
         _scrollController.move(index, animation: true);
       },
@@ -139,9 +162,10 @@ class _DateSliderState extends State<DateSlider> {
     );
   }
 
-  renderDateItem(String weekday, String day) {
+  renderDateItem(String weekday, String day, bool highlight) {
     TextStyle style = TextStyle(
-      color: ColorPalette.white,
+      color:
+          highlight ? ColorPalette.white : ColorPalette.white.withOpacity(0.7),
       fontWeight: FontWeight.w500,
       fontSize: 16,
     );

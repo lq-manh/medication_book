@@ -50,12 +50,19 @@ class Utils {
   }
 
   static String convertDatetime(BuildContext context, String dateTimeStr) {
-    var date = int.parse(dateTimeStr);
+    var dateTimeInt = int.parse(dateTimeStr);
 
     String formatedDateTime =
         DateFormat.yMd(Localizations.localeOf(context).toString())
-            .format(DateTime.fromMillisecondsSinceEpoch(date));
+            .format(DateTime.fromMillisecondsSinceEpoch(dateTimeInt));
     return formatedDateTime;
+  }
+
+  // numberString is milisecond format
+  static DateTime convertStringToDate(String dateTimeStr) {
+    var dateTimeInt = int.parse(dateTimeStr);
+
+    return DateTime.fromMillisecondsSinceEpoch(dateTimeInt);
   }
 
   static String convertDoubletoString(double number) {
