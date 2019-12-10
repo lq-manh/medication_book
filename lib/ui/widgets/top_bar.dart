@@ -10,18 +10,17 @@ class TopBar extends StatefulWidget {
   TopBar({this.leading, @required this.title, this.action, this.bottom});
 
   @override
-  _TopBarState createState() {
-    return _TopBarState();
-  }
+  _TopBarState createState() => _TopBarState();
 }
 
 class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     BorderRadiusGeometry borderRadius;
-    if (widget.bottom != null) {
+    if (this.widget.bottom != null) {
       borderRadius = BorderRadius.vertical(bottom: Radius.circular(16));
     }
+    final Widget leading = this.widget.leading ?? Container();
 
     return Container(
       decoration: BoxDecoration(
@@ -36,19 +35,19 @@ class _TopBarState extends State<TopBar> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 40, bottom: 20),
+            padding: EdgeInsets.only(top: 40, bottom: 10),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    widget.leading,
-                    if (widget.action != null) widget.action,
+                    leading,
+                    if (this.widget.action != null) this.widget.action,
                   ],
                 ),
                 Text(
-                  widget.title,
+                  this.widget.title,
                   style: TextStyle(
                     color: ColorPalette.white,
                     fontSize: 18,
@@ -58,8 +57,7 @@ class _TopBarState extends State<TopBar> {
               ],
             ),
           ),
-          if (widget.bottom != null)
-            widget.bottom
+          if (this.widget.bottom != null) this.widget.bottom,
         ],
       ),
     );
