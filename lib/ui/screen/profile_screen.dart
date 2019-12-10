@@ -10,10 +10,8 @@ import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/secure_store.dart';
 
-enum _MenuButtons { edit, logOut }
+enum _MenuButtons { view, edit, logOut }
 enum _Modes { viewing, editing }
-
-final _dateFormatter = DateFormat("MMMM dd, yyyy");
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -22,66 +20,68 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   _Modes _mode = _Modes.viewing;
-  // final Future<String> _uid = SecureStorage.instance.read(key: 'uid');
-  final Future<String> _uid = Future.value("PJY7EdCjoHdhoLPJtnESDklpOVb2");
+  final Future<String> _uid = SecureStorage.instance.read(key: 'uid');
 
   _ProfileScreenState();
 
+  _changeMode(_Modes mode) {
+    this._mode = mode;
+    this.setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ContentLayout(
-      topBar: TopBar(
-        title: 'Profile',
-        action: _Menu(onSelected: (_MenuButtons button) {
-          if (button == _MenuButtons.edit) this._mode = _Modes.editing;
-          this.setState(() {});
-        }),
-        bottom: FutureBuilder(
-          future: this._uid,
-          builder: (BuildContext context, AsyncSnapshot<String> snap) {
-            if (snap.connectionState != ConnectionState.done || !snap.hasData)
-              return CircularProgressIndicator(
-                backgroundColor: ColorPalette.blue,
-              );
+    return FutureBuilder(
+      future: this._uid,
+      builder: (BuildContext context, AsyncSnapshot<String> snap) {
+        if (snap.connectionState != ConnectionState.done || !snap.hasData)
+          return Container();
 
-            return FittedBox(
-              child: CircleAvatar(backgroundColor: ColorPalette.white),
-            );
-          },
-        ),
-        leading: Container(),
-      ),
-      main: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
-          child: FutureBuilder(
-            future: this._uid,
-            builder: (BuildContext context, AsyncSnapshot<String> snap) {
-              if (snap.connectionState != ConnectionState.done || !snap.hasData)
-                return CircularProgressIndicator(
-                  backgroundColor: ColorPalette.blue,
-                );
-
-              return _Profile(
+        return ContentLayout(
+          topBar: TopBar(
+            title: 'Profile',
+            action: _Menu(
+              mode: this._mode,
+              onSelected: (_MenuButtons button) {
+                if (button == _MenuButtons.edit)
+                  this._changeMode(_Modes.editing);
+                else if (button == _MenuButtons.view)
+                  this._changeMode(_Modes.viewing);
+              },
+            ),
+            bottom: Container(
+              height: 128,
+              padding: EdgeInsets.only(bottom: 20),
+              child: FittedBox(
+                child: _Avatar(
+                  mode: this._mode,
+                  uid: snap.data,
+                  onModeChanged: this._changeMode,
+                ),
+              ),
+            ),
+          ),
+          main: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
+              child: _Profile(
                 mode: this._mode,
                 uid: snap.data,
-                onModeChanged: (_Modes mode) {
-                  this._mode = mode;
-                  this.setState(() {});
-                },
-              );
-            },
+                onModeChanged: this._changeMode,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class _Menu extends StatelessWidget {
+  final _Modes mode;
   final void Function(_MenuButtons) onSelected;
 
-  _Menu({this.onSelected});
+  _Menu({@required this.mode, this.onSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,11 @@ class _Menu extends StatelessWidget {
       ),
       onSelected: this.onSelected,
       itemBuilder: (BuildContext context) => [
-        PopupMenuItem(value: _MenuButtons.edit, child: Text('Edit profile')),
+        this.mode == _Modes.viewing
+            ? PopupMenuItem(
+                value: _MenuButtons.edit, child: Text('Edit profile'))
+            : PopupMenuItem(
+                value: _MenuButtons.view, child: Text('View profile')),
         PopupMenuItem(
           value: _MenuButtons.logOut,
           child: Text(
@@ -101,6 +105,39 @@ class _Menu extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _Avatar extends StatefulWidget {
+  final _Modes mode;
+  final String uid;
+  final void Function(_Modes) onModeChanged;
+
+  _Avatar({@required this.mode, @required this.uid, this.onModeChanged});
+
+  @override
+  _AvatarState createState() => _AvatarState();
+}
+
+class _AvatarState extends State<_Avatar> {
+  final CollectionReference _users = Firestore.instance.collection('users');
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
+        if (snap.hasError || !snap.hasData)
+          return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
+
+        final DocumentSnapshot doc = snap.data.documents[0];
+        final User user = User.fromJson(doc.data);
+        if (this.widget.mode == _Modes.viewing) {
+          return CircleAvatar(backgroundImage: NetworkImage(user.avatar));
+        }
+        return CircleAvatar(backgroundColor: ColorPalette.white);
+      },
     );
   }
 }
@@ -130,8 +167,11 @@ class _ProfileState extends State<_Profile> {
           children: <Widget>[
             _InfoRow(fieldName: 'Name', value: user.name),
             _InfoRow(
-              fieldName: 'Date of Birth',
-              value: _dateFormatter.format(user.dateOfBirth),
+              fieldName: 'Age',
+              value: user.dateOfBirth != null
+                  ? DateTime.now().year - user.dateOfBirth.year
+                  : null,
+              unit: " years old",
             ),
             _InfoRow(fieldName: 'Gender', value: user.gender),
             _InfoRow(fieldName: 'Height', value: user.height, unit: 'cm'),
@@ -170,8 +210,8 @@ class _ProfileState extends State<_Profile> {
             ),
             CustomRaisedButton(
               onPressed: () {
-                this._formState.save();
-                docRef.updateData(this._formState.value);
+                if (this._formState != null)
+                  docRef.updateData(this._formState.value);
                 this.widget.onModeChanged(_Modes.viewing);
               },
               text: 'Save',
@@ -185,7 +225,7 @@ class _ProfileState extends State<_Profile> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: this._users.where('uid', isEqualTo: "PJY7EdCjoHdhoLPJtnESDklpOVb2").snapshots(),
+      stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData)
           return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
@@ -271,14 +311,15 @@ class _ProfileFormState extends State<_ProfileForm> {
               labelText: 'Name',
               hintText: 'Full name',
             ),
+            maxLength: 128,
+            maxLines: 1,
             validators: [FormBuilderValidators.required()],
           ),
           FormBuilderDateTimePicker(
             attribute: 'dateOfBirth',
             decoration: InputDecoration(labelText: 'Date of Birth'),
             inputType: InputType.date,
-            format: _dateFormatter,
-            validators: [FormBuilderValidators.required()],
+            format: DateFormat("MMMM dd, yyyy"),
           ),
           FormBuilderDropdown(
             attribute: 'gender',
@@ -288,13 +329,11 @@ class _ProfileFormState extends State<_ProfileForm> {
               DropdownMenuItem(value: 'Female', child: Text('Female')),
               DropdownMenuItem(value: 'Other', child: Text('Other')),
             ],
-            validators: [FormBuilderValidators.required()],
           ),
           FormBuilderTextField(
             attribute: 'height',
             decoration: InputDecoration(labelText: 'Height', suffixText: 'cm'),
             validators: [
-              FormBuilderValidators.required(),
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),
             ],
@@ -302,7 +341,7 @@ class _ProfileFormState extends State<_ProfileForm> {
               try {
                 return double.parse(val);
               } on FormatException {
-                return '';
+                return null;
               }
             },
           ),
@@ -310,7 +349,6 @@ class _ProfileFormState extends State<_ProfileForm> {
             attribute: 'weight',
             decoration: InputDecoration(labelText: 'Weight', suffixText: 'kg'),
             validators: [
-              FormBuilderValidators.required(),
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),
             ],
@@ -318,7 +356,7 @@ class _ProfileFormState extends State<_ProfileForm> {
               try {
                 return double.parse(val);
               } on FormatException {
-                return '';
+                return null;
               }
             },
           ),
@@ -331,7 +369,6 @@ class _ProfileFormState extends State<_ProfileForm> {
               DropdownMenuItem(value: 'AB', child: Text('AB')),
               DropdownMenuItem(value: 'O', child: Text('O')),
             ],
-            validators: [FormBuilderValidators.required()],
           ),
         ],
       ),
