@@ -26,7 +26,7 @@ class Utils {
       case Session.EVENING:
         return Icon(
           FontAwesomeIcons.moon,
-          color: ColorPalette.nightBlue,
+          color: ColorPalette.blue,
           size: size,
         );
     }
@@ -66,7 +66,9 @@ class Utils {
   }
 
   static String convertDoubletoString(double number) {
-    if (number > number.floor()) return number.toString();
-    else return number.floor().toString();
+    if (number > number.floor())
+      return number.toString();
+    else
+      return number.floor().toString();
   }
 }
