@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medication_book/ui/screen/scanning_screen.dart';
+import 'package:medication_book/configs/theme.dart';
+import 'package:medication_book/ui/screen/scanning/scanning_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 
 class QuickActionMenu extends StatefulWidget {
   @override
@@ -75,7 +77,7 @@ class ItemAction extends StatefulWidget {
 class _ItemActionState extends State<ItemAction> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return RoundedCard(
       child: Material(
         borderRadius: BorderRadius.circular(15.0),
         color: Colors.white,
@@ -85,32 +87,24 @@ class _ItemActionState extends State<ItemAction> {
           child: Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                width: 60,
                 child: Column(
                   children: <Widget>[
                     Image(
                       image: AssetImage(widget.image),
                       width: 50,
-                      height: 50,
                     ),
                     Text(
                       widget.title,
                       style: TextStyle(
-                          color: Color(0xFF505050),
-                          fontWeight: FontWeight.w300),
+                          color: ColorPalette.blacklight,
+                          fontWeight: FontWeight.w300,
+                          fontSize: 12),
                     )
                   ],
                 ),
               )),
         ),
       ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black12, blurRadius: 8),
-          ]
-        ),
     );
   }
 }

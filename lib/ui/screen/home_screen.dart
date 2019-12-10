@@ -29,21 +29,24 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: _FloatingActionButton(
-          onPressed: () => this.setState(() {
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _FloatingActionButton(
+        onPressed: () => this.setState(() {
+          this._blurred = !this._blurred;
+        }),
+      ),
+      body: _HomeScreenBody(
+        tabController: this._tabController,
+        blurred: this._blurred,
+        onTapCancel: () {
+          setState(() {
             this._blurred = !this._blurred;
-          }),
-        ),
-        body: _HomeScreenBody(
-          tabController: this._tabController,
-          blurred: this._blurred,
-        ),
-        bottomNavigationBar: _HomeScreenBottom(
-          tabController: this._tabController,
-        ),
+          });
+        },
+      ),
+      bottomNavigationBar: _HomeScreenBottom(
+        tabController: this._tabController,
       ),
     );
   }
@@ -59,7 +62,10 @@ class _FloatingActionButton extends StatelessWidget {
     return Container(
       width: 80,
       height: 80,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: FloatingActionButton(
@@ -76,59 +82,55 @@ class _FloatingActionButton extends StatelessWidget {
 class _HomeScreenBody extends StatelessWidget {
   final TabController tabController;
   final bool blurred;
+  final Function onTapCancel;
 
-  _HomeScreenBody({@required this.tabController, this.blurred = false});
+  _HomeScreenBody(
+      {@required this.tabController, this.blurred = false, this.onTapCancel});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ColorPalette.blue.withOpacity(0.2),
-            ColorPalette.green.withOpacity(0.2),
-          ],
-        ),
-      ),
       child: Stack(
         children: <Widget>[
           Container(
             child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               controller: this.tabController,
               children: <Widget>[
                 DashboardScreen(),
-                NotesScreen(),
                 HistoryScreen(),
+                NotesScreen(),
                 ProfileScreen(),
               ],
             ),
           ),
           if (this.blurred)
-            ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200.withOpacity(0.5),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 50,
-                          horizontal: 40,
-                        ),
-                        child: QuickActionMenu(),
-                      )
-                    ],
+            GestureDetector(
+              onTap: onTapCancel,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade500.withOpacity(0.5),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 50,
+                            horizontal: 40,
+                          ),
+                          child: QuickActionMenu(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            )
         ],
       ),
     );
@@ -144,7 +146,7 @@ class _HomeScreenBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
         elevation: 0,
-        color: Colors.white,
+        color: ColorPalette.white,
         child: Container(
           height: 60,
           child: Theme(
@@ -162,16 +164,16 @@ class _HomeScreenBottom extends StatelessWidget {
                 Icon(FontAwesomeIcons.home),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.calendar),
+                    Icon(FontAwesomeIcons.bookMedical),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.clock),
+                    Icon(FontAwesomeIcons.solidClipboard),
                   ],
                   mainAxisAlignment: MainAxisAlignment.end,
                 ),
-                Icon(FontAwesomeIcons.user),
+                Icon(FontAwesomeIcons.solidUser),
               ],
             ),
           ),

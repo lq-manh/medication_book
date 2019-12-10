@@ -35,9 +35,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       future: this._uid,
       builder: (BuildContext context, AsyncSnapshot<String> snap) {
         if (snap.connectionState != ConnectionState.done || !snap.hasData)
-          // return CircularProgressIndicator(
-          //   backgroundColor: ColorPalette.blue,
-          // );
           return Container();
 
         return ContentLayout(
