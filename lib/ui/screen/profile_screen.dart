@@ -10,7 +10,7 @@ import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/secure_store.dart';
 
-enum _MenuButtons { edit, logOut }
+enum _MenuButtons { view, edit, logOut }
 enum _Modes { viewing, editing }
 
 class ProfileScreen extends StatefulWidget {
@@ -40,14 +40,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return ContentLayout(
           topBar: TopBar(
             title: 'Profile',
-            action: _Menu(onSelected: (_MenuButtons button) {
-              if (button == _MenuButtons.edit) this._changeMode(_Modes.editing);
-            }),
-            bottom: FittedBox(
-              child: _Avatar(
-                mode: this._mode,
-                uid: snap.data,
-                onModeChanged: this._changeMode,
+            action: _Menu(
+              mode: this._mode,
+              onSelected: (_MenuButtons button) {
+                if (button == _MenuButtons.edit)
+                  this._changeMode(_Modes.editing);
+                else if (button == _MenuButtons.view)
+                  this._changeMode(_Modes.viewing);
+              },
+            ),
+            bottom: Container(
+              height: 128,
+              padding: EdgeInsets.only(bottom: 20),
+              child: FittedBox(
+                child: _Avatar(
+                  mode: this._mode,
+                  uid: snap.data,
+                  onModeChanged: this._changeMode,
+                ),
               ),
             ),
           ),
@@ -68,9 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class _Menu extends StatelessWidget {
+  final _Modes mode;
   final void Function(_MenuButtons) onSelected;
 
-  _Menu({this.onSelected});
+  _Menu({@required this.mode, this.onSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +92,11 @@ class _Menu extends StatelessWidget {
       ),
       onSelected: this.onSelected,
       itemBuilder: (BuildContext context) => [
-        PopupMenuItem(value: _MenuButtons.edit, child: Text('Edit profile')),
+        this.mode == _Modes.viewing
+            ? PopupMenuItem(
+                value: _MenuButtons.edit, child: Text('Edit profile'))
+            : PopupMenuItem(
+                value: _MenuButtons.view, child: Text('View profile')),
         PopupMenuItem(
           value: _MenuButtons.logOut,
           child: Text(
