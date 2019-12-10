@@ -10,7 +10,7 @@ Prescription _$PrescriptionFromJson(Map<String, dynamic> json) {
   return Prescription(
     id: json['id'] as String,
     name: json['name'] as String,
-    duration: (json['duration'] as num)?.toDouble(),
+    duration: json['duration'] as int,
     notice: json['notice'] as String,
     userID: json['userID'] as String,
     desc: json['desc'] as String,

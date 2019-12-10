@@ -30,6 +30,7 @@ class ReminderAPI {
 
     for (int i = 0; i < q.documents.length; i++) {
       Reminder re = Reminder.fromJson(jsonDecode(jsonEncode(q.documents[i].data)));
+      re.id = q.documents[i].documentID;
 
       listReminder.add(re);
     }

@@ -246,60 +246,58 @@ class _ScanningState extends State<Scanning>
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: screenWidth,
-              height: screenHeight,
-              child: renderQRScanner(),
-              //color: Colors.black38.withOpacity(0.5),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            child: renderQRScanner(),
+            //color: Colors.black38.withOpacity(0.5),
+          ),
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            // child: renderQRScanner(),
+            //color: Colors.black45.withOpacity(0.5),
+            child: Column(
+              children: <Widget>[
+                HeaderBar(),
+                Expanded(
+                    child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child:
+                          Container(color: Colors.black45.withOpacity(0.5)),
+                      flex: 1,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.6,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                                color: Colors.black45.withOpacity(0.5)),
+                          ),
+                          Container(
+                              width: MediaQuery.of(context).size.width * 0.6),
+                          Expanded(
+                            child: Container(
+                                color: Colors.black45.withOpacity(0.5)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child:
+                          Container(color: Colors.black45.withOpacity(0.5)),
+                      flex: 2,
+                    ),
+                  ],
+                ))
+              ],
             ),
-            Container(
-              width: screenWidth,
-              height: screenHeight,
-              // child: renderQRScanner(),
-              //color: Colors.black45.withOpacity(0.5),
-              child: Column(
-                children: <Widget>[
-                  HeaderBar(),
-                  Expanded(
-                      child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child:
-                            Container(color: Colors.black45.withOpacity(0.5)),
-                        flex: 1,
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.6,
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                  color: Colors.black45.withOpacity(0.5)),
-                            ),
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.6),
-                            Expanded(
-                              child: Container(
-                                  color: Colors.black45.withOpacity(0.5)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child:
-                            Container(color: Colors.black45.withOpacity(0.5)),
-                        flex: 2,
-                      ),
-                    ],
-                  ))
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -326,8 +324,8 @@ class _ScanningState extends State<Scanning>
 class HeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
+    return Container( 
+      padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
       color: Colors.black45.withOpacity(0.5),
       child: Row(
         children: <Widget>[

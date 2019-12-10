@@ -89,51 +89,49 @@ class _HomeScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: this.tabController,
-                children: <Widget>[
-                  DashboardScreen(),
-                  HistoryScreen(),
-                  NotesScreen(),
-                  ProfileScreen(),
-                ],
-              ),
+    return Container(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: this.tabController,
+              children: <Widget>[
+                DashboardScreen(),
+                HistoryScreen(),
+                NotesScreen(),
+                ProfileScreen(),
+              ],
             ),
-            if (this.blurred)
-              GestureDetector(
-                onTap: onTapCancel,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200.withOpacity(0.5),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 50,
-                              horizontal: 40,
-                            ),
-                            child: QuickActionMenu(),
-                          )
-                        ],
-                      ),
+          ),
+          if (this.blurred)
+            GestureDetector(
+              onTap: onTapCancel,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade500.withOpacity(0.5),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 50,
+                            horizontal: 40,
+                          ),
+                          child: QuickActionMenu(),
+                        )
+                      ],
                     ),
                   ),
                 ),
-              )
-          ],
-        ),
+              ),
+            )
+        ],
       ),
     );
   }

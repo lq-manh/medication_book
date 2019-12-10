@@ -10,6 +10,7 @@ import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
+import 'package:medication_book/utils/global.dart';
 import 'package:medication_book/utils/utils.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -17,13 +18,16 @@ class HistoryScreen extends StatefulWidget {
   _HistoryScreenState createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveClientMixin<HistoryScreen> {
   PrescriptionApi prescApi = new PrescriptionApi();
   ReminderAPI reminderApi = new ReminderAPI();
 
   List<Prescription> listPresc = [];
 
   bool loading = true;
+
+  @override 
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -214,6 +218,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       await deletePresc(presc);
 
       listPresc.remove(presc);
+
+      Global.hasChangedData = true;
 
       setState(() {});
     }

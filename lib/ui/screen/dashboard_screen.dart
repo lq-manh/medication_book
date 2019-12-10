@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/dashboard_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
+import 'package:medication_book/models/listDate.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
@@ -12,6 +14,8 @@ import 'package:medication_book/ui/widgets/drug_item.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
+import 'package:medication_book/ui/widgets/date_slider.dart';
+import 'package:medication_book/utils/global.dart';
 import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/utils.dart';
 
@@ -20,45 +24,131 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen>
+    with AutomaticKeepAliveClientMixin<DashboardScreen> {
   DashBoardBloc bloc = new DashBoardBloc();
-  List<Reminder> listReminder;
+
+  List<Prescription> listAllPresc;
+  List<Reminder> listAllActiveReminder;
+
   List<Reminder> morningReminders;
   List<Reminder> eveningReminders;
+
   ReminderController reCtrl = new ReminderController();
 
+  ReminderAPI reminderAPI = new ReminderAPI();
+  PrescriptionApi prescApi = new PrescriptionApi();
+
   bool loading = true;
+
+  ListDate listDate = new ListDate();
+  int sliderIndex;
+
+  DateTime currentDay;
+
+  @override
+  bool get wantKeepAlive {
+    bool alive = !Global.hasChangedData;
+    Global.hasChangedData = false;
+    return alive;
+  }
 
   @override
   void initState() {
     super.initState();
+    sliderIndex = (listDate.list.length/2).floor();
 
-    getData();
+    currentDay = DateTime.now();
+
+    initData();
   }
 
-  getData() async {
+  initData() async {
     loading = true;
     setState(() {});
 
-    listReminder = [];
+    listAllPresc = [];
+    listAllPresc = await prescApi.getAllPresc();
+
+    listAllActiveReminder = [];
+    listAllActiveReminder = await reminderAPI.getActiveReminder();
+  
+    await getData(currentDay);
+
+    Future.delayed(Duration(seconds: 1)).then((v) {
+      loading = false;
+      setState(() {});
+    });
+  }
+
+  getData(DateTime day) async {
+    // loading = true;
+    // setState(() {});
+
     morningReminders = [];
     eveningReminders = [];
-    ReminderAPI reminderAPI = new ReminderAPI();
-    await reCtrl.cancelAllDailyReminder();
 
-    listReminder = await reminderAPI.getActiveReminder();
-    for (Reminder re in listReminder) {
-      if (re.isActive) reCtrl.addDailyReminder(re);
-      if (re.session == Session.MORNING) morningReminders.add(re);
-      if (re.session == Session.EVENING) eveningReminders.add(re);
+    // await reCtrl.cancelAllDailyReminder();
+
+    // listReminder = await reminderAPI.getActiveReminder();
+    for (Reminder re in listAllActiveReminder) {
+      Prescription presc = listAllPresc.firstWhere((p) => p.id == re.prescID);
+
+      DateTime startDate = Utils.convertStringToDate(presc.date);
+      startDate = new DateTime(startDate.year, startDate.month, startDate.day);
+
+      DateTime endDate = startDate.add(Duration(days: presc.duration));
+      endDate = new DateTime(endDate.year, endDate.month, endDate.day, 23, 59);
+
+      if (day.isAfter(startDate) && day.isBefore(endDate)) {
+        reCtrl.addDailyReminder(re);
+        if (re.session == Session.MORNING) morningReminders.add(re);
+        if (re.session == Session.EVENING) eveningReminders.add(re);
+      } else {
+        if (!day.isBefore(endDate)) {
+          reCtrl.cancelDailyReminder(re);
+          re.isActive = false;
+          await reminderAPI.updateReminder(re);
+        }
+      }
+    }
+
+    Utils.sortTimeReminder(morningReminders);
+    Utils.sortTimeReminder(eveningReminders);
+  }
+
+  changeDay(DateTime day) async {
+    // loading = true;
+    // setState(() {});
+
+    morningReminders = [];
+    eveningReminders = [];
+
+    // listReminder = await reminderAPI.getActiveReminder();
+    for (Reminder re in listAllActiveReminder) {
+      Prescription presc = listAllPresc.firstWhere((p) => p.id == re.prescID);
+
+      DateTime startDate = Utils.convertStringToDate(presc.date);
+      startDate = new DateTime(startDate.year, startDate.month, startDate.day);
+
+      DateTime endDate = startDate.add(Duration(days: presc.duration));
+      endDate = new DateTime(endDate.year, endDate.month, endDate.day, 23, 59);
+
+      if (day.isAfter(startDate) && day.isBefore(endDate)) {
+        if (re.session == Session.MORNING) morningReminders.add(re);
+        if (re.session == Session.EVENING) eveningReminders.add(re);
+      }
     }
 
     Utils.sortTimeReminder(morningReminders);
     Utils.sortTimeReminder(eveningReminders);
 
-    Future.delayed(Duration(seconds: 1)).then((v) {
-      loading = false;
-      setState(() {});
+    // Future.delayed(Duration(seconds: 1)).then((v) {
+    //   loading = false;
+    //   setState(() {});
+    // });
+    setState(() {
+      
     });
   }
 
@@ -72,18 +162,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
         action: Container(),
       ),
       main: Container(
-        child: loading
-            ? LoadingCircle()
-            : SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    renderSessionReminder(Session.MORNING, morningReminders),
-                    // SizedBox(height: 15),
-                    renderSessionReminder(Session.EVENING, eveningReminders),
-                    SizedBox(height: 30),
-                  ],
+        child: ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(16)),
+                    boxShadow: [commonBoxShadow],
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        ColorPalette.blue,
+                        ColorPalette.green,
+                      ],
+                    ),
+                  ),
+                  height: 180,
+                  child: DateSlider(
+                    listDate: listDate,
+                    index: sliderIndex,
+                    onChanged: (index) async {
+                      sliderIndex = index;
+                      await changeDay(listDate.list[index]);
+                    },
+                  ),
                 ),
-              ),
+                SizedBox(height: 30),
+                loading
+                    ? LoadingCircle()
+                    : Column(
+                        children: <Widget>[
+                          renderSessionReminder(
+                              Session.MORNING, morningReminders),
+                          // SizedBox(height: 15),
+                          renderSessionReminder(
+                              Session.EVENING, eveningReminders),
+                        ],
+                      ),
+                SizedBox(height: 60),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -162,7 +286,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ReminderSettingScreen(prescription: presc)));
 
-        getData();
+        initData();
       },
       child: Row(
         children: <Widget>[
@@ -201,13 +325,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Center(
       child: Column(
         children: <Widget>[
-          // ColorFiltered(
-          //   colorFilter: ColorFilter.mode(Colors.white, BlendMode.modulate),
-          //   child: Image.asset(
-          //     "assets/image/schedule.png",
-          //     width: 120,
-          //   ),
-          // ),
           Image.asset(
             "assets/image/schedule.png",
             width: 120,
@@ -223,4 +340,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
+
+class PrescReminder {
+  Prescription presc;
+  List<Reminder> listReminder;
+
+  PrescReminder(this.presc, this.listReminder);
 }

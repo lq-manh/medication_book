@@ -36,7 +36,7 @@ class _TopBarState extends State<TopBar> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10),
+            padding: EdgeInsets.only(top: 40, bottom: 20),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[

@@ -84,55 +84,53 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ContentLayout(
-          topBar: TopBar(
-            title: 'Reminder Setting',
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: ColorPalette.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    return Scaffold(
+      body: ContentLayout(
+        topBar: TopBar(
+          title: 'Reminder Setting',
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: ColorPalette.white,
             ),
-            action: Container(
-              width: 50,
-              height: 50,
-              margin: EdgeInsets.only(right: 10),
-              // color: Colors.blue,
-              child: isSaving
-                  ? LoadingCircle(
-                      color: ColorPalette.white,
-                      size: 20,
-                      strokeWidth: 2,
-                    )
-                  : renderSaveAction(),
-            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          main: Container(
-            width: MediaQuery.of(context).size.width,
-            child: loading
-              ? LoadingCircle()
-              : SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      renderPrescInfo(),
-                      // SizedBox(
-                      //   height: 30,
-                      // ),
-                      renderReminderItem(morningReminder),
-                      // SizedBox(height: 20),
-                      renderReminderItem(eveningReminder),
-                      SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
+          action: Container(
+            width: 50,
+            height: 50,
+            margin: EdgeInsets.only(right: 10),
+            // color: Colors.blue,
+            child: isSaving
+                ? LoadingCircle(
+                    color: ColorPalette.white,
+                    size: 20,
+                    strokeWidth: 2,
+                  )
+                : renderSaveAction(),
+          ),
+        ),
+        main: Container(
+          width: MediaQuery.of(context).size.width,
+          child: loading
+            ? LoadingCircle()
+            : SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    renderPrescInfo(),
+                    // SizedBox(
+                    //   height: 30,
+                    // ),
+                    renderReminderItem(morningReminder),
+                    // SizedBox(height: 20),
+                    renderReminderItem(eveningReminder),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ],
                 ),
-          ),
+              ),
         ),
       ),
     );
