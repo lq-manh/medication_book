@@ -6,32 +6,33 @@ class RoundedCard extends StatelessWidget {
   final Color backgroundColor;
   final bool hasBorder;
   final bool hasShadow;
+  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
 
   RoundedCard({
     this.child,
     this.backgroundColor = ColorPalette.white,
     this.hasBorder = false,
     this.hasShadow = true,
+    this.margin,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        border: Border.all(
+          color: ColorPalette.blue,
+          width: this.hasBorder ? 1 : 0,
+        ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [if (this.hasShadow) commonBoxShadow],
-      ),
-      child: Card(
         color: this.backgroundColor,
-        elevation: 0, // disabled to use custom box shadow
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: this.hasBorder
-              ? BorderSide(color: ColorPalette.blue, width: 1)
-              : BorderSide.none,
-        ),
-        child: this.child,
       ),
+      margin: this.margin,
+      padding: this.padding,
+      child: this.child,
     );
   }
 }
