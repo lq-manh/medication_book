@@ -56,6 +56,9 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   void initState() {
     super.initState();
+
+    reCtrl.init();
+
     sliderIndex = (listDate.list.length/2).floor();
 
     currentDay = DateTime.now();

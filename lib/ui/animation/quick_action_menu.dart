@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medication_book/configs/theme.dart';
-import 'package:medication_book/ui/screen/add_presc_screen.dart';
+import 'package:medication_book/ui/screen/add_presc/add_presc_screen.dart';
 import 'package:medication_book/ui/screen/scanning/scanning_screen.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 

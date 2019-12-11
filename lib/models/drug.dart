@@ -8,6 +8,7 @@ part 'drug.g.dart';
 class Drug {
   String presId;
   String name;
+  String type;
   String unit;
   double totalAmount;
   double dosage;
@@ -17,6 +18,7 @@ class Drug {
   Drug(
       {this.sessions,
       this.presId,
+      this.type,
       this.unit,
       this.totalAmount,
       this.dosage,

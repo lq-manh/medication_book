@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:medication_book/utils/global.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<Null> main() async {
-  await PermissionHandler().requestPermissions([
-    PermissionGroup.camera
-  ]);
+  await PermissionHandler().requestPermissions([PermissionGroup.camera]);
 
   Global.hasChangedData = false;
 
-  SystemChrome.setSystemUIOverlayStyle(new SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent // set status bar color
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+  );
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -27,12 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashPage(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: "GoogleSans"
-      )
-    );
+        debugShowCheckedModeBanner: false,
+        home: SplashPage(),
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: "GoogleSans"));
   }
 }
