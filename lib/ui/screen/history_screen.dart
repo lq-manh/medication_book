@@ -13,32 +13,46 @@ import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/global.dart';
 import 'package:medication_book/utils/utils.dart';
 
+import 'add_presc/add_presc_screen.dart';
+
 class HistoryScreen extends StatefulWidget {
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveClientMixin<HistoryScreen> {
+class _HistoryScreenState extends State<HistoryScreen>
+    with AutomaticKeepAliveClientMixin<HistoryScreen> {
   PrescriptionApi prescApi = new PrescriptionApi();
   ReminderAPI reminderApi = new ReminderAPI();
 
   List<Prescription> listPresc = [];
 
-  bool loading = true;
+  bool loading;
 
-  @override 
+  @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
 
+    getListPresc();
+  }
+
+  getListPresc() {
+    setState(() {
+      loading = true;
+    });
+
+    listPresc = [];
+
     prescApi.getAllPresc().then((list) {
       listPresc = list;
 
       Future.delayed(Duration(seconds: 1)).then((v) {
-        loading = false;
-        setState(() {});
+        setState(() {
+          loading = false;
+        });
       });
     });
   }
@@ -49,7 +63,7 @@ class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveCl
         topBar: TopBar(
           title: 'Prescriptions',
           leading: Container(),
-          action: Container(),
+          action: renderTopBarAction(),
         ),
         main: Container(
             child: loading
@@ -64,19 +78,38 @@ class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveCl
                     : renderEmpty()));
   }
 
+  renderTopBarAction() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: IconButton(
+        icon: new Icon(
+          FontAwesomeIcons.plus,
+          size: 20,
+          color: ColorPalette.white,
+        ),
+        onPressed: () async {
+          await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddPrescScreen()));
+
+          getListPresc();
+        },
+      ),
+    );
+  }
+
   renderEmpty() {
     return Column(
       children: <Widget>[
         Image.asset(
-          "assets/image/invoice.png",
+          "assets/image/prescription.png",
           width: 120,
+          color: Colors.black26,
         ),
+        SizedBox(height: 10),
         Text(
           "No Prescription",
           style: TextStyle(
-              color: Colors.black26,
-              fontWeight: FontWeight.w500,
-              fontSize: 18),
+              color: Colors.black26, fontWeight: FontWeight.w500, fontSize: 18),
         )
       ],
       mainAxisAlignment: MainAxisAlignment.center,
@@ -128,7 +161,7 @@ class _HistoryScreenState extends State<HistoryScreen> with AutomaticKeepAliveCl
                       ),
                       SizedBox(height: 5),
                       Text(
-                        Utils.convertDatetime(context, presc.date),
+                        Utils.convertDatetime(presc.date),
                         style: TextStyle(
                             color: ColorPalette.blacklight,
                             fontWeight: FontWeight.w300,

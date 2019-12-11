@@ -2,10 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_book/configs/theme.dart';
+import 'package:medication_book/models/drug_type.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
 
 class Utils {
+  static List<DrugType> listType = [
+    DrugType("syrup", "assets/image/syrup.png", "ml"),
+    DrugType("syringe", "assets/image/syringe.png", "ml"),
+    DrugType("pill", "assets/image/pill.png", "pill"),
+    DrugType("capsule", "assets/image/capsule.png", "capsule"),
+    DrugType("drops", "assets/image/drops.png", "drops"),
+  ];
+
+  static String getImageType(String type) {
+    if (type == null) 
+      return "assets/image/pill.png";
+      
+    return "assets/image/${type}.png";
+  }
+
   static String convertSessionToString(Session session) {
     switch (session) {
       case Session.MORNING:
@@ -49,13 +65,20 @@ class Utils {
     return reminders;
   }
 
-  static String convertDatetime(BuildContext context, String dateTimeStr) {
+  static String convertDatetime(String dateTimeStr) {
     var dateTimeInt = int.parse(dateTimeStr);
 
-    String formatedDateTime =
-        DateFormat.yMd(Localizations.localeOf(context).toString())
-            .format(DateTime.fromMillisecondsSinceEpoch(dateTimeInt));
+    String formatedDateTime = DateFormat.yMMMd()
+        .format(DateTime.fromMillisecondsSinceEpoch(dateTimeInt));
     return formatedDateTime;
+  }
+
+  // startDay is milisecond format
+  static String getNextDay(String startDay, int duration) {
+    DateTime start = convertStringToDate(startDay);
+    DateTime end = start.add(Duration(days: duration));
+
+    return convertDatetime(end.millisecondsSinceEpoch.toString());
   }
 
   // numberString is milisecond format
@@ -66,7 +89,9 @@ class Utils {
   }
 
   static String convertDoubletoString(double number) {
-    if (number > number.floor()) return number.toString();
-    else return number.floor().toString();
+    if (number > number.floor())
+      return number.toString();
+    else
+      return number.floor().toString();
   }
 }

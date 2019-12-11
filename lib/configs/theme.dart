@@ -16,7 +16,7 @@ class ColorPalette {
 }
 
 final BoxShadow commonBoxShadow = BoxShadow(
-  color: ColorPalette.black.withOpacity(0.15),
+  color: Colors.grey.shade200,
   offset: Offset(0, 5),
-  blurRadius: 10,
+  blurRadius: 5,
 );

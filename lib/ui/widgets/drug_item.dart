@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
+import 'package:medication_book/models/session.dart';
+import 'package:medication_book/utils/utils.dart';
 
 import 'cards.dart';
 
 class DrugItem extends StatefulWidget {
   final Drug drug;
+  final bool showSession;
 
-  const DrugItem({Key key, this.drug}) : super(key: key);
+  const DrugItem({Key key, this.drug, this.showSession = false})
+      : super(key: key);
 
   @override
   _DrugItemState createState() => _DrugItemState();
@@ -47,7 +51,16 @@ class _DrugItemState extends State<DrugItem> {
                       style: TextStyle(
                           color: ColorPalette.blacklight,
                           fontWeight: FontWeight.w300),
-                    )
+                    ),
+                    if (widget.showSession)
+                      Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          renderSession(widget.drug.sessions)
+                        ],
+                      )
                   ],
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -56,18 +69,14 @@ class _DrugItemState extends State<DrugItem> {
               Column(
                 children: <Widget>[
                   Image.asset(
-                    "assets/image/medicineIcon.png",
-                    height: 40,
+                    Utils.getImageType(widget.drug.type),
+                    height: 60,
                   ),
                   Text(
-                    (widget.drug.dosage > widget.drug.dosage.floor()
-                            ? widget.drug.dosage.toString()
-                            : widget.drug.dosage.floor().toString()) +
-                        " " +
-                        widget.drug.unit,
+                    "${Utils.convertDoubletoString(widget.drug.dosage)} ${widget.drug.unit}",
                     style: TextStyle(
                       color: ColorPalette.blacklight,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w300,
                     ),
                   )
                 ],
@@ -77,6 +86,17 @@ class _DrugItemState extends State<DrugItem> {
           ),
         ),
       )),
+    );
+  }
+
+  renderSession(List<Session> session) {
+    return Row(
+      children: session
+          .map((s) => Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Utils.getSessionIcon(s, 14),
+              ))
+          .toList(),
     );
   }
 }
