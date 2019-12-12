@@ -9,6 +9,7 @@ import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/secure_store.dart';
+import 'package:medication_book/ui/screen/login_screen.dart';
 
 enum _MenuButtons { view, edit, logOut }
 enum _Modes { viewing, editing }
@@ -85,6 +86,12 @@ class _Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void logOut() async {
+      await SecureStorage.instance.deleteAll();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginScreen()));
+    }
+
     return PopupMenuButton<_MenuButtons>(
       icon: Icon(Icons.menu, color: ColorPalette.white),
       shape: RoundedRectangleBorder(
@@ -99,9 +106,12 @@ class _Menu extends StatelessWidget {
                 value: _MenuButtons.view, child: Text('View profile')),
         PopupMenuItem(
           value: _MenuButtons.logOut,
-          child: Text(
-            'Log out',
-            style: TextStyle(color: ColorPalette.textBody.withOpacity(0.85)),
+          child: InkWell(
+            child: Text(
+              'Log out',
+              style: TextStyle(color: ColorPalette.textBody.withOpacity(0.85)),
+            ),
+            onTap: logOut,
           ),
         ),
       ],

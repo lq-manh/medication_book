@@ -19,10 +19,15 @@ class _SplashState extends State<SplashPage> {
           child: Column(
         children: <Widget>[
           Expanded(
-            child: Image(
-              image: AssetImage('assets/image/splash_logo.png'),
-              width: 256,
-              height: 256,
+            child: Center(
+              child: ClipRRect(
+                borderRadius: new BorderRadius.circular(180.0),
+                child: Image(
+                  image: AssetImage('assets/image/splash_logo.png'),
+                  width: 256,
+                  height: 256,
+                ),
+              ),
             ),
             flex: 6,
           ),
