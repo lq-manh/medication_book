@@ -82,6 +82,11 @@
     <string>fbshareextension</string>
 </array>
 
+ <key>NSCameraUsageDescription</key>
+ <string>We need camera for scan QR code ?</string>
+
 
 </dict>
+
+
 </plist>

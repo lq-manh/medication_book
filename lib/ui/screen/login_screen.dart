@@ -23,19 +23,27 @@ class _LoginState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: ContentLayout(
-          topBar: TopBar(
-            title: 'Sign In',
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.topRight,
+              colors: [ColorPalette.blue, ColorPalette.green],
+            ),
           ),
-          main: Center(
-            child: Column(
+          child: ContentLayout(
+            topBar: TopBar(
+              title: 'Sign In',
+              hasShadow: false,
+            ),
+            main: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image(
-                  image: AssetImage('assets/image/splash_logo.png'),
-                  width: 192,
-                  height: 192,
+                  image: AssetImage('assets/image/app_icon_no_padding.png'),
+                  width: 256,
+                  height: 256,
                 ),
                 new Container(
                   width: 300,
@@ -43,7 +51,7 @@ class _LoginState extends State<LoginScreen> {
                   margin: EdgeInsets.only(top: 30, bottom: 20),
                   child: Text(
                     'By sign in with social network, your data will be backed up in Cloud and you will able to sync data across your devices.',
-                    style: TextStyle(color: ColorPalette.textBody),
+                    style: TextStyle(color: ColorPalette.white),
                   ),
                 ),
                 new Container(
