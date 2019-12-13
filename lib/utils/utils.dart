@@ -42,7 +42,7 @@ class Utils {
       case Session.EVENING:
         return Icon(
           FontAwesomeIcons.moon,
-          color: ColorPalette.nightBlue,
+          color: ColorPalette.blue,
           size: size,
         );
     }

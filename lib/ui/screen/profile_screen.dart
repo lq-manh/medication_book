@@ -35,8 +35,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder(
       future: this._uid,
       builder: (BuildContext context, AsyncSnapshot<String> snap) {
-        if (snap.connectionState != ConnectionState.done || !snap.hasData)
-          return Container();
+        if (snap.connectionState != ConnectionState.done)
+          return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
 
         return ContentLayout(
           topBar: TopBar(
@@ -62,15 +62,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          main: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
-              child: _Profile(
-                mode: this._mode,
-                uid: snap.data,
-                onModeChanged: this._changeMode,
-              ),
-            ),
+          main: _Profile(
+            mode: this._mode,
+            uid: snap.data,
+            onModeChanged: this._changeMode,
           ),
         );
       },
@@ -109,7 +104,7 @@ class _Menu extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Log out',
-              style: TextStyle(color: ColorPalette.textBody.withOpacity(0.85)),
+              style: TextStyle(color: ColorPalette.red),
             ),
             onTap: logOut,
           ),
@@ -171,24 +166,22 @@ class _ProfileState extends State<_Profile> {
     return RoundedCard(
       hasBorder: true,
       hasShadow: false,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: <Widget>[
-            _InfoRow(fieldName: 'Name', value: user.name),
-            _InfoRow(
-              fieldName: 'Age',
-              value: user.dateOfBirth != null
-                  ? DateTime.now().year - user.dateOfBirth.year
-                  : null,
-              unit: " years old",
-            ),
-            _InfoRow(fieldName: 'Gender', value: user.gender),
-            _InfoRow(fieldName: 'Height', value: user.height, unit: 'cm'),
-            _InfoRow(fieldName: 'Weight', value: user.weight, unit: 'kg'),
-            _InfoRow(fieldName: 'Blood Type', value: user.bloodType),
-          ],
-        ),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Column(
+        children: <Widget>[
+          _InfoRow(fieldName: 'Name', value: user.name),
+          _InfoRow(
+            fieldName: 'Age',
+            value: user.dateOfBirth != null
+                ? DateTime.now().year - user.dateOfBirth.year
+                : null,
+            unit: " years old",
+          ),
+          _InfoRow(fieldName: 'Gender', value: user.gender),
+          _InfoRow(fieldName: 'Height', value: user.height, unit: 'cm'),
+          _InfoRow(fieldName: 'Weight', value: user.weight, unit: 'kg'),
+          _InfoRow(fieldName: 'Blood Type', value: user.bloodType),
+        ],
       ),
     );
   }
@@ -199,15 +192,13 @@ class _ProfileState extends State<_Profile> {
         RoundedCard(
           hasBorder: true,
           hasShadow: false,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: _ProfileForm(
-              initialState: user.toFormJson(),
-              onChanged: (FormBuilderState state) {
-                this._formState = state;
-                this.setState(() {});
-              },
-            ),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: _ProfileForm(
+            initialState: user.toFormJson(),
+            onChanged: (FormBuilderState state) {
+              this._formState = state;
+              this.setState(() {});
+            },
           ),
         ),
         ButtonBar(
@@ -242,10 +233,13 @@ class _ProfileState extends State<_Profile> {
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);
-        if (this.widget.mode == _Modes.viewing) {
-          return this._viewingWidget(user);
-        }
-        return this._editingWidget(doc.reference, user);
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
+          child: this.widget.mode == _Modes.viewing
+              ? this._viewingWidget(user)
+              : this._editingWidget(doc.reference, user),
+        );
       },
     );
   }
@@ -343,6 +337,7 @@ class _ProfileFormState extends State<_ProfileForm> {
           FormBuilderTextField(
             attribute: 'height',
             decoration: InputDecoration(labelText: 'Height', suffixText: 'cm'),
+            keyboardType: TextInputType.number,
             validators: [
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),
@@ -358,6 +353,7 @@ class _ProfileFormState extends State<_ProfileForm> {
           FormBuilderTextField(
             attribute: 'weight',
             decoration: InputDecoration(labelText: 'Weight', suffixText: 'kg'),
+            keyboardType: TextInputType.number,
             validators: [
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),

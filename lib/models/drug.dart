@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
 
 part 'drug.g.dart';
