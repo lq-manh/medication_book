@@ -22,10 +22,10 @@ class RoundedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: ColorPalette.blue,
-          width: this.hasBorder ? 1 : 0,
-        ),
+        // border: Border.all(
+        //   color: ColorPalette.blue,
+        //   width: this.hasBorder ? 1 : 0,
+        // ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [if (this.hasShadow) commonBoxShadow],
         color: this.backgroundColor,
