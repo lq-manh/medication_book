@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:medication_book/utils/secure_store.dart';
 import 'package:medication_book/ui/screen/login_screen.dart';
 import 'package:medication_book/ui/screen/home_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -48,6 +49,12 @@ class _SplashState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  init() async {
+    await Future.delayed(Duration(seconds: 3));
+    await PermissionHandler().requestPermissions([PermissionGroup.camera]);
     checkLogin();
   }
 
