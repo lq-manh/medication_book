@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:medication_book/configs/theme.dart';
+import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/utils/secure_store.dart';
 import 'package:medication_book/ui/screen/login_screen.dart';
 import 'package:medication_book/ui/screen/home_screen.dart';
@@ -16,33 +18,37 @@ class _SplashState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: ClipRRect(
-                borderRadius: new BorderRadius.circular(180.0),
-                child: Image(
-                  image: AssetImage('assets/image/splash_logo.png'),
-                  width: 256,
-                  height: 256,
-                ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/image/splash.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 120),
+            Image(
+              image: AssetImage('assets/image/app_icon_no_padding.png'),
+              width: 256,
+            ),
+            Text(
+              "Medication Book",
+              style: TextStyle(
+                color: ColorPalette.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            flex: 6,
-          ),
-          Expanded(
-            child: Center(
-              child: new SpinKitFadingCircle(
-                color: Color.fromRGBO(249, 66, 58, 1),
-                size: 50.0,
-              ),
-            ),
-            flex: 3,
-          ),
-        ],
-      )),
+            SizedBox(height: 20),
+            LoadingCircle(
+              color: ColorPalette.white,
+              size: 40,
+            )
+          ],
+        ),
+      ),
     );
   }
 
