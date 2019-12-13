@@ -96,7 +96,7 @@ class _Menu extends StatelessWidget {
           value: _MenuButtons.logOut,
           child: Text(
             'Log out',
-            style: TextStyle(color: ColorPalette.textBody.withOpacity(0.85)),
+            style: TextStyle(color: ColorPalette.red),
           ),
         ),
       ],
