@@ -7,6 +7,7 @@ import 'package:medication_book/models/user.dart';
 import 'package:medication_book/ui/widgets/buttons.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
+import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/secure_store.dart';
 import 'package:medication_book/ui/screen/login_screen.dart';
@@ -36,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       future: this._uid,
       builder: (BuildContext context, AsyncSnapshot<String> snap) {
         if (snap.connectionState != ConnectionState.done)
-          return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
+          return Container();
 
         return ContentLayout(
           topBar: TopBar(
@@ -134,7 +135,7 @@ class _AvatarState extends State<_Avatar> {
       stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData)
-          return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
+          return LoadingCircle(color: ColorPalette.blue, size: 40,);
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);
@@ -229,7 +230,7 @@ class _ProfileState extends State<_Profile> {
       stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData)
-          return CircularProgressIndicator(backgroundColor: ColorPalette.blue);
+          return LoadingCircle(color: ColorPalette.blue, size: 40,);
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);
