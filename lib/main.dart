@@ -5,6 +5,7 @@ import 'package:medication_book/utils/global.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<Null> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await PermissionHandler().requestPermissions([PermissionGroup.camera]);
 
   Global.hasChangedData = false;

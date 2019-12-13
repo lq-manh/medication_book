@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medication_book/configs/theme.dart';
+import 'package:medication_book/ui/screen/add_presc/add_presc_screen.dart';
 import 'package:medication_book/ui/screen/scanning/scanning_screen.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 
@@ -43,7 +44,10 @@ class _QuickActionMenuState extends State<QuickActionMenu>
                 ItemAction(
                     image: 'assets/image/medicineIcon.png',
                     title: "Medical",
-                    onTap: () {}),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddPrescScreen()));
+                    }),
                 ItemAction(
                     image: 'assets/image/cameraIcon.png',
                     title: "Scan bill",

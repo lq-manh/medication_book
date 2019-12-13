@@ -17,12 +17,8 @@ class DateSlider extends StatefulWidget {
   _DateSliderState createState() => _DateSliderState();
 }
 
-class _DateSliderState extends State<DateSlider>
-    with AutomaticKeepAliveClientMixin<DateSlider> {
+class _DateSliderState extends State<DateSlider> {
   SwiperController _scrollController = SwiperController();
-
-  @override
-  bool get wantKeepAlive => true;
 
   int todayIndex;
 

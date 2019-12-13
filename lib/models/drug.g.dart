@@ -12,6 +12,7 @@ Drug _$DrugFromJson(Map<String, dynamic> json) {
         ?.map((e) => _$enumDecodeNullable(_$SessionEnumMap, e))
         ?.toList(),
     presId: json['presId'] as String,
+    type: json['type'] as String,
     unit: json['unit'] as String,
     totalAmount: (json['totalAmount'] as num)?.toDouble(),
     dosage: (json['dosage'] as num)?.toDouble(),
@@ -23,6 +24,7 @@ Drug _$DrugFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$DrugToJson(Drug instance) => <String, dynamic>{
       'presId': instance.presId,
       'name': instance.name,
+      'type': instance.type,
       'unit': instance.unit,
       'totalAmount': instance.totalAmount,
       'dosage': instance.dosage,

@@ -161,7 +161,7 @@ class _HomeScreenBottom extends StatelessWidget {
               indicatorColor: Colors.transparent,
               indicatorSize: TabBarIndicatorSize.label,
               tabs: <Widget>[
-                Icon(FontAwesomeIcons.home),
+                Icon(FontAwesomeIcons.solidListAlt),
                 Row(
                   children: <Widget>[
                     Icon(FontAwesomeIcons.bookMedical),
