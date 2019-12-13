@@ -327,6 +327,7 @@ class _ProfileFormState extends State<_ProfileForm> {
           FormBuilderTextField(
             attribute: 'height',
             decoration: InputDecoration(labelText: 'Height', suffixText: 'cm'),
+            keyboardType: TextInputType.number,
             validators: [
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),
@@ -342,6 +343,7 @@ class _ProfileFormState extends State<_ProfileForm> {
           FormBuilderTextField(
             attribute: 'weight',
             decoration: InputDecoration(labelText: 'Weight', suffixText: 'kg'),
+            keyboardType: TextInputType.number,
             validators: [
               FormBuilderValidators.numeric(),
               FormBuilderValidators.min(1),

@@ -8,6 +8,7 @@ part of 'note.dart';
 
 Note _$NoteFromJson(Map<String, dynamic> json) {
   return Note(
+    id: json['id'] as String,
     userID: json['userID'] as String,
     content: json['content'] as String,
     createdAt: Note._parseDate(json['createdAt'] as Timestamp),
@@ -16,8 +17,9 @@ Note _$NoteFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
+      'id': instance.id,
       'userID': instance.userID,
       'content': instance.content,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': Note._parseTimestamp(instance.createdAt),
+      'updatedAt': Note._autoTimestamp(instance.updatedAt),
     };
