@@ -16,10 +16,9 @@ class Utils {
   ];
 
   static String getImageType(String type) {
-    if (type == null) 
-      return "assets/image/pill.png";
-      
-    return "assets/image/${type}.png";
+    if (type == null) return "assets/image/pill.png";
+
+    return "assets/image/$type.png";
   }
 
   static String convertSessionToString(Session session) {
