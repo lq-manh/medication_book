@@ -208,7 +208,7 @@ class _ProfileState extends State<_Profile> {
               onPressed: () => this.widget.onModeChanged(_Modes.viewing),
               text: 'Cancel',
               color: ColorPalette.white,
-              textColor: ColorPalette.textBody.withOpacity(0.85),
+              textColor: ColorPalette.textBody,
             ),
             CustomRaisedButton(
               onPressed: () {

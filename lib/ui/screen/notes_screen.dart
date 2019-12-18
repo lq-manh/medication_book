@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/note.dart';
+import 'package:medication_book/ui/widgets/buttons.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
@@ -37,17 +39,20 @@ class _NotesScreenState extends State<NotesScreen> {
               icon: Icon(this._addingNote ? Icons.clear : Icons.add),
               color: ColorPalette.white,
               onPressed: () => this.setState(() {
-                this._addingNote = !this._addingNote;
+                this._addingNote = true;
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => _NoteDialog(
+                    Note(userID: snap.data),
+                    onPop: () => this.setState(() {
+                      this._addingNote = false;
+                    }),
+                  ),
+                );
               }),
             ),
           ),
-          main: _Notes(
-            uid: snap.data,
-            addingNote: this._addingNote,
-            onAddingNoteChanged: (bool value) => this.setState(() {
-              this._addingNote = value;
-            }),
-          ),
+          main: _Notes(uid: snap.data),
         );
       },
     );
@@ -56,14 +61,8 @@ class _NotesScreenState extends State<NotesScreen> {
 
 class _Notes extends StatefulWidget {
   final String uid;
-  final bool addingNote;
-  final Function(bool) onAddingNoteChanged;
 
-  _Notes({
-    @required this.uid,
-    @required this.addingNote,
-    @required this.onAddingNoteChanged,
-  });
+  _Notes({@required this.uid});
 
   @override
   _NotesState createState() => _NotesState();
@@ -91,25 +90,15 @@ class _NotesState extends State<_Notes> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData) return Container();
 
-        final Iterable<Widget> notes = snap.data.documents.map<Widget>(
-          (DocumentSnapshot doc) {
-            final Note n = Note.fromJson(doc.data);
-            n.id = doc.documentID;
-            return _NoteCard(n, onRemove: this._removeNote);
-          },
-        );
-
         return ListView(
           padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
-          children: <Widget>[
-            ...notes,
-            if (this.widget.addingNote)
-              _NoteCard(
-                Note(userID: this.widget.uid),
-                initialMode: _NoteModes.adding,
-                onCreate: () => this.widget.onAddingNoteChanged(false),
-              ),
-          ],
+          children: snap.data.documents.map<Widget>(
+            (DocumentSnapshot doc) {
+              final Note n = Note.fromJson(doc.data);
+              n.id = doc.documentID;
+              return _NoteCard(n, onRemove: this._removeNote);
+            },
+          ).toList(),
         );
       },
     );
@@ -117,35 +106,15 @@ class _NotesState extends State<_Notes> {
 }
 
 enum _NoteMenuButtons { edit, remove }
-enum _NoteModes { viewing, editing, adding }
 
-class _NoteCard extends StatefulWidget {
+class _NoteCard extends StatelessWidget {
   final Note note;
-  final _NoteModes initialMode;
-  final Function() onCreate;
   final Function(String) onRemove;
 
-  _NoteCard(
-    this.note, {
-    this.initialMode = _NoteModes.viewing,
-    this.onCreate,
-    this.onRemove,
-  });
+  _NoteCard(this.note, {this.onRemove});
 
   @override
-  _NoteCardState createState() => _NoteCardState();
-}
-
-class _NoteCardState extends State<_NoteCard> {
-  _NoteModes _mode;
-
-  @override
-  void initState() {
-    super.initState();
-    this._mode = this.widget.initialMode;
-  }
-
-  Widget _viewingWidget(Note note) {
+  Widget build(BuildContext context) {
     return RoundedCard(
       margin: EdgeInsets.only(bottom: 20),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -163,11 +132,7 @@ class _NoteCardState extends State<_NoteCard> {
                   ),
                 ),
                 Text(
-                  note.updatedAt != null
-                      ? formatter.format(note.updatedAt)
-                      : note.createdAt != null
-                          ? formatter.format(note.createdAt)
-                          : '',
+                  note.reminder != null ? formatter.format(note.reminder) : '',
                   style: TextStyle(
                     color: ColorPalette.textBody,
                     fontStyle: FontStyle.italic,
@@ -187,9 +152,15 @@ class _NoteCardState extends State<_NoteCard> {
             ),
             onSelected: (_NoteMenuButtons button) {
               if (button == _NoteMenuButtons.edit)
-                this.setState(() => this._mode = _NoteModes.editing);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => _NoteDialog(
+                    note,
+                    onPop: () {},
+                  ),
+                );
               else if (button == _NoteMenuButtons.remove)
-                this.widget.onRemove(note.id);
+                this.onRemove(note.id);
             },
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
@@ -209,54 +180,132 @@ class _NoteCardState extends State<_NoteCard> {
       ),
     );
   }
+}
 
-  Widget _editingWidget(Note note) {
-    return RoundedCard(
-      margin: EdgeInsets.only(bottom: 20),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: TextFormField(
-        initialValue: note.content,
-        keyboardType: TextInputType.text,
-        maxLength: 120,
-        minLines: 1,
-        maxLines: 3,
-        onFieldSubmitted: (String value) {
-          note.content = value;
-          notesCollection.document(note.id).updateData(note.toJson());
-          this._mode = _NoteModes.viewing;
-          this.setState(() {});
-        },
-      ),
-    );
+class _NoteDialog extends StatefulWidget {
+  final Note note;
+  final void Function() onPop;
+
+  _NoteDialog(this.note, {@required this.onPop});
+
+  @override
+  _NoteDialogState createState() => _NoteDialogState();
+}
+
+class _NoteDialogState extends State<_NoteDialog> {
+  FormBuilderState _formState;
+
+  _createNote(Note note) {
+    note
+      ..content = this._formState.value['content']
+      ..reminder = this._formState.value['reminder']
+      ..createdAt = DateTime.now();
+    notesCollection.add(note.toJson());
   }
 
-  Widget _addingWidget(Note note) {
-    return RoundedCard(
-      margin: EdgeInsets.only(bottom: 20),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: TextFormField(
-        keyboardType: TextInputType.text,
-        maxLength: 120,
-        maxLines: 3,
-        minLines: 1,
-        onFieldSubmitted: (String value) {
-          note.content = value;
-          note.createdAt = DateTime.now();
-          notesCollection.add(note.toJson());
-          this.widget.onCreate();
-        },
-      ),
-    );
+  _updateNote(Note note) {
+    note
+      ..content = this._formState.value['content']
+      ..reminder = this._formState.value['reminder'];
+    notesCollection.document(note.id).updateData(note.toJson());
   }
 
   @override
   Widget build(BuildContext context) {
     final Note note = this.widget.note;
-    if (this._mode == _NoteModes.viewing)
-      return this._viewingWidget(note);
-    else if (this._mode == _NoteModes.editing)
-      return this._editingWidget(note);
-    else if (this._mode == _NoteModes.adding) return this._addingWidget(note);
-    return null; // this line should never be reached
+
+    return WillPopScope(
+      onWillPop: () async {
+        this.widget.onPop();
+        return true;
+      },
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: _NoteForm(
+                initialValue: {
+                  'content': note.content,
+                  'reminder': note.reminder,
+                },
+                onChanged: (FormBuilderState state) => this.setState(() {
+                  this._formState = state;
+                }),
+              ),
+            ),
+            ButtonBar(
+              children: <Widget>[
+                CustomRaisedButton(
+                  text: 'Cancel',
+                  onPressed: () {
+                    this.widget.onPop();
+                    Navigator.pop(context);
+                  },
+                  color: ColorPalette.white,
+                  textColor: ColorPalette.textBody,
+                ),
+                CustomRaisedButton(
+                  text: 'Save',
+                  onPressed: () {
+                    if (note.id != null)
+                      this._updateNote(note);
+                    else
+                      this._createNote(note);
+                    this.widget.onPop();
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoteForm extends StatefulWidget {
+  final Map<String, dynamic> initialValue;
+  final Function(FormBuilderState) onChanged;
+
+  _NoteForm({this.initialValue = const {}, this.onChanged});
+
+  @override
+  _NoteFormState createState() => _NoteFormState();
+}
+
+class _NoteFormState extends State<_NoteForm> {
+  final GlobalKey<FormBuilderState> _key = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilder(
+      autovalidate: true,
+      initialValue: this.widget.initialValue,
+      key: this._key,
+      onChanged: (Map<String, dynamic> _) {
+        this.widget.onChanged(this._key.currentState);
+      },
+      child: Column(
+        children: <Widget>[
+          FormBuilderTextField(
+            attribute: 'content',
+            decoration: InputDecoration(labelText: 'Content'),
+            maxLength: 256,
+            maxLines: 3,
+            minLines: 3,
+            validators: [FormBuilderValidators.required()],
+          ),
+          FormBuilderDateTimePicker(
+            attribute: 'reminder',
+            decoration: InputDecoration(labelText: 'Reminder (optional)'),
+            format: formatter,
+          ),
+        ],
+      ),
+    );
   }
 }
