@@ -43,12 +43,9 @@ class ReminderController {
       'repeatDailyAtTime channel id',
       'repeatDailyAtTime channel name',
       'repeatDailyAtTime description',
-      importance: Importance.Max,
-      priority: Priority.High,
-      ticker: 'ticker',
     );
     final iosNotificationDetails = IOSNotificationDetails();
-    final platformChannelSpecifics = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       androidNotificationDetails,
       iosNotificationDetails,
     );
@@ -58,7 +55,7 @@ class ReminderController {
       'Medicine Reminder',
       "${reminder.content}",
       time,
-      platformChannelSpecifics,
+      notificationDetails,
     );
   }
 
@@ -66,7 +63,31 @@ class ReminderController {
     await notificationsPlugin.cancel(re.notiID);
   }
 
-  Future<void> cancelAllDailyReminder() async {
+  void addNoteReminder(int id, DateTime time, String content) {
+    final androidNotificationDetails = AndroidNotificationDetails(
+      'medicationbook-notes',
+      'medicationbook-notes',
+      "Medication Book's Notes",
+    );
+    final iosNotificationDetails = IOSNotificationDetails();
+    final notificationDetails = NotificationDetails(
+      androidNotificationDetails,
+      iosNotificationDetails,
+    );
+    notificationsPlugin.schedule(
+      id,
+      "Medication Book's Notes",
+      content,
+      time,
+      notificationDetails,
+    );
+  }
+
+  Future<void> cancelReminder(int id) async {
+    notificationsPlugin.cancel(id);
+  }
+
+  Future<void> cancelAllReminders() async {
     await notificationsPlugin.cancelAll();
   }
 }

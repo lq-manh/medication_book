@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     reCtrl.init();
 
-    sliderIndex = (listDate.list.length/2).floor();
+    sliderIndex = listDate.list.length ~/ 2;
 
     currentDay = DateTime.now();
 
@@ -75,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     listAllActiveReminder = [];
     listAllActiveReminder = await reminderAPI.getActiveReminder();
-  
+
     await getData(currentDay);
 
     Future.delayed(Duration(seconds: 1)).then((v) {
@@ -90,8 +90,6 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     morningReminders = [];
     eveningReminders = [];
-
-    // await reCtrl.cancelAllDailyReminder();
 
     // listReminder = await reminderAPI.getActiveReminder();
     for (Reminder re in listAllActiveReminder) {
@@ -150,9 +148,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     //   loading = false;
     //   setState(() {});
     // });
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override

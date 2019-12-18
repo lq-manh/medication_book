@@ -9,7 +9,9 @@ import 'package:medication_book/ui/widgets/buttons.dart';
 import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
+import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/secure_store.dart';
+import 'package:medication_book/utils/utils.dart';
 
 final formatter = DateFormat("MMMM dd, yyyy HH:mm");
 final CollectionReference notesCollection =
@@ -70,10 +72,12 @@ class _Notes extends StatefulWidget {
 
 class _NotesState extends State<_Notes> {
   Stream<QuerySnapshot> _dataStream;
+  final ReminderController _reCtrl = ReminderController();
 
   @override
   void initState() {
     super.initState();
+    this._reCtrl.init();
     this._dataStream =
         notesCollection.where('userID', isEqualTo: this.widget.uid).snapshots();
   }
@@ -96,6 +100,12 @@ class _NotesState extends State<_Notes> {
             (DocumentSnapshot doc) {
               final Note n = Note.fromJson(doc.data);
               n.id = doc.documentID;
+
+              if (n.reminder != null) {
+                final int id = Utils.stringToInt(n.id);
+                this._reCtrl.addNoteReminder(id, n.reminder, n.content);
+              }
+
               return _NoteCard(n, onRemove: this._removeNote);
             },
           ).toList(),
@@ -193,21 +203,47 @@ class _NoteDialog extends StatefulWidget {
 }
 
 class _NoteDialogState extends State<_NoteDialog> {
+  final ReminderController _reCtrl = ReminderController();
   FormBuilderState _formState;
 
-  _createNote(Note note) {
+  @override
+  void initState() {
+    super.initState();
+    _reCtrl.init();
+  }
+
+  Function() _handleSaveNote(Note note) {
+    return () {
+      final Note newNote =
+          note.id != null ? this._updateNote(note) : this._createNote(note);
+
+      final int id = Utils.stringToInt(note.id);
+      if (newNote.reminder != null) {
+        this._reCtrl.addNoteReminder(id, newNote.reminder, newNote.content);
+      } else {
+        this._reCtrl.cancelReminder(id);
+      }
+
+      this.widget.onPop();
+      Navigator.pop(context);
+    };
+  }
+
+  Note _createNote(Note note) {
     note
       ..content = this._formState.value['content']
       ..reminder = this._formState.value['reminder']
       ..createdAt = DateTime.now();
     notesCollection.add(note.toJson());
+    return note;
   }
 
-  _updateNote(Note note) {
+  Note _updateNote(Note note) {
     note
       ..content = this._formState.value['content']
       ..reminder = this._formState.value['reminder'];
     notesCollection.document(note.id).updateData(note.toJson());
+    return note;
   }
 
   @override
@@ -249,14 +285,7 @@ class _NoteDialogState extends State<_NoteDialog> {
                 ),
                 CustomRaisedButton(
                   text: 'Save',
-                  onPressed: () {
-                    if (note.id != null)
-                      this._updateNote(note);
-                    else
-                      this._createNote(note);
-                    this.widget.onPop();
-                    Navigator.pop(context);
-                  },
+                  onPressed: this._handleSaveNote(note),
                 )
               ],
             )
