@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/utils/secure_store.dart';
@@ -67,10 +66,8 @@ class _SplashState extends State<SplashPage> {
   void checkLogin() async {
     String uid = await SecureStorage.instance.read(key: 'uid');
     if (uid == null || uid == '') {
-      setState(() {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => LoginScreen()));
-      });
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()));

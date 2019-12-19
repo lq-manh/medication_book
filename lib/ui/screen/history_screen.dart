@@ -39,21 +39,19 @@ class _HistoryScreenState extends State<HistoryScreen>
     getListPresc();
   }
 
-  getListPresc() {
+  getListPresc() async {
     setState(() {
       loading = true;
     });
 
     listPresc = [];
 
-    prescApi.getAllPresc().then((list) {
-      listPresc = list;
+    listPresc = await prescApi.getAllPresc();
 
-      Future.delayed(Duration(seconds: 1)).then((v) {
-        setState(() {
-          loading = false;
-        });
-      });
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      loading = false;
     });
   }
 
