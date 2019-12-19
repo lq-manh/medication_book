@@ -67,3 +67,5 @@ class PrescriptionApi {
     return await ref.document(presc.id).delete();
   }
 }
+
+PrescriptionApi prescAPI = PrescriptionApi();

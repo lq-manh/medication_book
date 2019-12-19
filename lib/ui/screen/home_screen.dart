@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/bloc/application_bloc.dart';
+import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/configs/theme.dart';
-import 'package:medication_book/ui/screen/dashboard_screen.dart';
+import 'package:medication_book/ui/screen/dashboard_screen2.dart';
 import 'package:medication_book/ui/screen/history_screen.dart';
 import 'package:medication_book/ui/screen/notes_screen.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
@@ -29,24 +31,27 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _FloatingActionButton(
-        onPressed: () => this.setState(() {
-          this._blurred = !this._blurred;
-        }),
-      ),
-      body: _HomeScreenBody(
-        tabController: this._tabController,
-        blurred: this._blurred,
-        onTapCancel: () {
-          setState(() {
+    return BlocProvider(
+      bloc: ApplicationBloc(),
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: _FloatingActionButton(
+          onPressed: () => this.setState(() {
             this._blurred = !this._blurred;
-          });
-        },
-      ),
-      bottomNavigationBar: _HomeScreenBottom(
-        tabController: this._tabController,
+          }),
+        ),
+        body: _HomeScreenBody(
+          tabController: this._tabController,
+          blurred: this._blurred,
+          onTapCancel: () {
+            setState(() {
+              this._blurred = !this._blurred;
+            });
+          },
+        ),
+        bottomNavigationBar: _HomeScreenBottom(
+          tabController: this._tabController,
+        ),
       ),
     );
   }
@@ -97,7 +102,7 @@ class _HomeScreenBody extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               controller: this.tabController,
               children: <Widget>[
-                DashboardScreen(),
+                DashboardScreen2(),
                 HistoryScreen(),
                 NotesScreen(),
                 ProfileScreen(),

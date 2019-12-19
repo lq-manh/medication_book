@@ -79,3 +79,5 @@ class ReminderAPI {
     return;
   }
 }
+
+ReminderAPI reminderAPI = ReminderAPI();
