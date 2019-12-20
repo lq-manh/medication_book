@@ -7,10 +7,10 @@ import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
   BehaviorSubject<List<Prescription>> _prescController = BehaviorSubject<List<Prescription>>();
-  Stream<List<Prescription>> get listPresc => _prescController.stream;
+  Stream<List<Prescription>> get prescListStream => _prescController.stream;
 
   BehaviorSubject<List<Reminder>> _reminderController = BehaviorSubject<List<Reminder>>();
-  Stream<List<Reminder>> get listReminder => _reminderController.stream;
+  Stream<List<Reminder>> get reminderListStream => _reminderController.stream;
 
   List<Prescription> prescList;
   List<Reminder> reminderList;

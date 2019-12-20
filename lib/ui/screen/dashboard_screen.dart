@@ -26,7 +26,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with AutomaticKeepAliveClientMixin<DashboardScreen> {
-  DashBoardBloc bloc = new DashBoardBloc();
+  // DashBoardBloc bloc = new DashBoardBloc();
 
   List<Prescription> listAllPresc;
   List<Reminder> listAllActiveReminder;
