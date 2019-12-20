@@ -12,12 +12,22 @@ class Note {
   String content;
 
   @JsonKey(fromJson: Note._parseDate, toJson: Note._parseTimestamp)
+  DateTime reminder;
+
+  @JsonKey(fromJson: Note._parseDate, toJson: Note._parseTimestamp)
   DateTime createdAt;
 
   @JsonKey(fromJson: Note._parseDate, toJson: Note._autoTimestamp)
   final DateTime updatedAt;
 
-  Note({this.id, this.userID, this.content, this.createdAt, this.updatedAt});
+  Note({
+    this.id,
+    this.userID,
+    this.content,
+    this.reminder,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   static DateTime _parseDate(Timestamp val) => val?.toDate();
 

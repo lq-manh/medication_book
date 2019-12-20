@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       future: this._uid,
       builder: (BuildContext context, AsyncSnapshot<String> snap) {
         if (snap.connectionState != ConnectionState.done)
-          return Container();
+          return LoadingCircle(color: ColorPalette.blue, size: 40);
 
         return ContentLayout(
           topBar: TopBar(
@@ -135,7 +135,7 @@ class _AvatarState extends State<_Avatar> {
       stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData)
-          return LoadingCircle(color: ColorPalette.blue, size: 40,);
+          return LoadingCircle(color: ColorPalette.blue, size: 40);
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);
@@ -208,7 +208,7 @@ class _ProfileState extends State<_Profile> {
               onPressed: () => this.widget.onModeChanged(_Modes.viewing),
               text: 'Cancel',
               color: ColorPalette.white,
-              textColor: ColorPalette.textBody.withOpacity(0.85),
+              textColor: ColorPalette.textBody,
             ),
             CustomRaisedButton(
               onPressed: () {
@@ -230,7 +230,7 @@ class _ProfileState extends State<_Profile> {
       stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData)
-          return LoadingCircle(color: ColorPalette.blue, size: 40,);
+          return LoadingCircle(color: ColorPalette.blue, size: 40);
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);

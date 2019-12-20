@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +10,6 @@ import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
 import 'package:medication_book/ui/screen/add_presc/add_drug_screen.dart';
-import 'package:medication_book/ui/screen/home_screen.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
@@ -131,7 +129,7 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                   Icons.edit,
                   size: 14,
                   color: ColorPalette.green,
-                ), 
+                ),
                 onSubmitted: (text) {
                   presc.name = text;
                 },
@@ -149,7 +147,7 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                   color: ColorPalette.green,
                 ),
                 onSubmitted: (text) {
-                  presc.desc= text;
+                  presc.desc = text;
                 },
                 onChanged: (text) {
                   presc.desc = text;
@@ -167,11 +165,10 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                 textInputType: TextInputType.number,
                 onSubmitted: (number) {
                   int duration = int.parse(number);
-                  
+
                   presc.duration = duration;
 
-                  prescEndDayCtrl.text =
-                      Utils.getNextDay(presc.date, duration);
+                  prescEndDayCtrl.text = Utils.getNextDay(presc.date, duration);
                 },
               ),
               SizedBox(height: 10),
@@ -233,8 +230,7 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   }
 
   renderAddPrescBtn() {
-    if (isSaving)
-      return LoadingCircle();
+    if (isSaving) return LoadingCircle();
 
     return LargeButton(
       title: "Add Prescription",

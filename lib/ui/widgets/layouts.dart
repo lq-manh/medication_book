@@ -16,17 +16,7 @@ class _ContentLayoutState extends State<ContentLayout> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [
-        //     ColorPalette.blue.withOpacity(0.2),
-        //     ColorPalette.green.withOpacity(0.2),
-        //   ],
-        // ),
-        color: Colors.white10
-      ),
+      color: ColorPalette.lightGrey,
       child: Column(
         children: <Widget>[
           widget.topBar,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:medication_book/utils/global.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
