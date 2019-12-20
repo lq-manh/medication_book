@@ -3,24 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medication_book/models/reminder.dart';
 
-final FlutterLocalNotificationsPlugin notificationsPlugin =
+final FlutterLocalNotificationsPlugin _notificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-class ReceivedNotification {
-  final int id;
-  final String title;
-  final String body;
-  final String payload;
-
-  ReceivedNotification({
-    @required this.id,
-    @required this.title,
-    @required this.body,
-    @required this.payload,
-  });
-}
-
 class ReminderController {
+  static const medicineNotiIDRange = [1000, 1100];
+  static const noteNotiIDRange = [2000, 2100];
+
   ReminderController() {
     WidgetsFlutterBinding.ensureInitialized();
   }
@@ -33,7 +22,7 @@ class ReminderController {
       initSettingsAndroid,
       initSettingsIOS,
     );
-    await notificationsPlugin.initialize(initSettings);
+    await _notificationsPlugin.initialize(initSettings);
   }
 
   Future<void> addDailyReminder(Reminder reminder) async {
@@ -50,17 +39,17 @@ class ReminderController {
       iosNotificationDetails,
     );
 
-    await notificationsPlugin.showDailyAtTime(
+    await _notificationsPlugin.showDailyAtTime(
       reminder.notiID,
-      'Medicine Reminder',
-      "${reminder.content}",
+      "Medication Book's medicine reminder",
+      reminder.content,
       time,
       notificationDetails,
     );
   }
 
   Future<void> cancelDailyReminder(Reminder re) async {
-    await notificationsPlugin.cancel(re.notiID);
+    await _notificationsPlugin.cancel(re.notiID);
   }
 
   void addNoteReminder(int id, DateTime time, String content) {
@@ -74,20 +63,22 @@ class ReminderController {
       androidNotificationDetails,
       iosNotificationDetails,
     );
-    notificationsPlugin.schedule(
+    _notificationsPlugin.schedule(
       id,
-      "Medication Book's Notes",
+      "Medication Book's note",
       content,
       time,
       notificationDetails,
     );
   }
 
-  Future<void> cancelReminder(int id) async {
-    notificationsPlugin.cancel(id);
+  void cancel(int id) {
+    _notificationsPlugin.cancel(id);
   }
 
-  Future<void> cancelAllReminders() async {
-    await notificationsPlugin.cancelAll();
+  void cancelRange(int start, int end) {
+    for (int id = start; id < end; ++id) {
+      _notificationsPlugin.cancel(id);
+    }
   }
 }

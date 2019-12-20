@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,8 @@ import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug_type.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
+
+final _rand = Random();
 
 class Utils {
   static List<DrugType> listType = [
@@ -96,8 +97,7 @@ class Utils {
       return number.floor().toString();
   }
 
-  static int stringToInt(String s) {
-    final Uint8List ints = base64.decode(s);
-    return int.parse(ints.join(''));
+  static int randomInRange(int min, int max) {
+    return min + _rand.nextInt(max - min);
   }
 }

@@ -73,6 +73,8 @@ class _Notes extends StatefulWidget {
 class _NotesState extends State<_Notes> {
   Stream<QuerySnapshot> _dataStream;
   final ReminderController _reCtrl = ReminderController();
+  final int _minNotiID = ReminderController.noteNotiIDRange[0];
+  final int _maxNotiID = ReminderController.noteNotiIDRange[1];
 
   @override
   void initState() {
@@ -89,6 +91,8 @@ class _NotesState extends State<_Notes> {
 
   @override
   Widget build(BuildContext context) {
+    this._reCtrl.cancelRange(this._minNotiID, this._maxNotiID);
+
     return StreamBuilder(
       stream: this._dataStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
@@ -102,8 +106,11 @@ class _NotesState extends State<_Notes> {
               n.id = doc.documentID;
 
               if (n.reminder != null) {
-                final int id = Utils.stringToInt(n.id);
-                this._reCtrl.addNoteReminder(id, n.reminder, n.content);
+                this._reCtrl.addNoteReminder(
+                      Utils.randomInRange(this._minNotiID, this._maxNotiID),
+                      n.reminder,
+                      n.content,
+                    );
               }
 
               return _NoteCard(n, onRemove: this._removeNote);
@@ -212,38 +219,32 @@ class _NoteDialogState extends State<_NoteDialog> {
     _reCtrl.init();
   }
 
-  Function() _handleSaveNote(Note note) {
+  Function() _saveNote(Note note) {
     return () {
-      final Note newNote =
-          note.id != null ? this._updateNote(note) : this._createNote(note);
-
-      final int id = Utils.stringToInt(note.id);
-      if (newNote.reminder != null) {
-        this._reCtrl.addNoteReminder(id, newNote.reminder, newNote.content);
-      } else {
-        this._reCtrl.cancelReminder(id);
+      if (this._formState != null) {
+        if (note.id != null)
+          this._updateNote(note);
+        else
+          this._createNote(note);
       }
-
       this.widget.onPop();
       Navigator.pop(context);
     };
   }
 
-  Note _createNote(Note note) {
+  void _createNote(Note note) {
     note
       ..content = this._formState.value['content']
       ..reminder = this._formState.value['reminder']
       ..createdAt = DateTime.now();
     notesCollection.add(note.toJson());
-    return note;
   }
 
-  Note _updateNote(Note note) {
+  void _updateNote(Note note) {
     note
       ..content = this._formState.value['content']
       ..reminder = this._formState.value['reminder'];
     notesCollection.document(note.id).updateData(note.toJson());
-    return note;
   }
 
   @override
@@ -285,7 +286,7 @@ class _NoteDialogState extends State<_NoteDialog> {
                 ),
                 CustomRaisedButton(
                   text: 'Save',
-                  onPressed: this._handleSaveNote(note),
+                  onPressed: this._saveNote(note),
                 )
               ],
             )
