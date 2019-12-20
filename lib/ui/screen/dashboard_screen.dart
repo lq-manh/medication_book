@@ -47,11 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   DateTime currentDay;
 
   @override
-  bool get wantKeepAlive {
-    bool alive = !Global.hasChangedData;
-    Global.hasChangedData = false;
-    return alive;
-  }
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {

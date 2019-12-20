@@ -66,10 +66,8 @@ class _SplashState extends State<SplashPage> {
   void checkLogin() async {
     String uid = await SecureStorage.instance.read(key: 'uid');
     if (uid == null || uid == '') {
-      setState(() {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => LoginScreen()));
-      });
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()));
