@@ -8,23 +8,15 @@ import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
+import 'package:medication_book/ui/screen/reminder_setting_screen.dart';
+import 'package:medication_book/ui/widgets/date_slider.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/utils.dart';
 
-class DashboardScreen2 extends StatefulWidget {
-  @override
-  _DashboardScreen2State createState() => _DashboardScreen2State();
-}
-
-class _DashboardScreen2State extends State<DashboardScreen2> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class DashboardScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -39,10 +31,12 @@ class _DashboardScreen2State extends State<DashboardScreen2> {
 
 class Dashboard extends StatelessWidget {
   DashBoardBloc dashboardBloc;
+  BuildContext ctx;
+
   @override
   Widget build(BuildContext context) {
-    final appBloc = BlocProvider.of<ApplicationBloc>(context);
     dashboardBloc = BlocProvider.of<DashBoardBloc>(context);
+    this.ctx = context;
 
     return ContentLayout(
       topBar: TopBar(
@@ -50,7 +44,10 @@ class Dashboard extends StatelessWidget {
         title: "Reminders",
       ),
       main: Container(
-        child: renderBody(dashboardBloc),
+        child: ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: renderBody(dashboardBloc),
+        ),
       ),
     );
   }
@@ -59,40 +56,36 @@ class Dashboard extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          // Container(
-          //   decoration: BoxDecoration(
-          //     borderRadius:
-          //         BorderRadius.vertical(bottom: Radius.circular(16)),
-          //     boxShadow: [commonBoxShadow],
-          //     gradient: LinearGradient(
-          //       begin: Alignment.centerLeft,
-          //       end: Alignment.centerRight,
-          //       colors: [
-          //         ColorPalette.blue,
-          //         ColorPalette.green,
-          //       ],
-          //     ),
-          //   ),
-          //   height: 180,
-          //   child: DateSlider(
-          //     listDate: listDate,
-          //     index: sliderIndex,
-          //     onChanged: (index) async {
-          //       sliderIndex = index;
-          //       await changeDay(listDate.list[index]);
-          //     },
-          //   ),
-          // ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+              boxShadow: [commonBoxShadow],
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  ColorPalette.blue,
+                  ColorPalette.green,
+                ],
+              ),
+            ),
+            height: 180,
+            child: DateSlider(
+              onDateChanged: (date) async {
+                bloc.getData(date);
+              },
+            ),
+          ),
           SizedBox(height: 30),
           Column(
             children: <Widget>[
               StreamBuilder(
                 stream: bloc.dayReminderController,
                 builder: (context, snapshot) {
-                  if (snapshot.data != null ){
-                    return renderSessionReminder(Session.MORNING, snapshot.data);
-                  }
-                  else {
+                  if (snapshot.data != null) {
+                    return renderSessionReminder(
+                        Session.MORNING, snapshot.data);
+                  } else {
                     return LoadingCircle();
                   }
                 },
@@ -100,10 +93,10 @@ class Dashboard extends StatelessWidget {
               StreamBuilder(
                 stream: bloc.nightReminderController,
                 builder: (context, snapshot) {
-                  if (snapshot.data != null ){
-                    return renderSessionReminder(Session.EVENING, snapshot.data);
-                  }
-                  else {
+                  if (snapshot.data != null) {
+                    return renderSessionReminder(
+                        Session.EVENING, snapshot.data);
+                  } else {
                     return LoadingCircle();
                   }
                 },
@@ -129,7 +122,7 @@ class Dashboard extends StatelessWidget {
                 Utils.convertSessionToString(session),
                 style: TextStyle(
                     color: ColorPalette.blacklight,
-                    fontSize: 20,
+                    fontSize: 24,
                     fontWeight: FontWeight.w700),
               ),
             ],
@@ -152,17 +145,7 @@ class Dashboard extends StatelessWidget {
         return Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              // child: StreamBuilder(
-              //   stream: bloc.prescNameStream(re),
-              //   builder: (context, snap) {
-              //     if (snap.hasData) {
-              //       Prescription presc = snap.data;
-              //       return rendertimeRow(re, presc);
-              //     } else
-              //       return Container();
-              //   },
-              // ),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: rendertimeRow(re),
             ),
             Container(
@@ -186,42 +169,37 @@ class Dashboard extends StatelessWidget {
   }
 
   rendertimeRow(Reminder re) {
-    Prescription presc = dashboardBloc.prescList.firstWhere((p) => p.id == re.prescID);
+    Prescription presc =
+        dashboardBloc.prescList?.firstWhere((p) => p.id == re.prescID);
+
+    if (presc == null) return Container();
 
     return GestureDetector(
       onTap: () async {
-        // await Navigator.of(context).push(MaterialPageRoute(
-        //     builder: (context) => ReminderSettingScreen(prescription: presc)));
-
-        // initData();
+        await Navigator.of(ctx).push(MaterialPageRoute(
+            builder: (context) => ReminderSettingScreen(prescription: presc)));
       },
       child: Row(
         children: <Widget>[
-          // Text(
-          //   TimeOfDay(hour: re.hour, minute: re.minute).format(context),
-          //   style: TextStyle(
-          //     color: ColorPalette.green,
-          //     fontSize: 24,
-          //     fontWeight: FontWeight.w500,
-          //   ),
-          // ),
           Expanded(
             child: Text(
               presc.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
               style: TextStyle(
                 color: ColorPalette.blacklight,
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: FontWeight.w300,
               ),
             ),
           ),
-          Icon(
-            FontAwesomeIcons.longArrowAltRight,
-            size: 20,
-            color: ColorPalette.blue,
+          Text(
+            TimeOfDay(hour: re.hour, minute: re.minute).format(ctx),
+            style: TextStyle(
+              color: ColorPalette.green,
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
@@ -232,6 +210,7 @@ class Dashboard extends StatelessWidget {
     return Center(
       child: Column(
         children: <Widget>[
+          SizedBox(height: 10),
           Image.asset(
             "assets/image/reminder.png",
             width: 120,
@@ -243,10 +222,21 @@ class Dashboard extends StatelessWidget {
             style: TextStyle(
                 color: Colors.black26,
                 fontWeight: FontWeight.w500,
-                fontSize: 18),
+                fontSize: 20),
           )
         ],
       ),
     );
   }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      ClampingScrollPhysics();
+
+  @override
+  Widget buildViewportChrome(
+          BuildContext context, Widget child, AxisDirection axisDirection) =>
+      child;
 }

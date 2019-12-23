@@ -348,10 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
 class MyBehavior extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child;
-  }
+  ScrollPhysics getScrollPhysics(BuildContext context) => ClampingScrollPhysics();
 }
 
 class PrescReminder {

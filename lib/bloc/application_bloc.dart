@@ -12,10 +12,19 @@ class ApplicationBloc implements BlocBase {
   BehaviorSubject<List<Reminder>> _reminderController = BehaviorSubject<List<Reminder>>();
   Stream<List<Reminder>> get reminderListStream => _reminderController.stream;
 
-  List<Prescription> prescList;
-  List<Reminder> reminderList;
+  BehaviorSubject<bool> _blurredController = BehaviorSubject<bool>();
+  Stream<bool> get blurredStream => _blurredController.stream;
+
+  bool isBlurred;
+
+  List<Prescription> prescList = [];
+  List<Reminder> reminderList = [];
 
   ApplicationBloc() {
+    isBlurred = false;
+
+    _blurredController.sink.add(isBlurred);
+
     init();
   }
 
@@ -25,6 +34,11 @@ class ApplicationBloc implements BlocBase {
 
     reminderList = await reminderAPI.getActiveReminder();
     _reminderController.sink.add(reminderList);
+  }
+
+  changeBlurredOverlay() {
+    isBlurred = !isBlurred;
+    _blurredController.sink.add(isBlurred);
   }
 
   @override

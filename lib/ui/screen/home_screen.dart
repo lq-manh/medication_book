@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/bloc/application_bloc.dart';
@@ -8,50 +7,47 @@ import 'package:medication_book/ui/screen/dashboard_screen2.dart';
 import 'package:medication_book/ui/screen/history_screen.dart';
 import 'package:medication_book/ui/screen/notes_screen.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
-import 'package:medication_book/ui/animation/quick_action_menu.dart';
+import 'package:medication_book/ui/widgets/blurred_overlay.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   @override
-  State createState() => HomeScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(bloc: ApplicationBloc(), child: Temp());
+  }
 }
 
-class HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  final dynamic cwData;
-  TabController _tabController;
-  bool _blurred = false;
+class Temp extends StatefulWidget {
+  @override
+  _TempState createState() => _TempState();
+}
 
-  HomeScreenState({this.cwData});
+class _TempState extends State<Temp> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  ApplicationBloc _appBloc;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(length: 4, vsync: this);
+
+    _appBloc = BlocProvider.of<ApplicationBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      bloc: ApplicationBloc(),
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: _FloatingActionButton(
-          onPressed: () => this.setState(() {
-            this._blurred = !this._blurred;
-          }),
-        ),
-        body: _HomeScreenBody(
-          tabController: this._tabController,
-          blurred: this._blurred,
-          onTapCancel: () {
-            setState(() {
-              this._blurred = !this._blurred;
-            });
-          },
-        ),
-        bottomNavigationBar: _HomeScreenBottom(
-          tabController: this._tabController,
-        ),
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _FloatingActionButton(
+        onPressed: () {
+          _appBloc.changeBlurredOverlay();
+        }
+      ),
+      body: _HomeScreenBody(
+        tabController: this._tabController,
+        bloc: _appBloc,
+      ),
+      bottomNavigationBar: _HomeScreenBottom(
+        tabController: this._tabController,
       ),
     );
   }
@@ -86,11 +82,10 @@ class _FloatingActionButton extends StatelessWidget {
 
 class _HomeScreenBody extends StatelessWidget {
   final TabController tabController;
-  final bool blurred;
-  final Function onTapCancel;
+  final ApplicationBloc bloc;
 
   _HomeScreenBody(
-      {@required this.tabController, this.blurred = false, this.onTapCancel});
+      {@required this.tabController, this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -109,33 +104,20 @@ class _HomeScreenBody extends StatelessWidget {
               ],
             ),
           ),
-          if (this.blurred)
-            GestureDetector(
-              onTap: onTapCancel,
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade500.withOpacity(0.5),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 50,
-                            horizontal: 40,
-                          ),
-                          child: QuickActionMenu(),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
+          StreamBuilder(
+            stream: bloc.blurredStream,
+            initialData: false,
+            builder: (context, snapshot) {
+              if (snapshot.data == false) {
+                return Container();
+              }
+              else {
+                return BlurredOverlay(
+                  onTapCancel: bloc.changeBlurredOverlay,
+                );
+              }
+            },
+          ),
         ],
       ),
     );

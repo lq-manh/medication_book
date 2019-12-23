@@ -35,7 +35,7 @@ class _QuickActionMenuState extends State<QuickActionMenu>
         scale: scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.5),
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Padding(
             padding: const EdgeInsets.all(15),
