@@ -14,12 +14,11 @@ class ReminderAPI {
     ref = _db.collection(COLLECTION_NAME);
   }
 
-  Future<List<Reminder>> getActiveReminder() async {
+  Future<List<Reminder>> getAllReminders() async {
     String uid = await SecureStorage.instance.read(key: 'uid');
 
     QuerySnapshot q = await ref
         .where("userID", isEqualTo: uid)
-        .where("isActive", isEqualTo: true)
         .getDocuments();
 
     List<Reminder> listReminder = [];

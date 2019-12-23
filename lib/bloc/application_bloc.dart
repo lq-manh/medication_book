@@ -6,6 +6,14 @@ import 'package:medication_book/models/reminder.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
+  static final ApplicationBloc _singleton = new ApplicationBloc._internal();
+
+  factory ApplicationBloc() {
+    return _singleton;
+  }
+ 
+  ApplicationBloc._internal();
+
   BehaviorSubject<List<Prescription>> _prescController = BehaviorSubject<List<Prescription>>();
   Stream<List<Prescription>> get prescListStream => _prescController.stream;
 
@@ -20,20 +28,26 @@ class ApplicationBloc implements BlocBase {
   List<Prescription> prescList = [];
   List<Reminder> reminderList = [];
 
-  ApplicationBloc() {
+  init() async {
     isBlurred = false;
 
     _blurredController.sink.add(isBlurred);
 
-    init();
-  }
-
-  init() async {
     prescList = await prescAPI.getAllPresc();
     _prescController.sink.add(prescList);
 
-    reminderList = await reminderAPI.getActiveReminder();
+    reminderList = await reminderAPI.getAllReminders();
     _reminderController.sink.add(reminderList);
+  }
+
+  updatePrescList(List<Prescription> list) {
+    prescList = list;
+    _prescController.sink.add(list);
+  }
+
+  updateReminderList(List<Reminder> list) {
+    reminderList = list;
+    _reminderController.sink.add(list);
   }
 
   changeBlurredOverlay() {
@@ -43,6 +57,7 @@ class ApplicationBloc implements BlocBase {
 
   @override
   void dispose() {
+    _blurredController.close();
     _prescController.close();
     _reminderController.close();
   }

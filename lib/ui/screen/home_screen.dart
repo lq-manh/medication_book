@@ -12,39 +12,34 @@ import 'package:medication_book/ui/widgets/blurred_overlay.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(bloc: ApplicationBloc(), child: Temp());
+    return BlocProvider(bloc: ApplicationBloc(), child: Home());
   }
 }
 
-class Temp extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _TempState createState() => _TempState();
+  _HomeState createState() => _HomeState();
 }
 
-class _TempState extends State<Temp> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  ApplicationBloc _appBloc;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(length: 4, vsync: this);
-
-    _appBloc = BlocProvider.of<ApplicationBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _FloatingActionButton(
-        onPressed: () {
-          _appBloc.changeBlurredOverlay();
-        }
-      ),
+      floatingActionButton: _FloatingActionButton(onPressed: () {
+        ApplicationBloc().changeBlurredOverlay();
+      }),
       body: _HomeScreenBody(
         tabController: this._tabController,
-        bloc: _appBloc,
+        bloc: ApplicationBloc(),
       ),
       bottomNavigationBar: _HomeScreenBottom(
         tabController: this._tabController,
@@ -84,8 +79,7 @@ class _HomeScreenBody extends StatelessWidget {
   final TabController tabController;
   final ApplicationBloc bloc;
 
-  _HomeScreenBody(
-      {@required this.tabController, this.bloc});
+  _HomeScreenBody({@required this.tabController, this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +99,12 @@ class _HomeScreenBody extends StatelessWidget {
             ),
           ),
           StreamBuilder(
-            stream: bloc.blurredStream,
+            stream: ApplicationBloc().blurredStream,
             initialData: false,
             builder: (context, snapshot) {
               if (snapshot.data == false) {
                 return Container();
-              }
-              else {
+              } else {
                 return BlurredOverlay(
                   onTapCancel: bloc.changeBlurredOverlay,
                 );
@@ -135,7 +128,7 @@ class _HomeScreenBottom extends StatelessWidget {
         elevation: 0,
         color: ColorPalette.white,
         child: Container(
-          height: 60,
+          height: 65,
           child: Theme(
             data: ThemeData(
               splashColor: Colors.transparent,
@@ -148,22 +141,50 @@ class _HomeScreenBottom extends StatelessWidget {
               indicatorColor: Colors.transparent,
               indicatorSize: TabBarIndicatorSize.label,
               tabs: <Widget>[
-                Icon(FontAwesomeIcons.solidListAlt),
+                renderBottomItem(
+                  Icon(FontAwesomeIcons.solidListAlt),
+                  "Reminders",
+                ),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.bookMedical),
+                    renderBottomItem(
+                      Icon(FontAwesomeIcons.bookMedical),
+                      "Presc",
+                    ),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.solidClipboard),
+                    renderBottomItem(
+                      Icon(FontAwesomeIcons.solidClipboard),
+                      "Notes",
+                    ),
                   ],
                   mainAxisAlignment: MainAxisAlignment.end,
                 ),
-                Icon(FontAwesomeIcons.solidUser),
+                renderBottomItem(
+                  Icon(FontAwesomeIcons.solidUser),
+                  "User",
+                ),
               ],
             ),
           ),
         ));
+  }
+
+  renderBottomItem(Icon icon, String text) {
+    return Column(
+      children: <Widget>[
+        icon,
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          text,
+          style: TextStyle(fontWeight: FontWeight.w400),
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    );
   }
 }

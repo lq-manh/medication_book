@@ -70,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     listAllPresc = await prescApi.getAllPresc();
 
     listAllActiveReminder = [];
-    listAllActiveReminder = await reminderAPI.getActiveReminder();
+    listAllActiveReminder = await reminderAPI.getAllReminders();
   
     await getData(currentDay);
 
@@ -181,14 +181,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                   ),
                   height: 180,
-                  child: DateSlider(
-                    listDate: listDate,
-                    index: sliderIndex,
-                    onChanged: (index) async {
-                      sliderIndex = index;
-                      await changeDay(listDate.list[index]);
-                    },
-                  ),
+                  // child: DateSlider(
+                  //   listDate: listDate,
+                  //   index: sliderIndex,
+                  //   onChanged: (index) async {
+                  //     sliderIndex = index;
+                  //     await changeDay(listDate.list[index]);
+                  //   },
+                  // ),
                 ),
                 SizedBox(height: 30),
                 loading
@@ -286,7 +286,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ReminderSettingScreen(prescription: presc)));
+            builder: (context) => ReminderSettingScreen(prescID: presc.id)));
 
         initData();
       },

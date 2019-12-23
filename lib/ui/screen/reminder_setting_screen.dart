@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
+import 'package:medication_book/bloc/reminder_settings_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
@@ -18,9 +21,9 @@ import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/utils.dart';
 
 class ReminderSettingScreen extends StatefulWidget {
-  final Prescription prescription;
+  final String prescID;
 
-  const ReminderSettingScreen({Key key, @required this.prescription})
+  const ReminderSettingScreen({Key key, @required this.prescID})
       : super(key: key);
 
   @override
@@ -34,6 +37,8 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
   Reminder morningReminder;
   Reminder eveningReminder;
 
+  ReminderSettingsBloc _bloc;
+
   TextEditingController prescNameCtrl;
 
   bool loading = true;
@@ -44,40 +49,33 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
   @override
   void initState() {
     super.initState();
-    prescNameCtrl = new TextEditingController(text: widget.prescription.name);
 
-    reminderAPI
-        .getRemindersByPrescID(widget.prescription.id)
-        .then((list) async {
-      listReminder = list;
+    _bloc = ReminderSettingsBloc(widget.prescID);
 
-      for (Reminder re in listReminder) {
-        if (re.session == Session.MORNING) morningReminder = re;
-        if (re.session == Session.EVENING) eveningReminder = re;
-      }
+    prescNameCtrl = new TextEditingController(text: _bloc.clonedPresc.name);
 
-      await Future.delayed(Duration(seconds: 1));
+    // reminderAPI
+    //     .getRemindersByPrescID(widget.prescription.id)
+    //     .then((list) async {
+    //   listReminder = list;
 
-      loading = false;
+    //   for (Reminder re in listReminder) {
+    //     if (re.session == Session.MORNING) morningReminder = re;
+    //     if (re.session == Session.EVENING) eveningReminder = re;
+    //   }
 
-      setState(() {});
-    });
+    //   await Future.delayed(Duration(seconds: 1));
 
-    reCtrl.init();
+    //   loading = false;
+
+    //   setState(() {});
+    // });
+
+    // reCtrl.init();
   }
 
   updatePrescReminder() async {
-    await prescriptionApi.updatePresc(widget.prescription);
-
-    for (Reminder re in listReminder) {
-      re.content = "It's time to take medicine " + widget.prescription.name;
-      await reminderAPI.updateReminder(re);
-
-      if (re.isActive)
-        await reCtrl.addDailyReminder(re);
-      else
-        await reCtrl.cancelDailyReminder(re);
-    }
+    await _bloc.update();
 
     Fluttertoast.showToast(msg: "Saved");
   }
@@ -113,24 +111,22 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
         ),
         main: Container(
           width: MediaQuery.of(context).size.width,
-          child: loading
-              ? LoadingCircle()
-              : SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      renderPrescInfo(),
-                      // SizedBox(
-                      //   height: 30,
-                      // ),
-                      renderReminderItem(morningReminder),
-                      // SizedBox(height: 20),
-                      renderReminderItem(eveningReminder),
-                      SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                renderPrescInfo(),
+                // SizedBox(
+                //   height: 30,
+                // ),
+                renderReminderItem(_bloc.clonedDayReminder),
+                // SizedBox(height: 20),
+                renderReminderItem(_bloc.clonedNightReminder),
+                SizedBox(
+                  height: 30,
                 ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -212,10 +208,10 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                         color: ColorPalette.blacklight,
                       ),
                       onSubmitted: (text) {
-                        widget.prescription.name = text;
+                        _bloc.clonedPresc.name = text;
                       },
                       onChanged: (text) {
-                        widget.prescription.name = text;
+                        _bloc.clonedPresc.name = text;
                       },
                     ),
                   ),
@@ -228,7 +224,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("Description", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    widget.prescription.desc,
+                   _bloc.clonedPresc.desc,
                     textAlign: TextAlign.right,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -243,7 +239,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("Duration", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    widget.prescription.duration.toString() + " days",
+                    _bloc.clonedPresc.duration.toString() + " days",
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -258,7 +254,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("Start Date", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    Utils.convertDatetime(widget.prescription.date),
+                    Utils.convertDatetime(_bloc.clonedPresc.date),
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -273,8 +269,8 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("End Date", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    Utils.getNextDay(widget.prescription.date,
-                        widget.prescription.duration),
+                    Utils.getNextDay(
+                        _bloc.clonedPresc.date, _bloc.clonedPresc.duration),
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medication_book/bloc/application_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/utils/secure_store.dart';
@@ -58,7 +59,7 @@ class _SplashState extends State<SplashPage> {
   }
 
   init() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 1));
     await PermissionHandler().requestPermissions([PermissionGroup.camera]);
     checkLogin();
   }
@@ -69,6 +70,8 @@ class _SplashState extends State<SplashPage> {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => LoginScreen()));
     } else {
+      await ApplicationBloc().init();
+
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()));
     }

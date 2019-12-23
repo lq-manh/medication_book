@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medication_book/bloc/application_bloc.dart';
 import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/bloc/dashboard_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
@@ -20,10 +19,7 @@ class DashboardScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      bloc: DashBoardBloc(
-        BlocProvider.of<ApplicationBloc>(context).prescListStream,
-        BlocProvider.of<ApplicationBloc>(context).reminderListStream,
-      ),
+      bloc: DashBoardBloc(),
       child: Dashboard(),
     );
   }
@@ -123,7 +119,7 @@ class Dashboard extends StatelessWidget {
                 style: TextStyle(
                     color: ColorPalette.blacklight,
                     fontSize: 24,
-                    fontWeight: FontWeight.w700),
+                    fontWeight: FontWeight.w300),
               ),
             ],
           ),
@@ -145,7 +141,7 @@ class Dashboard extends StatelessWidget {
         return Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: rendertimeRow(re),
             ),
             Container(
@@ -177,7 +173,7 @@ class Dashboard extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(ctx).push(MaterialPageRoute(
-            builder: (context) => ReminderSettingScreen(prescription: presc)));
+            builder: (context) => ReminderSettingScreen(prescID: presc.id)));
       },
       child: Row(
         children: <Widget>[
@@ -187,20 +183,29 @@ class Dashboard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: ColorPalette.blacklight,
+                color: ColorPalette.blue,
                 fontSize: 20,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          Text(
-            TimeOfDay(hour: re.hour, minute: re.minute).format(ctx),
-            style: TextStyle(
-              color: ColorPalette.green,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Row(
+            children: <Widget>[
+              Text(
+                TimeOfDay(hour: re.hour, minute: re.minute).format(ctx),
+                style: TextStyle(
+                  color: ColorPalette.green,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Icon(
+                FontAwesomeIcons.caretRight,
+                color: ColorPalette.green,
+                size: 26,
+              )
+            ],
+          )
         ],
       ),
     );

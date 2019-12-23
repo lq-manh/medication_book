@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:medication_book/bloc/application_bloc.dart';
 import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
@@ -8,13 +9,11 @@ import 'package:medication_book/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DashBoardBloc implements BlocBase {
-  DashBoardBloc(this.prescListController, this.reminderListController) {
+  DashBoardBloc() {
     _prescSub = prescListController.listen((list) {
-      print(list);
       prescList = list;
 
       _reminderSub = reminderListController.listen((list) {
-        print(list);
         reminderList = list;
 
         getData(DateTime.now());
@@ -22,8 +21,8 @@ class DashBoardBloc implements BlocBase {
     });
   }
 
-  final BehaviorSubject<List<Prescription>> prescListController;
-  final BehaviorSubject<List<Reminder>> reminderListController;
+  BehaviorSubject<List<Prescription>> prescListController = ApplicationBloc().prescListStream;
+  BehaviorSubject<List<Reminder>> reminderListController = ApplicationBloc().reminderListStream;
 
   StreamSubscription _prescSub;
   StreamSubscription _reminderSub;
@@ -54,8 +53,8 @@ class DashBoardBloc implements BlocBase {
 
       if (day.isAfter(startDate) && day.isBefore(endDate)) {
         // reCtrl.addDailyReminder(re);
-        if (re.session == Session.MORNING) dayReminders.add(re);
-        if (re.session == Session.EVENING) nightReminders.add(re);
+        if (re.session == Session.MORNING && re.isActive) dayReminders.add(re);
+        if (re.session == Session.EVENING && re.isActive) nightReminders.add(re);
       } else {
         if (!day.isBefore(endDate)) {
           // reCtrl.cancelDailyReminder(re);

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
+import 'package:medication_book/bloc/bloc_provider.dart';
+import 'package:medication_book/bloc/history_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/ui/screen/reminder_setting_screen.dart';
@@ -15,65 +17,54 @@ import 'package:medication_book/utils/utils.dart';
 
 import 'add_presc/add_presc_screen.dart';
 
-class HistoryScreen extends StatefulWidget {
+class HistoryScreen extends StatelessWidget {
   @override
-  _HistoryScreenState createState() => _HistoryScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      bloc: HistoryBloc(),
+      child: History(),
+    );
+  }
 }
 
-class _HistoryScreenState extends State<HistoryScreen>
-    with AutomaticKeepAliveClientMixin<HistoryScreen> {
-  PrescriptionApi prescApi = new PrescriptionApi();
-  ReminderAPI reminderApi = new ReminderAPI();
-
-  List<Prescription> listPresc = [];
-
-  bool loading;
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    getListPresc();
-  }
-
-  getListPresc() async {
-    setState(() {
-      loading = true;
-    });
-
-    listPresc = [];
-
-    listPresc = await prescApi.getAllPresc();
-
-    await Future.delayed(Duration(seconds: 1));
-
-    setState(() {
-      loading = false;
-    });
-  }
+class History extends StatelessWidget {
+  BuildContext ctx;
+  HistoryBloc bloc;
 
   @override
   Widget build(BuildContext context) {
+    bloc = BlocProvider.of<HistoryBloc>(context);
+    ctx = context;
+
     return ContentLayout(
-        topBar: TopBar(
-          title: 'Prescriptions',
-          leading: Container(),
-          action: renderTopBarAction(),
-        ),
-        main: Container(
-            child: loading
-                ? LoadingCircle()
-                : listPresc.length > 0
-                    ? ListView.builder(
-                        itemCount: listPresc.length,
-                        itemBuilder: (context, index) {
-                          return renderPrescItem(listPresc[index]);
-                        },
-                      )
-                    : renderEmpty()));
+      topBar: TopBar(
+        title: 'Prescriptions',
+        leading: Container(),
+        action: renderTopBarAction(),
+      ),
+      main: StreamBuilder(
+        stream: bloc.prescListStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Prescription> prescList = snapshot.data;
+            if (prescList.length > 0) {
+              return ListView.builder(
+                itemCount: prescList.length,
+                itemBuilder: (context, index) {
+                  return renderPrescItem(prescList[index]);
+                },
+              );
+            }
+            else {
+              return renderEmpty();
+            }
+          }
+          else {
+            return LoadingCircle();
+          }
+        },
+      ),
+    );
   }
 
   renderTopBarAction() {
@@ -86,10 +77,8 @@ class _HistoryScreenState extends State<HistoryScreen>
           color: ColorPalette.white,
         ),
         onPressed: () async {
-          await Navigator.push(context,
+          await Navigator.push(ctx,
               MaterialPageRoute(builder: (context) => AddPrescScreen()));
-
-          getListPresc();
         },
       ),
     );
@@ -119,9 +108,8 @@ class _HistoryScreenState extends State<HistoryScreen>
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  ReminderSettingScreen(prescription: presc)));
+          Navigator.of(ctx).push(MaterialPageRoute(
+              builder: (context) => ReminderSettingScreen(prescID: presc.id)));
         },
         child: RoundedCard(
           child: Padding(
@@ -241,24 +229,12 @@ class _HistoryScreenState extends State<HistoryScreen>
     print(value);
     if (value == "detail")
       Navigator.push(
-          context,
+          ctx,
           MaterialPageRoute(
               builder: (context) => PrescriptionDetailsScreen(presc, true)));
 
     if (value == "delete") {
-      await deletePresc(presc);
-
-      listPresc.remove(presc);
-
-      Global.hasChangedData = true;
-
-      setState(() {});
+      bloc.deletePresc(presc);
     }
-  }
-
-  deletePresc(Prescription presc) async {
-    await reminderApi.deleteReminderByPrescID(presc.id);
-
-    await prescApi.deletePresc(presc);
   }
 }
