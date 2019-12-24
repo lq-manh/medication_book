@@ -148,6 +148,7 @@ class _NoteCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Padding(padding: EdgeInsets.only(bottom: 10)),
                 Text(
                   note.reminder != null ? formatter.format(note.reminder) : '',
                   style: TextStyle(
@@ -182,7 +183,7 @@ class _NoteCard extends StatelessWidget {
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
                 value: _NoteMenuButtons.edit,
-                child: Text('Edit'),
+                child: Text('Edit note'),
               ),
               PopupMenuItem(
                 value: _NoteMenuButtons.remove,
@@ -258,12 +259,12 @@ class _NoteDialogState extends State<_NoteDialog> {
       },
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: _NoteForm(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _NoteForm(
                 initialValue: {
                   'content': note.content,
                   'reminder': note.reminder,
@@ -272,25 +273,26 @@ class _NoteDialogState extends State<_NoteDialog> {
                   this._formState = state;
                 }),
               ),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                CustomRaisedButton(
-                  text: 'Cancel',
-                  onPressed: () {
-                    this.widget.onPop();
-                    Navigator.pop(context);
-                  },
-                  color: ColorPalette.white,
-                  textColor: ColorPalette.textBody,
-                ),
-                CustomRaisedButton(
-                  text: 'Save',
-                  onPressed: this._saveNote(note),
-                )
-              ],
-            )
-          ],
+              Padding(padding: EdgeInsets.only(bottom: 20)),
+              ButtonBar(
+                children: <Widget>[
+                  CustomRaisedButton(
+                    text: 'Cancel',
+                    onPressed: () {
+                      this.widget.onPop();
+                      Navigator.pop(context);
+                    },
+                    color: ColorPalette.white,
+                    textColor: ColorPalette.textBody,
+                  ),
+                  CustomRaisedButton(
+                    text: 'Save',
+                    onPressed: this._saveNote(note),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

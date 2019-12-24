@@ -37,8 +37,8 @@ class User {
       "name": this.name,
       "gender": this.gender,
       "dateOfBirth": this.dateOfBirth,
-      "height": this.height.toString(),
-      "weight": this.weight.toString(),
+      "height": this.height != null ? this.height.toString() : '',
+      "weight": this.weight != null ? this.weight.toString() : '',
       "bloodType": this.bloodType,
     };
   }
