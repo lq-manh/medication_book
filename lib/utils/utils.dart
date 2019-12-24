@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug_type.dart';
+import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
 
@@ -16,9 +17,8 @@ class Utils {
   ];
 
   static String getImageType(String type) {
-    if (type == null) 
-      return "assets/image/pill.png";
-      
+    if (type == null) return "assets/image/pill.png";
+
     return "assets/image/${type}.png";
   }
 
@@ -76,7 +76,7 @@ class Utils {
   // startDay is milisecond format
   static String getNextDay(String startDay, int duration) {
     DateTime start = convertStringToDate(startDay);
-    DateTime end = start.add(Duration(days: duration));
+    DateTime end = start.add(Duration(days: duration - 1));
 
     return convertDatetime(end.millisecondsSinceEpoch.toString());
   }
@@ -93,5 +93,21 @@ class Utils {
       return number.toString();
     else
       return number.floor().toString();
+  }
+
+  static bool checkActive(Prescription p) {
+    DateTime today = DateTime.now();
+    DateTime startDate = Utils.convertStringToDate(p.date);
+    startDate = new DateTime(startDate.year, startDate.month, startDate.day);
+
+    DateTime endDate = startDate.add(Duration(days: p.duration - 1));
+    endDate = new DateTime(endDate.year, endDate.month, endDate.day, 23, 59);
+
+    if (today.isAfter(endDate)) {
+      return false;
+    }
+
+    if (today.isAfter(startDate) && today.isBefore(endDate))
+      return true;
   }
 }

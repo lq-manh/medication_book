@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -119,7 +120,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 //   height: 30,
                 // ),
                 renderReminderItem(_bloc.clonedDayReminder),
-                // SizedBox(height: 20),
+                SizedBox(height: 20),
                 renderReminderItem(_bloc.clonedNightReminder),
                 SizedBox(
                   height: 30,
@@ -314,7 +315,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                             .format(context),
                         style: TextStyle(
                             color: ColorPalette.green,
-                            fontSize: 20,
+                            fontSize: 30,
                             fontWeight: FontWeight.w500),
                       ),
                       Icon(
@@ -327,7 +328,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                     showTimePicker(re);
                   },
                 ),
-                Switch(
+                CupertinoSwitch(
                   value: re.isActive,
                   activeColor: ColorPalette.blue,
                   onChanged: (value) async {

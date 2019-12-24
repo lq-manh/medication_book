@@ -38,7 +38,7 @@ class DashBoardBloc implements BlocBase {
   List<Reminder> dayReminders;
   List<Reminder> nightReminders;
 
-  getData(DateTime day) async {
+  getData(DateTime date) async {
     dayReminders = [];
     nightReminders = [];
 
@@ -48,15 +48,14 @@ class DashBoardBloc implements BlocBase {
       DateTime startDate = Utils.convertStringToDate(presc.date);
       startDate = new DateTime(startDate.year, startDate.month, startDate.day);
 
-      DateTime endDate = startDate.add(Duration(days: presc.duration));
+      DateTime endDate = startDate.add(Duration(days: presc.duration - 1));
       endDate = new DateTime(endDate.year, endDate.month, endDate.day, 23, 59);
 
-      if (day.isAfter(startDate) && day.isBefore(endDate)) {
-        // reCtrl.addDailyReminder(re);
-        if (re.session == Session.MORNING && re.isActive) dayReminders.add(re);
-        if (re.session == Session.EVENING && re.isActive) nightReminders.add(re);
+      if (date.isAfter(startDate) && date.isBefore(endDate)) {
+        if (re.session == Session.MORNING) dayReminders.add(re);
+        if (re.session == Session.EVENING) nightReminders.add(re);
       } else {
-        if (!day.isBefore(endDate)) {
+        if (!date.isBefore(endDate)) {
           // reCtrl.cancelDailyReminder(re);
           // re.isActive = false;
           // await reminderAPI.updateReminder(re);

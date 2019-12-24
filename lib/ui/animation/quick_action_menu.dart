@@ -19,7 +19,7 @@ class _QuickActionMenuState extends State<QuickActionMenu>
     super.initState();
 
     controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     scaleAnimation = CurvedAnimation(parent: controller, curve: Curves.ease);
 
     controller.addListener(() {

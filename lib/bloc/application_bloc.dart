@@ -3,6 +3,8 @@ import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
+import 'package:medication_book/utils/reminder_controller.dart';
+import 'package:medication_book/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ApplicationBloc implements BlocBase {
@@ -11,13 +13,15 @@ class ApplicationBloc implements BlocBase {
   factory ApplicationBloc() {
     return _singleton;
   }
- 
+
   ApplicationBloc._internal();
 
-  BehaviorSubject<List<Prescription>> _prescController = BehaviorSubject<List<Prescription>>();
+  BehaviorSubject<List<Prescription>> _prescController =
+      BehaviorSubject<List<Prescription>>();
   Stream<List<Prescription>> get prescListStream => _prescController.stream;
 
-  BehaviorSubject<List<Reminder>> _reminderController = BehaviorSubject<List<Reminder>>();
+  BehaviorSubject<List<Reminder>> _reminderController =
+      BehaviorSubject<List<Reminder>>();
   Stream<List<Reminder>> get reminderListStream => _reminderController.stream;
 
   BehaviorSubject<bool> _blurredController = BehaviorSubject<bool>();
@@ -28,9 +32,10 @@ class ApplicationBloc implements BlocBase {
   List<Prescription> prescList = [];
   List<Reminder> reminderList = [];
 
+  ReminderController notiController;
+
   init() async {
     isBlurred = false;
-
     _blurredController.sink.add(isBlurred);
 
     prescList = await prescAPI.getAllPresc();
@@ -38,6 +43,37 @@ class ApplicationBloc implements BlocBase {
 
     reminderList = await reminderAPI.getAllReminders();
     _reminderController.sink.add(reminderList);
+
+    notiController = new ReminderController();
+    await notiController.init();
+    await notiController.cancelAllDailyReminder();
+
+    await disableOverduePresc();
+
+    // for (Reminder re in reminderList) {
+    //   if (re.isActive)
+    //     await notiController.addDailyReminder(re);
+    //   else
+    //     await notiController.cancelDailyReminder(re);
+    // }
+  }
+
+  disableOverduePresc() async {
+    for (Prescription p in prescList) {
+      if (Utils.checkActive(p) == false) {
+        for (Reminder re in reminderList) {
+          if (re.prescID == p.id) {
+            re.isActive = false;
+            await reminderAPI.updateReminder(re);
+          } else {
+            if (re.isActive)
+              await notiController.addDailyReminder(re);
+            else
+              await notiController.cancelDailyReminder(re);
+          }
+        }
+      }
+    }
   }
 
   updatePrescList(List<Prescription> list) {
@@ -61,5 +97,4 @@ class ApplicationBloc implements BlocBase {
     _prescController.close();
     _reminderController.close();
   }
-
 }

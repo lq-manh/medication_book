@@ -57,7 +57,8 @@ class ReminderAPI {
     var jsonReminder = reminder.toJson();
     var data = jsonDecode(jsonEncode(jsonReminder));
 
-    return await ref.add(data);
+    DocumentReference doc = await ref.add(data);
+    reminder.id = doc.documentID;
   }
 
   updateReminder(Reminder reminder) async {

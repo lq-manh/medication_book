@@ -2,9 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
+import 'package:medication_book/bloc/add_presc_bloc.dart';
+import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
@@ -21,12 +24,22 @@ import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/utils.dart';
 
-class AddPrescScreen extends StatefulWidget {
+class AddPrescScreen extends StatelessWidget {
   @override
-  _AddPrescScreenState createState() => _AddPrescScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      bloc: AddPrescBloc(),
+      child: AddPresc(),
+    );
+  }
 }
 
-class _AddPrescScreenState extends State<AddPrescScreen> {
+class AddPresc extends StatefulWidget {
+  @override
+  _AddPrescState createState() => _AddPrescState();
+}
+
+class _AddPrescState extends State<AddPresc> {
   Prescription presc;
   List<Drug> listDrug;
 
@@ -47,6 +60,8 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   TextEditingController drugNoteCtrl;
   TextEditingController drugAmountCtrl;
   TextEditingController drugDosageCtrl;
+
+  AddPrescBloc _bloc;
 
   @override
   void initState() {
@@ -74,6 +89,8 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
 
     prescEndDayCtrl = new TextEditingController(
         text: Utils.getNextDay(presc.date, presc.duration));
+
+    _bloc = BlocProvider.of<AddPrescBloc>(context);
   }
 
   @override
@@ -131,7 +148,7 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                   Icons.edit,
                   size: 14,
                   color: ColorPalette.green,
-                ), 
+                ),
                 onSubmitted: (text) {
                   presc.name = text;
                 },
@@ -149,7 +166,7 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                   color: ColorPalette.green,
                 ),
                 onSubmitted: (text) {
-                  presc.desc= text;
+                  presc.desc = text;
                 },
                 onChanged: (text) {
                   presc.desc = text;
@@ -167,11 +184,17 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                 textInputType: TextInputType.number,
                 onSubmitted: (number) {
                   int duration = int.parse(number);
-                  
-                  presc.duration = duration;
 
-                  prescEndDayCtrl.text =
-                      Utils.getNextDay(presc.date, duration);
+                  if (duration > 0) {
+                    presc.duration = duration;
+
+                    prescEndDayCtrl.text =
+                        Utils.getNextDay(presc.date, duration);
+                  }
+                  else {
+                    prescDurationCtrl.text = presc.duration.toString();
+                    Fluttertoast.showToast(msg: "Duration <= 0 is not allowed");
+                  }
                 },
               ),
               SizedBox(height: 10),
@@ -233,8 +256,7 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   }
 
   renderAddPrescBtn() {
-    if (isSaving)
-      return LoadingCircle();
+    if (isSaving) return LoadingCircle();
 
     return LargeButton(
       title: "Add Prescription",
@@ -243,68 +265,17 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   }
 
   createPresc() async {
-    setState(() {
-      isSaving = true;
-    });
+    if (listDrug.length <= 0) {
+      Fluttertoast.showToast(msg: "Please add some drugs");
+    } else {
+      setState(() {
+        isSaving = true;
+      });
 
-    presc.listDrugs = listDrug;
-    presc.drugStore = new DrugStore(
-        name: "Medication Book App",
-        address: "Some where",
-        phoneNumber: "0123456789");
+      await _bloc.createPresc(presc, listDrug);
 
-    List<Reminder> listReminder = analyzePresc(presc);
-
-    await reCtrl.init();
-    await prescAPI.addPresc(presc);
-
-    for (Reminder re in listReminder) {
-      re.prescID = presc.id;
-      re.content = "It's time to take medicine " + presc.name;
-      if (re.listDrug.length > 0) await reminderAPI.addReminder(re);
-
-      if (re.isActive) await reCtrl.addDailyReminder(re);
+      Navigator.pop(context);
     }
-
-    Navigator.pop(context);
-  }
-
-  List<Reminder> analyzePresc(Prescription presc) {
-    List<Drug> listDrug = presc.listDrugs;
-    Random ran = new Random();
-
-    Reminder morningReminder = new Reminder(
-        notiID: ran.nextInt(99999),
-        isActive: false,
-        hour: 8,
-        minute: 0,
-        session: Session.MORNING,
-        listDrug: []);
-
-    Reminder eveningReminder = new Reminder(
-        notiID: ran.nextInt(99999) + 1,
-        isActive: false,
-        hour: 20,
-        minute: 0,
-        session: Session.EVENING,
-        listDrug: []);
-
-    for (int i = 0; i < listDrug.length; i++) {
-      Drug drug = listDrug[i];
-
-      if (drug.sessions.contains(Session.MORNING)) {
-        morningReminder.listDrug.add(drug);
-      }
-
-      if (drug.sessions.contains(Session.EVENING)) {
-        eveningReminder.listDrug.add(drug);
-      }
-    }
-
-    if (morningReminder.listDrug.length > 0) morningReminder.isActive = true;
-    if (eveningReminder.listDrug.length > 0) eveningReminder.isActive = true;
-
-    return [morningReminder, eveningReminder];
   }
 }
 
