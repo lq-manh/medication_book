@@ -8,7 +8,13 @@ class TopBar extends StatefulWidget {
   final Widget bottom;
   final bool hasShadow;
 
-  TopBar({this.leading, @required this.title, this.action, this.bottom, this.hasShadow});
+  TopBar({
+    this.leading,
+    @required this.title,
+    this.action,
+    this.bottom,
+    this.hasShadow = true,
+  });
 
   @override
   _TopBarState createState() => _TopBarState();
@@ -26,10 +32,10 @@ class _TopBarState extends State<TopBar> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        boxShadow: (this.widget.hasShadow != null && !this.widget.hasShadow) ? null : [commonBoxShadow],
+        boxShadow: this.widget.hasShadow ? [commonBoxShadow] : null,
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
           colors: [ColorPalette.blue, ColorPalette.green],
         ),
       ),
