@@ -45,8 +45,10 @@ class _QuickActionMenuState extends State<QuickActionMenu>
                     image: 'assets/image/medicineIcon.png',
                     title: "Medical",
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddPrescScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddPrescScreen()));
                     }),
                 ItemAction(
                     image: 'assets/image/cameraIcon.png',
@@ -100,7 +102,7 @@ class _ItemActionState extends State<ItemAction> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontWeight: FontWeight.w300,
                           fontSize: 12),
                     )

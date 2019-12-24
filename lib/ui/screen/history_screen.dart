@@ -152,7 +152,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontWeight: FontWeight.w300,
                           fontSize: 14,
                         ),
@@ -161,7 +161,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       Text(
                         Utils.convertDatetime(presc.date),
                         style: TextStyle(
-                            color: ColorPalette.blacklight,
+                            color: ColorPalette.darkerGrey,
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                             fontStyle: FontStyle.italic),
@@ -208,7 +208,7 @@ class _HistoryScreenState extends State<HistoryScreen>
               Text(
                 'View details',
                 style: TextStyle(
-                  color: ColorPalette.blacklight,
+                  color: ColorPalette.darkerGrey,
                   fontWeight: FontWeight.w300,
                   fontSize: 16,
                 ),

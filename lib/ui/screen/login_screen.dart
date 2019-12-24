@@ -109,7 +109,7 @@ class _SignInButton extends StatelessWidget {
         children: <Widget>[
           Image.asset(this.iconAssetName, height: 24),
           Padding(padding: EdgeInsets.only(right: 10)),
-          Text(this.text, style: TextStyle(color: ColorPalette.blacklight)),
+          Text(this.text, style: TextStyle(color: ColorPalette.darkerGrey)),
         ],
       ),
     );

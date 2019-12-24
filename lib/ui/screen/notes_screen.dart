@@ -105,7 +105,7 @@ class _NotesState extends State<_Notes> {
               final Note n = Note.fromJson(doc.data);
               n.id = doc.documentID;
 
-              if (n.reminder != null) {
+              if (n.reminder != null && DateTime.now().isBefore(n.reminder)) {
                 this._reCtrl.addNoteReminder(
                       Utils.randomInRange(this._minNotiID, this._maxNotiID),
                       n.reminder,

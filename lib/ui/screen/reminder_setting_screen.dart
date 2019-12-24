@@ -170,7 +170,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
     );
 
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
+        color: ColorPalette.darkerGrey,
         fontSize: 16,
         fontWeight: FontWeight.w300);
 
@@ -209,7 +209,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w300,
-                        color: ColorPalette.blacklight,
+                        color: ColorPalette.darkerGrey,
                       ),
                       onSubmitted: (text) {
                         widget.prescription.name = text;
@@ -273,8 +273,8 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("End Date", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    Utils.getNextDay(widget.prescription.date,
-                        widget.prescription.duration),
+                    Utils.getNextDay(
+                        widget.prescription.date, widget.prescription.duration),
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -304,7 +304,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                     Text(
                       Utils.convertSessionToString(re.session),
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontSize: 20,
                           fontWeight: FontWeight.w700),
                     ),
