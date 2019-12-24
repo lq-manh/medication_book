@@ -15,7 +15,6 @@ import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/ui/widgets/date_slider.dart';
-import 'package:medication_book/utils/global.dart';
 import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/utils.dart';
 
