@@ -50,7 +50,7 @@ class ReminderAPI {
     return listReminder;
   }
 
-  Future<DocumentReference> addReminder(Reminder reminder) async {
+  Future<void> addReminder(Reminder reminder) async {
     String uid = await SecureStorage.instance.read(key: 'uid');
     reminder.userID = uid;
 

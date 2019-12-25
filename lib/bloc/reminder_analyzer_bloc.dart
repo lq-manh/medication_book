@@ -2,18 +2,14 @@ import 'dart:math';
 
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
+import 'package:medication_book/bloc/application_bloc.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'dart:async';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
-import 'package:medication_book/utils/reminder_controller.dart';
 
 class ReminderAnalyzerBloc {
-  ReminderAPI reminderAPI = new ReminderAPI();
-  PrescriptionApi prescAPI = new PrescriptionApi();
-  ReminderController reCtrl = new ReminderController();
-
   List<Reminder> analyzePresc(Prescription presc) {
     List<Drug> listDrug = presc.listDrugs;
     Random ran = new Random();
@@ -59,15 +55,22 @@ class ReminderAnalyzerBloc {
   } 
 
   savePrescReminders(List<Reminder> reminders, Prescription presc) async {
-    await reCtrl.init();
     await prescAPI.addPresc(presc);
-    
+
     for (Reminder re in reminders) {
       re.prescID = presc.id;
       re.content = "It's time to take medicine " + presc.name;
       if (re.listDrug.length > 0) await reminderAPI.addReminder(re);
-
-      if (re.isActive) await reCtrl.addDailyReminder(re);
+      if (re.isActive)
+        await ApplicationBloc().notiController.addDailyReminder(re);
     }
+
+    List<Prescription> prescList = ApplicationBloc().prescList;
+    prescList.add(presc);
+    ApplicationBloc().updatePrescList(prescList);
+
+    List<Reminder> reminderList = ApplicationBloc().reminderList;
+    reminderList.addAll(reminders);
+    ApplicationBloc().updateReminderList(reminderList);
   }
 }

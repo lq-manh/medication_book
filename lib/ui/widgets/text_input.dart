@@ -34,7 +34,7 @@ class _TextInputState extends State<TextInput> {
   Widget build(BuildContext context) {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
     );
 

@@ -11,7 +11,7 @@ class ScanningBloc {
 
   /// login via Google
   Future<Prescription> detect(String url) async {
-    if (!url.contains("http://api-medical.teneocto.io/"))
+    if (!url.contains("https://api-medical.teneocto.io/"))
       return null;
 
     var res = await http.get(url);

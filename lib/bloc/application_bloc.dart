@@ -34,6 +34,8 @@ class ApplicationBloc implements BlocBase {
 
   ReminderController notiController;
 
+  bool needDispose = false;
+
   init() async {
     isBlurred = false;
     _blurredController.sink.add(isBlurred);
@@ -93,8 +95,10 @@ class ApplicationBloc implements BlocBase {
 
   @override
   void dispose() {
-    _blurredController.close();
-    _prescController.close();
-    _reminderController.close();
+    if (needDispose) {
+      _blurredController.close();
+      _prescController.close();
+      _reminderController.close();
+    }
   }
 }

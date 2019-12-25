@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/bloc/application_bloc.dart';
 import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/configs/theme.dart';
-import 'package:medication_book/ui/screen/dashboard_screen2.dart';
+import 'package:medication_book/ui/screen/dashboard_screen.dart';
 import 'package:medication_book/ui/screen/history_screen.dart';
 import 'package:medication_book/ui/screen/notes_screen.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
@@ -91,7 +91,7 @@ class _HomeScreenBody extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               controller: this.tabController,
               children: <Widget>[
-                DashboardScreen2(),
+                DashboardScreen(),
                 HistoryScreen(),
                 NotesScreen(),
                 ProfileScreen(),
@@ -137,7 +137,7 @@ class _HomeScreenBottom extends StatelessWidget {
             child: TabBar(
               controller: this.tabController,
               labelColor: ColorPalette.blue,
-              unselectedLabelColor: Colors.black26,
+              unselectedLabelColor: ColorPalette.gray,
               indicatorColor: Colors.transparent,
               indicatorSize: TabBarIndicatorSize.label,
               tabs: <Widget>[

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -65,7 +66,13 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
             child: Column(
               children: <Widget>[
                 renderPrescInfo(),
+                SizedBox(
+                  height: 20,
+                ),
                 renderReminderItem(listReminder[0]),
+                SizedBox(
+                  height: 20,
+                ),
                 renderReminderItem(listReminder[1]),
                 SizedBox(
                   height: 20,
@@ -85,13 +92,13 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
   renderPrescInfo() {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
     );
 
     TextStyle fieldStyle2 = TextStyle(
         color: ColorPalette.blacklight,
-        fontSize: 14,
+        fontSize: 18,
         fontWeight: FontWeight.w300);
 
     return Padding(
@@ -218,8 +225,8 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                       Utils.convertSessionToString(re.session),
                       style: TextStyle(
                           color: ColorPalette.blacklight,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w300),
                     ),
                   ],
                 ),
@@ -231,7 +238,7 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                             .format(context),
                         style: TextStyle(
                             color: ColorPalette.green,
-                            fontSize: 20,
+                            fontSize: 30,
                             fontWeight: FontWeight.w500),
                       ),
                       Icon(
@@ -244,7 +251,7 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                     showTimePicker(re);
                   },
                 ),
-                Switch(
+                CupertinoSwitch(
                   value: re.isActive,
                   activeColor: ColorPalette.blue,
                   onChanged: (value) {

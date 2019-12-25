@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -10,9 +8,7 @@ import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/reminder_settings_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
-import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
-import 'package:medication_book/models/session.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
@@ -54,25 +50,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
     _bloc = ReminderSettingsBloc(widget.prescID);
 
     prescNameCtrl = new TextEditingController(text: _bloc.clonedPresc.name);
-
-    // reminderAPI
-    //     .getRemindersByPrescID(widget.prescription.id)
-    //     .then((list) async {
-    //   listReminder = list;
-
-    //   for (Reminder re in listReminder) {
-    //     if (re.session == Session.MORNING) morningReminder = re;
-    //     if (re.session == Session.EVENING) eveningReminder = re;
-    //   }
-
-    //   await Future.delayed(Duration(seconds: 1));
-
-    //   loading = false;
-
-    //   setState(() {});
-    // });
-
-    // reCtrl.init();
   }
 
   updatePrescReminder() async {
@@ -100,7 +77,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
             width: 50,
             height: 50,
             margin: EdgeInsets.only(right: 10),
-            // color: Colors.blue,
             child: isSaving
                 ? LoadingCircle(
                     color: ColorPalette.white,
@@ -116,15 +92,11 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
             child: Column(
               children: <Widget>[
                 renderPrescInfo(),
-                // SizedBox(
-                //   height: 30,
-                // ),
+                SizedBox(height: 30),
                 renderReminderItem(_bloc.clonedDayReminder),
                 SizedBox(height: 20),
                 renderReminderItem(_bloc.clonedNightReminder),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
               ],
             ),
           ),
@@ -151,7 +123,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
           "Save",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: 18,
           ),
           // textAlign: TextAlign.center,
         ),
@@ -162,13 +134,13 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
   renderPrescInfo() {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
     );
 
     TextStyle fieldStyle2 = TextStyle(
         color: ColorPalette.blacklight,
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: FontWeight.w300);
 
     return Padding(
@@ -225,7 +197,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("Description", style: fieldStyle),
                 Expanded(
                   child: Text(
-                   _bloc.clonedPresc.desc,
+                    _bloc.clonedPresc.desc,
                     textAlign: TextAlign.right,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -302,8 +274,8 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       Utils.convertSessionToString(re.session),
                       style: TextStyle(
                           color: ColorPalette.blacklight,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w300),
                     ),
                   ],
                 ),
@@ -334,15 +306,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                   onChanged: (value) async {
                     re.isActive = value;
                     setState(() {});
-
-                    // if (value) {
-                    //   await reCtrl.addDailyReminder(re);
-                    //   Fluttertoast.showToast(msg: "Turned On");
-                    // }
-                    // else {
-                    //   await reCtrl.cancelDailyReminder(re);
-                    //   Fluttertoast.showToast(msg: "Turned Off");
-                    // }
                   },
                 ),
               ],
@@ -351,7 +314,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
           ),
           Container(
             height: 150,
-            // color: Colors.blue,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 0),

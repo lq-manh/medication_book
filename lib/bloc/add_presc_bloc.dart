@@ -10,27 +10,22 @@ import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
 
 class AddPrescBloc extends BlocBase {
-  AddPrescBloc() {
-
-  }
+  AddPrescBloc() {}
 
   createPresc(Prescription presc, List<Drug> listDrug) async {
     presc.listDrugs = listDrug;
-    presc.drugStore = new DrugStore(
-        name: "Medication Book App",
-        address: "Some where",
-        phoneNumber: "0123456789");
+    presc.drugStore = new DrugStore(name: "Medication Book App");
 
     List<Reminder> listReminder = analyzePresc(presc);
 
-    // await reCtrl.init();
     await prescAPI.addPresc(presc);
 
     for (Reminder re in listReminder) {
       re.prescID = presc.id;
       re.content = "It's time to take medicine " + presc.name;
       if (re.listDrug.length > 0) await reminderAPI.addReminder(re);
-      // if (re.isActive) await reCtrl.addDailyReminder(re);
+      if (re.isActive)
+        await ApplicationBloc().notiController.addDailyReminder(re);
     }
 
     List<Prescription> prescList = ApplicationBloc().prescList;
@@ -80,9 +75,6 @@ class AddPrescBloc extends BlocBase {
     return [morningReminder, eveningReminder];
   }
 
-
   @override
-  void dispose() {
-  }
-
+  void dispose() {}
 }

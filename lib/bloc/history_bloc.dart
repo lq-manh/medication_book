@@ -32,6 +32,9 @@ class HistoryBloc extends BlocBase {
     prescList.remove(presc);
 
     List<Reminder> listReminder = ApplicationBloc().reminderList;
+    for (Reminder re in listReminder) {
+      await ApplicationBloc().notiController.cancelDailyReminder(re);
+    }
     listReminder.removeWhere((re) => re.prescID == presc.id);
 
     ApplicationBloc().updateReminderList(listReminder);

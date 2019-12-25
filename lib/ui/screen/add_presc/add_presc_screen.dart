@@ -176,10 +176,22 @@ class _AddPrescState extends State<AddPresc> {
               TextInput(
                 label: "Duration",
                 ctrl: prescDurationCtrl,
-                suffix: Icon(
-                  Icons.edit,
-                  size: 14,
-                  color: ColorPalette.green,
+                suffix: Row(
+                  children: <Widget>[
+                    Text(
+                      "day(s)",
+                      style: TextStyle(
+                        color: ColorPalette.blacklight,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(
+                      Icons.edit,
+                      size: 14,
+                      color: ColorPalette.green,
+                    ),
+                  ],
+                  mainAxisSize: MainAxisSize.min,
                 ),
                 textInputType: TextInputType.number,
                 onSubmitted: (number) {
@@ -190,8 +202,7 @@ class _AddPrescState extends State<AddPresc> {
 
                     prescEndDayCtrl.text =
                         Utils.getNextDay(presc.date, duration);
-                  }
-                  else {
+                  } else {
                     prescDurationCtrl.text = presc.duration.toString();
                     Fluttertoast.showToast(msg: "Duration <= 0 is not allowed");
                   }
@@ -247,6 +258,11 @@ class _AddPrescState extends State<AddPresc> {
               return DrugItem(
                 drug: drug,
                 showSession: true,
+                removable: true,
+                onRemove: () {
+                  listDrug.removeAt(index);
+                  setState(() {});
+                },
               );
             },
           ),
@@ -267,15 +283,21 @@ class _AddPrescState extends State<AddPresc> {
   createPresc() async {
     if (listDrug.length <= 0) {
       Fluttertoast.showToast(msg: "Please add some drugs");
-    } else {
-      setState(() {
-        isSaving = true;
-      });
-
-      await _bloc.createPresc(presc, listDrug);
-
-      Navigator.pop(context);
+      return;
     }
+
+    if (presc.duration == null) {
+      Fluttertoast.showToast(msg: "Please enter duration");
+      return;
+    }
+
+    setState(() {
+      isSaving = true;
+    });
+
+    await _bloc.createPresc(presc, listDrug);
+
+    Navigator.pop(context);
   }
 }
 

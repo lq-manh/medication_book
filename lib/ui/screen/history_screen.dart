@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medication_book/api/prescription_api.dart';
-import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/bloc/history_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
@@ -12,7 +10,6 @@ import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
-import 'package:medication_book/utils/global.dart';
 import 'package:medication_book/utils/utils.dart';
 
 import 'add_presc/add_presc_screen.dart';
@@ -54,12 +51,10 @@ class History extends StatelessWidget {
                   return renderPrescItem(prescList[index]);
                 },
               );
-            }
-            else {
+            } else {
               return renderEmpty();
             }
-          }
-          else {
+          } else {
             return LoadingCircle();
           }
         },
@@ -77,8 +72,8 @@ class History extends StatelessWidget {
           color: ColorPalette.white,
         ),
         onPressed: () async {
-          await Navigator.push(ctx,
-              MaterialPageRoute(builder: (context) => AddPrescScreen()));
+          await Navigator.push(
+              ctx, MaterialPageRoute(builder: (context) => AddPrescScreen()));
         },
       ),
     );
@@ -116,11 +111,19 @@ class History extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             child: Row(
               children: <Widget>[
-                Image.asset(
-                  "assets/image/medicineIcon2.png",
-                  width: 40,
+                if (Utils.checkActive(presc))
+                  Icon(
+                    FontAwesomeIcons.heartbeat,
+                    size: 40,
+                    color: ColorPalette.green,
+                  )
+                else 
+                  Icon(
+                  FontAwesomeIcons.heartbeat,
+                  size: 40,
+                  color: ColorPalette.gray,
                 ),
-                SizedBox(width: 15),
+                SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     children: <Widget>[
@@ -159,14 +162,6 @@ class History extends StatelessWidget {
                   ),
                 ),
                 renderActionBtn(presc)
-                // IconButton(
-                //   icon: Icon(
-                //     FontAwesomeIcons.ellipsisV,
-                //     color: Colors.black38,
-                //   ),
-                //   iconSize: 18,
-                //   onPressed: () {},
-                // ),
               ],
             ),
           ),
