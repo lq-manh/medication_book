@@ -55,9 +55,9 @@ class _TopBarState extends State<TopBar> {
                 ),
                 Text(
                   this.widget.title,
+                  textScaleFactor: 1.2,
                   style: TextStyle(
                     color: ColorPalette.white,
-                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

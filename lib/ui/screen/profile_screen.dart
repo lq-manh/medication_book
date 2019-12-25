@@ -36,8 +36,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder(
       future: this._uid,
       builder: (BuildContext context, AsyncSnapshot<String> snap) {
-        if (snap.connectionState != ConnectionState.done)
-          return LoadingCircle(color: ColorPalette.blue, size: 40);
+        if (snap.connectionState != ConnectionState.done ||
+            snap.hasError ||
+            !snap.hasData) return LoadingCircle();
 
         return ContentLayout(
           topBar: TopBar(
@@ -134,8 +135,7 @@ class _AvatarState extends State<_Avatar> {
     return StreamBuilder(
       stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-        if (snap.hasError || !snap.hasData)
-          return LoadingCircle(color: ColorPalette.blue, size: 40);
+        if (snap.hasError || !snap.hasData) return LoadingCircle();
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);
@@ -202,6 +202,7 @@ class _ProfileState extends State<_Profile> {
             },
           ),
         ),
+        Padding(padding: EdgeInsets.only(bottom: 20)),
         ButtonBar(
           children: <Widget>[
             CustomRaisedButton(
@@ -229,8 +230,7 @@ class _ProfileState extends State<_Profile> {
     return StreamBuilder(
       stream: this._users.where('uid', isEqualTo: this.widget.uid).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-        if (snap.hasError || !snap.hasData)
-          return LoadingCircle(color: ColorPalette.blue, size: 40);
+        if (snap.hasError || !snap.hasData) return LoadingCircle();
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);

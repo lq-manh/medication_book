@@ -64,7 +64,7 @@ class _FloatingActionButton extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
+        color: ColorPalette.white,
       ),
       child: Padding(
         padding: const EdgeInsets.all(15),
@@ -113,7 +113,7 @@ class _HomeScreenBody extends StatelessWidget {
                   child: Container(
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade500.withOpacity(0.5),
+                      color: ColorPalette.grey.withOpacity(0.5),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,

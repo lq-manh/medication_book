@@ -69,8 +69,6 @@ class _ScanningState extends State<Scanning>
           child: Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              // color: Theme.of(context).canvasColor,
-              // color: Colors.red,
               image: DecorationImage(
                 image: AssetImage("assets/image/background-scan.png"),
                 fit: BoxFit.cover,
@@ -122,7 +120,7 @@ class _ScanningState extends State<Scanning>
                     prescription.drugStore.name,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    style: TextStyle(color: ColorPalette.blacklight),
+                    style: TextStyle(color: ColorPalette.darkerGrey),
                   ),
                 ], crossAxisAlignment: CrossAxisAlignment.start),
                 SizedBox(height: 10),
@@ -138,7 +136,7 @@ class _ScanningState extends State<Scanning>
                     prescription.drugStore.address,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    style: TextStyle(color: ColorPalette.blacklight),
+                    style: TextStyle(color: ColorPalette.darkerGrey),
                   ),
                 ], crossAxisAlignment: CrossAxisAlignment.start),
                 SizedBox(height: 10),
@@ -154,10 +152,9 @@ class _ScanningState extends State<Scanning>
                   ),
                   Text(
                     prescription.desc,
-                    style: TextStyle(color: ColorPalette.blacklight),
+                    style: TextStyle(color: ColorPalette.darkerGrey),
                   ),
                 ], crossAxisAlignment: CrossAxisAlignment.start),
-                //Text(prescription.drugStore.name, style: TextStyle(color: Colors.black87, fontSize: 16),),
               ],
               crossAxisAlignment: CrossAxisAlignment.start,
             ),
@@ -225,12 +222,12 @@ class _ScanningState extends State<Scanning>
         );
       } else {
         return Container(
-          color: Colors.white,
+          color: ColorPalette.white,
         );
       }
     } else {
       return Container(
-        color: Colors.white,
+        color: ColorPalette.white,
       );
     }
   }
@@ -247,13 +244,10 @@ class _ScanningState extends State<Scanning>
             width: screenWidth,
             height: screenHeight,
             child: renderQRScanner(),
-            //color: Colors.black38.withOpacity(0.5),
           ),
           Container(
             width: screenWidth,
             height: screenHeight,
-            // child: renderQRScanner(),
-            //color: Colors.black45.withOpacity(0.5),
             child: Column(
               children: <Widget>[
                 HeaderBar(),
@@ -262,7 +256,6 @@ class _ScanningState extends State<Scanning>
                   children: <Widget>[
                     Expanded(
                       child: Container(color: Colors.black45.withOpacity(0.5)),
-                      flex: 1,
                     ),
                     Container(
                       height: MediaQuery.of(context).size.width * 0.6,

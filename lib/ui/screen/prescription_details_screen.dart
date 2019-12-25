@@ -67,7 +67,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
     );
 
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
+        color: ColorPalette.darkerGrey,
         fontSize: 14,
         fontWeight: FontWeight.w300);
 
@@ -140,8 +140,8 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
               Text("End Date", style: fieldStyle),
               Expanded(
                 child: Text(
-                  Utils.getNextDay(widget.prescription.date,
-                      widget.prescription.duration),
+                  Utils.getNextDay(
+                      widget.prescription.date, widget.prescription.duration),
                   textAlign: TextAlign.right,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -202,7 +202,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
 
   renderDrudRows(List<Drug> listDrug) {
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
+        color: ColorPalette.darkerGrey,
         fontSize: 12,
         fontWeight: FontWeight.w300);
 

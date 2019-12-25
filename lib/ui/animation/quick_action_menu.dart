@@ -35,7 +35,7 @@ class _QuickActionMenuState extends State<QuickActionMenu>
         scale: scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: ColorPalette.white,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -45,8 +45,10 @@ class _QuickActionMenuState extends State<QuickActionMenu>
                     image: 'assets/image/medicineIcon.png',
                     title: "Medical",
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddPrescScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddPrescScreen()));
                     }),
                 ItemAction(
                     image: 'assets/image/cameraIcon.png',
@@ -84,7 +86,7 @@ class _ItemActionState extends State<ItemAction> {
     return RoundedCard(
       child: Material(
         borderRadius: BorderRadius.circular(15.0),
-        color: Colors.white,
+        color: ColorPalette.white,
         child: InkWell(
           onTap: widget.onTap,
           borderRadius: BorderRadius.circular(15.0),
@@ -100,7 +102,7 @@ class _ItemActionState extends State<ItemAction> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontWeight: FontWeight.w300,
                           fontSize: 12),
                     )

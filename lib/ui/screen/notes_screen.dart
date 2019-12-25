@@ -98,24 +98,47 @@ class _NotesState extends State<_Notes> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData) return Container();
 
+        if (snap.data.documents.length <= 0)
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/image/notes.png',
+                width: 120,
+                color: Colors.black26,
+              ),
+              SizedBox(height: 10),
+              Text(
+                "No Notes",
+                textScaleFactor: 1.2,
+                style: TextStyle(
+                  color: Colors.black26,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          );
+
+        final List<Widget> noteCards = snap.data.documents.map<Widget>(
+          (DocumentSnapshot doc) {
+            final Note n = Note.fromJson(doc.data);
+            n.id = doc.documentID;
+
+            if (n.reminder != null && DateTime.now().isBefore(n.reminder)) {
+              this._reCtrl.addNoteReminder(
+                    Utils.randomInRange(this._minNotiID, this._maxNotiID),
+                    n.reminder,
+                    n.content,
+                  );
+            }
+
+            return _NoteCard(n, onRemove: this._removeNote);
+          },
+        ).toList();
+
         return ListView(
           padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
-          children: snap.data.documents.map<Widget>(
-            (DocumentSnapshot doc) {
-              final Note n = Note.fromJson(doc.data);
-              n.id = doc.documentID;
-
-              if (n.reminder != null) {
-                this._reCtrl.addNoteReminder(
-                      Utils.randomInRange(this._minNotiID, this._maxNotiID),
-                      n.reminder,
-                      n.content,
-                    );
-              }
-
-              return _NoteCard(n, onRemove: this._removeNote);
-            },
-          ).toList(),
+          children: noteCards,
         );
       },
     );
@@ -148,6 +171,7 @@ class _NoteCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Padding(padding: EdgeInsets.only(bottom: 10)),
                 Text(
                   note.reminder != null ? formatter.format(note.reminder) : '',
                   style: TextStyle(
@@ -182,7 +206,7 @@ class _NoteCard extends StatelessWidget {
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
                 value: _NoteMenuButtons.edit,
-                child: Text('Edit'),
+                child: Text('Edit note'),
               ),
               PopupMenuItem(
                 value: _NoteMenuButtons.remove,
@@ -258,12 +282,12 @@ class _NoteDialogState extends State<_NoteDialog> {
       },
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: _NoteForm(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _NoteForm(
                 initialValue: {
                   'content': note.content,
                   'reminder': note.reminder,
@@ -272,25 +296,26 @@ class _NoteDialogState extends State<_NoteDialog> {
                   this._formState = state;
                 }),
               ),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                CustomRaisedButton(
-                  text: 'Cancel',
-                  onPressed: () {
-                    this.widget.onPop();
-                    Navigator.pop(context);
-                  },
-                  color: ColorPalette.white,
-                  textColor: ColorPalette.textBody,
-                ),
-                CustomRaisedButton(
-                  text: 'Save',
-                  onPressed: this._saveNote(note),
-                )
-              ],
-            )
-          ],
+              Padding(padding: EdgeInsets.only(bottom: 20)),
+              ButtonBar(
+                children: <Widget>[
+                  CustomRaisedButton(
+                    text: 'Cancel',
+                    onPressed: () {
+                      this.widget.onPop();
+                      Navigator.pop(context);
+                    },
+                    color: ColorPalette.white,
+                    textColor: ColorPalette.textBody,
+                  ),
+                  CustomRaisedButton(
+                    text: 'Save',
+                    onPressed: this._saveNote(note),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

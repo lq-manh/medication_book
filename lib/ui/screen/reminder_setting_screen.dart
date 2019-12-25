@@ -101,7 +101,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
             width: 50,
             height: 50,
             margin: EdgeInsets.only(right: 10),
-            // color: Colors.blue,
             child: isSaving
                 ? LoadingCircle(
                     color: ColorPalette.white,
@@ -153,7 +152,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
         child: Text(
           "Save",
           style: TextStyle(
-            color: Colors.white,
+            color: ColorPalette.white,
             fontSize: 16,
           ),
           // textAlign: TextAlign.center,
@@ -170,7 +169,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
     );
 
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
+        color: ColorPalette.darkerGrey,
         fontSize: 16,
         fontWeight: FontWeight.w300);
 
@@ -209,7 +208,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w300,
-                        color: ColorPalette.blacklight,
+                        color: ColorPalette.darkerGrey,
                       ),
                       onSubmitted: (text) {
                         widget.prescription.name = text;
@@ -273,8 +272,8 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                 Text("End Date", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    Utils.getNextDay(widget.prescription.date,
-                        widget.prescription.duration),
+                    Utils.getNextDay(
+                        widget.prescription.date, widget.prescription.duration),
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -304,7 +303,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                     Text(
                       Utils.convertSessionToString(re.session),
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontSize: 20,
                           fontWeight: FontWeight.w700),
                     ),
@@ -354,7 +353,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
           ),
           Container(
             height: 150,
-            // color: Colors.blue,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 0),

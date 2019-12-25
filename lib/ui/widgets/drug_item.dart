@@ -49,7 +49,7 @@ class _DrugItemState extends State<DrugItem> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontWeight: FontWeight.w300),
                     ),
                     if (widget.showSession)
@@ -75,7 +75,7 @@ class _DrugItemState extends State<DrugItem> {
                   Text(
                     "${Utils.convertDoubletoString(widget.drug.dosage)} ${widget.drug.unit}",
                     style: TextStyle(
-                      color: ColorPalette.blacklight,
+                      color: ColorPalette.darkerGrey,
                       fontWeight: FontWeight.w300,
                     ),
                   )

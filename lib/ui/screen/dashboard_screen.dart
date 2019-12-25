@@ -218,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               Text(
                 Utils.convertSessionToString(session),
                 style: TextStyle(
-                    color: ColorPalette.blacklight,
+                    color: ColorPalette.darkerGrey,
                     fontSize: 20,
                     fontWeight: FontWeight.w700),
               ),
@@ -302,7 +302,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorPalette.blacklight,
+                color: ColorPalette.darkerGrey,
                 fontSize: 16,
                 fontWeight: FontWeight.w300,
               ),
