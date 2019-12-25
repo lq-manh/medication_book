@@ -4,6 +4,7 @@ class ColorPalette {
   static const Color black = Colors.black;
   static const Color darkerGrey = Color(0xFF404040);
   static const Color darkGrey = Color(0xFF606060);
+  static const Color grey = Colors.grey;
   static const Color lightGrey = Color(0xFFF5F5F5);
   static const Color white = Colors.white;
 

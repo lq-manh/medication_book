@@ -102,7 +102,7 @@ class _SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomRaisedButton(
-      color: Colors.white,
+      color: ColorPalette.white,
       onPressed: this.onPresssed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

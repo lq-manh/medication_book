@@ -101,7 +101,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
             width: 50,
             height: 50,
             margin: EdgeInsets.only(right: 10),
-            // color: Colors.blue,
             child: isSaving
                 ? LoadingCircle(
                     color: ColorPalette.white,
@@ -153,7 +152,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
         child: Text(
           "Save",
           style: TextStyle(
-            color: Colors.white,
+            color: ColorPalette.white,
             fontSize: 16,
           ),
           // textAlign: TextAlign.center,
@@ -354,7 +353,6 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
           ),
           Container(
             height: 150,
-            // color: Colors.blue,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 0),

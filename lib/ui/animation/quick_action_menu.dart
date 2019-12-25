@@ -35,7 +35,7 @@ class _QuickActionMenuState extends State<QuickActionMenu>
         scale: scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: ColorPalette.white,
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -86,7 +86,7 @@ class _ItemActionState extends State<ItemAction> {
     return RoundedCard(
       child: Material(
         borderRadius: BorderRadius.circular(15.0),
-        color: Colors.white,
+        color: ColorPalette.white,
         child: InkWell(
           onTap: widget.onTap,
           borderRadius: BorderRadius.circular(15.0),
