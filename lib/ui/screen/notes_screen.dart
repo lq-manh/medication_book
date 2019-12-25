@@ -98,24 +98,47 @@ class _NotesState extends State<_Notes> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
         if (snap.hasError || !snap.hasData) return Container();
 
+        if (snap.data.documents.length <= 0)
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/image/notes.png',
+                width: 120,
+                color: Colors.black26,
+              ),
+              SizedBox(height: 10),
+              Text(
+                "No Notes",
+                textScaleFactor: 1.2,
+                style: TextStyle(
+                  color: Colors.black26,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          );
+
+        final List<Widget> noteCards = snap.data.documents.map<Widget>(
+          (DocumentSnapshot doc) {
+            final Note n = Note.fromJson(doc.data);
+            n.id = doc.documentID;
+
+            if (n.reminder != null && DateTime.now().isBefore(n.reminder)) {
+              this._reCtrl.addNoteReminder(
+                    Utils.randomInRange(this._minNotiID, this._maxNotiID),
+                    n.reminder,
+                    n.content,
+                  );
+            }
+
+            return _NoteCard(n, onRemove: this._removeNote);
+          },
+        ).toList();
+
         return ListView(
           padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
-          children: snap.data.documents.map<Widget>(
-            (DocumentSnapshot doc) {
-              final Note n = Note.fromJson(doc.data);
-              n.id = doc.documentID;
-
-              if (n.reminder != null && DateTime.now().isBefore(n.reminder)) {
-                this._reCtrl.addNoteReminder(
-                      Utils.randomInRange(this._minNotiID, this._maxNotiID),
-                      n.reminder,
-                      n.content,
-                    );
-              }
-
-              return _NoteCard(n, onRemove: this._removeNote);
-            },
-          ).toList(),
+          children: noteCards,
         );
       },
     );

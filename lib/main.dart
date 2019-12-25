@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:medication_book/utils/global.dart';
 
-Future<Null> main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Global.hasChangedData = false;
@@ -13,10 +12,9 @@ Future<Null> main() async {
     SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-    runApp(MyApp());
-  });
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,11 +22,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashPage(),
-        theme: ThemeData(
-          primarySwatch: ColorPalette.blue,
-          fontFamily: "GoogleSans",
-        ));
+      debugShowCheckedModeBanner: false,
+      home: SplashPage(),
+      theme: ThemeData(
+        fontFamily: "GoogleSans",
+        textTheme: Theme.of(context).textTheme.apply(fontSizeFactor: 1.15),
+      ),
+    );
   }
 }
