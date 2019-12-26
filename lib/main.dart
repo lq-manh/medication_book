@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       home: SplashPage(),
       theme: ThemeData(
         fontFamily: "GoogleSans",
-        textTheme: Theme.of(context).textTheme.apply(fontSizeFactor: 1.15),
+        textTheme: Theme.of(context).textTheme.apply(fontSizeFactor: 1.15, fontFamily: "GoogleSans"),
       ),
     );
   }

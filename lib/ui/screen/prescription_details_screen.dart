@@ -4,6 +4,8 @@ import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/ui/screen/scanning/reminder_analyzer_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
@@ -23,12 +25,16 @@ class PrescriptionDetailsScreen extends StatefulWidget {
 class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    DrugStore drugStore = widget.prescription.drugStore;
+
     return Scaffold(
       body: ContentLayout(
         topBar: TopBar(
-          title: widget.prescription.drugStore.name,
+          title: drugStore.name,
           action: Container(),
-          bottom: renderBottomAppBar(),
+          bottom: drugStore.address != null && drugStore.phoneNumber != null
+              ? renderBottomAppBar()
+              : null,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -50,11 +56,35 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          renderPrescBasicInfo(),
-          renderDrugTable(),
           SizedBox(height: 20),
-          widget.isView ? Container() : renderRemindBtn(),
+          Heading(
+            title: "Prescription",
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: RoundedCard(
+              child: renderPrescBasicInfo(),
+            ),
+          ),
+          SizedBox(height: 20),
+          Heading(
+            title: "Drugs",
+          ),
+          SizedBox(height: 20),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: renderDrugTable(),
+          ),
+          SizedBox(height: 30),
+          widget.isView
+              ? Container()
+              : Row(
+                  children: <Widget>[renderRemindBtn()],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
+          SizedBox(height: 30),
         ],
+        crossAxisAlignment: CrossAxisAlignment.start,
       ),
     );
   }
@@ -62,14 +92,12 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
   renderPrescBasicInfo() {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: FontWeight.w500,
     );
 
-    TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.darkerGrey,
-        fontSize: 14,
-        fontWeight: FontWeight.w300);
+    TextStyle fieldStyle2 =
+        TextStyle(color: ColorPalette.darkerGrey, fontWeight: FontWeight.w300);
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -89,22 +117,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
               )
             ],
           ),
-          SizedBox(height: 10),
-          Row(
-            children: <Widget>[
-              Text("Date", style: fieldStyle),
-              Expanded(
-                child: Text(
-                  Utils.convertDatetime(widget.prescription.date),
-                  textAlign: TextAlign.right,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: fieldStyle2,
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Row(
             children: <Widget>[
               Text("Duration", style: fieldStyle),
@@ -119,7 +132,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
               )
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Row(
             children: <Widget>[
               Text("Start Date", style: fieldStyle),
@@ -134,7 +147,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
               )
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Row(
             children: <Widget>[
               Text("End Date", style: fieldStyle),
@@ -160,7 +173,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
 
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 14,
+      fontSize: 20,
       fontWeight: FontWeight.w500,
     );
 
@@ -168,7 +181,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
       color: ColorPalette.white,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
       child: DataTable(
-        columnSpacing: 15,
+        columnSpacing: 30,
         columns: <DataColumn>[
           DataColumn(
             label: Text(
@@ -202,9 +215,9 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
 
   renderDrudRows(List<Drug> listDrug) {
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.darkerGrey,
-        fontSize: 12,
-        fontWeight: FontWeight.w300);
+      color: ColorPalette.darkerGrey,
+      fontSize: 16,
+    );
 
     return listDrug.map((drug) {
       return DataRow(
@@ -232,7 +245,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
               children: drug.sessions.map((s) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: Utils.getSessionIcon(s, 14),
+                  child: Utils.getSessionIcon(s, 18),
                 );
               }).toList(),
               mainAxisAlignment: MainAxisAlignment.start,

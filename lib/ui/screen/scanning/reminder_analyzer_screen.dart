@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +8,9 @@ import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/ui/screen/home_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
@@ -64,16 +67,27 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                renderPrescInfo(),
+                SizedBox(height: 10),
+                Heading(
+                  title: "Prescription",
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: RoundedCard(
+                    child: renderPrescInfo(),
+                  ),
+                ),
+                SizedBox(height: 30),
+                Heading(
+                  title: "Reminders",
+                ),
+                SizedBox(height: 20),
                 renderReminderItem(listReminder[0]),
+                SizedBox(height: 20),
                 renderReminderItem(listReminder[1]),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 renderDoneBtn(),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
               ],
             ),
           ),
@@ -85,7 +99,7 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
   renderPrescInfo() {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
     );
 
@@ -232,7 +246,7 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                             .format(context),
                         style: TextStyle(
                             color: ColorPalette.green,
-                            fontSize: 20,
+                            fontSize: 30,
                             fontWeight: FontWeight.w500),
                       ),
                       Icon(
@@ -245,7 +259,7 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                     showTimePicker(re);
                   },
                 ),
-                Switch(
+                CupertinoSwitch(
                   value: re.isActive,
                   activeColor: ColorPalette.blue,
                   onChanged: (value) {

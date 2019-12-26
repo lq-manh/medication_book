@@ -6,12 +6,9 @@ import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/listDate.dart';
 
 class DateSlider extends StatefulWidget {
-  final int index;
-  final ListDate listDate;
-  final Function onChanged;
+  final ValueChanged<DateTime> onDateChanged;
 
-  const DateSlider({Key key, this.onChanged, this.listDate, this.index})
-      : super(key: key);
+  const DateSlider({Key key, this.onDateChanged}) : super(key: key);
 
   @override
   _DateSliderState createState() => _DateSliderState();
@@ -19,31 +16,35 @@ class DateSlider extends StatefulWidget {
 
 class _DateSliderState extends State<DateSlider> {
   SwiperController _scrollController = SwiperController();
+  ListDate listDate;
 
+  int curIndex;
   int todayIndex;
 
   @override
   void initState() {
     super.initState();
 
-    todayIndex = (widget.listDate.list.length / 2).floor();
+    listDate = new ListDate();
+    todayIndex = (listDate.list.length / 2).floor();
+    curIndex = todayIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        if (widget.index != todayIndex)
+        SizedBox(height: 5),
+        if (curIndex != todayIndex)
           renderGoTodayBtn()
         else
           Container(
-            height: 25,
+            height: 30,
             child: Text(
               "Today",
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: ColorPalette.white.withOpacity(0.65),
-                fontSize: 16,
               ),
             ),
           ),
@@ -112,7 +113,7 @@ class _DateSliderState extends State<DateSlider> {
         _scrollController.move(todayIndex, animation: true);
       },
       child: Container(
-        height: 25,
+        height: 30,
         decoration: BoxDecoration(
             border: Border.all(
                 color: ColorPalette.white.withOpacity(0.65), width: 1),
@@ -123,7 +124,6 @@ class _DateSliderState extends State<DateSlider> {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: ColorPalette.white.withOpacity(0.65),
-            fontSize: 14,
           ),
         ),
       ),
@@ -131,7 +131,7 @@ class _DateSliderState extends State<DateSlider> {
   }
 
   renderSwiper() {
-    var list = widget.listDate.list;
+    var list = listDate.list;
 
     return Swiper(
       itemBuilder: (BuildContext context, int index) {
@@ -139,7 +139,7 @@ class _DateSliderState extends State<DateSlider> {
         String weekday = DateFormat('EEE').format(date);
         String day = date.day.toString();
 
-        return renderDateItem(weekday, day, index == widget.index);
+        return renderDateItem(weekday, day, index == curIndex);
       },
 
       itemCount: list.length,
@@ -147,8 +147,13 @@ class _DateSliderState extends State<DateSlider> {
       scale: 1,
       loop: true,
       fade: 0.2,
-      index: widget.index,
-      onIndexChanged: widget.onChanged,
+      index: curIndex,
+      onIndexChanged: (index) {
+        setState(() {
+          curIndex = index;
+        });
+        widget.onDateChanged(listDate.list[index]);
+      },
       onTap: (index) {
         _scrollController.move(index, animation: true);
       },
@@ -163,7 +168,6 @@ class _DateSliderState extends State<DateSlider> {
       color:
           highlight ? ColorPalette.white : ColorPalette.white.withOpacity(0.7),
       fontWeight: FontWeight.w500,
-      fontSize: 16,
     );
 
     return Container(

@@ -1,25 +1,28 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medication_book/bloc/application_bloc.dart';
+import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/dashboard_screen.dart';
 import 'package:medication_book/ui/screen/history_screen.dart';
 import 'package:medication_book/ui/screen/notes_screen.dart';
 import 'package:medication_book/ui/screen/profile_screen.dart';
-import 'package:medication_book/ui/animation/quick_action_menu.dart';
+import 'package:medication_book/ui/widgets/blurred_overlay.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   @override
-  State createState() => HomeScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(bloc: ApplicationBloc(), child: Home());
+  }
 }
 
-class HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  final dynamic cwData;
-  TabController _tabController;
-  bool _blurred = false;
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
 
-  HomeScreenState({this.cwData});
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  TabController _tabController;
 
   @override
   void initState() {
@@ -31,19 +34,12 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _FloatingActionButton(
-        onPressed: () => this.setState(() {
-          this._blurred = !this._blurred;
-        }),
-      ),
+      floatingActionButton: _FloatingActionButton(onPressed: () {
+        ApplicationBloc().changeBlurredOverlay();
+      }),
       body: _HomeScreenBody(
         tabController: this._tabController,
-        blurred: this._blurred,
-        onTapCancel: () {
-          setState(() {
-            this._blurred = !this._blurred;
-          });
-        },
+        bloc: ApplicationBloc(),
       ),
       bottomNavigationBar: _HomeScreenBottom(
         tabController: this._tabController,
@@ -81,11 +77,9 @@ class _FloatingActionButton extends StatelessWidget {
 
 class _HomeScreenBody extends StatelessWidget {
   final TabController tabController;
-  final bool blurred;
-  final Function onTapCancel;
+  final ApplicationBloc bloc;
 
-  _HomeScreenBody(
-      {@required this.tabController, this.blurred = false, this.onTapCancel});
+  _HomeScreenBody({@required this.tabController, this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -104,33 +98,19 @@ class _HomeScreenBody extends StatelessWidget {
               ],
             ),
           ),
-          if (this.blurred)
-            GestureDetector(
-              onTap: onTapCancel,
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      color: ColorPalette.grey.withOpacity(0.5),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 50,
-                            horizontal: 40,
-                          ),
-                          child: QuickActionMenu(),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
+          StreamBuilder(
+            stream: ApplicationBloc().blurredStream,
+            initialData: false,
+            builder: (context, snapshot) {
+              if (snapshot.data == false) {
+                return Container();
+              } else {
+                return BlurredOverlay(
+                  onTapCancel: bloc.changeBlurredOverlay,
+                );
+              }
+            },
+          ),
         ],
       ),
     );
@@ -148,7 +128,7 @@ class _HomeScreenBottom extends StatelessWidget {
         elevation: 0,
         color: ColorPalette.white,
         child: Container(
-          height: 60,
+          height: 65,
           child: Theme(
             data: ThemeData(
               splashColor: Colors.transparent,
@@ -157,26 +137,54 @@ class _HomeScreenBottom extends StatelessWidget {
             child: TabBar(
               controller: this.tabController,
               labelColor: ColorPalette.blue,
-              unselectedLabelColor: Colors.black26,
+              unselectedLabelColor: ColorPalette.gray,
               indicatorColor: Colors.transparent,
               indicatorSize: TabBarIndicatorSize.label,
               tabs: <Widget>[
-                Icon(FontAwesomeIcons.solidListAlt),
+                renderBottomItem(
+                  Icon(FontAwesomeIcons.solidListAlt),
+                  "Reminders",
+                ),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.bookMedical),
+                    renderBottomItem(
+                      Icon(FontAwesomeIcons.bookMedical),
+                      "Presc",
+                    ),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Icon(FontAwesomeIcons.solidClipboard),
+                    renderBottomItem(
+                      Icon(FontAwesomeIcons.solidClipboard),
+                      "Notes",
+                    ),
                   ],
                   mainAxisAlignment: MainAxisAlignment.end,
                 ),
-                Icon(FontAwesomeIcons.solidUser),
+                renderBottomItem(
+                  Icon(FontAwesomeIcons.solidUser),
+                  "User",
+                ),
               ],
             ),
           ),
         ));
+  }
+
+  renderBottomItem(Icon icon, String text) {
+    return Column(
+      children: <Widget>[
+        icon,
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          text,
+          style: TextStyle(fontWeight: FontWeight.w400),
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    );
   }
 }

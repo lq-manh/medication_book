@@ -44,7 +44,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
 
     drug = new Drug(
       name: "Drug A",
-      note: "Some notes",
+      note: "Take after the meal",
       totalAmount: 10,
       dosage: 1,
     );
@@ -174,7 +174,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
             ctrl: drugNameCtrl,
             suffix: Icon(
               Icons.edit,
-              size: 14,
+              size: 16,
               color: ColorPalette.green,
             ),
             hintText: "Enter drug name",
@@ -191,7 +191,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
             ctrl: drugNoteCtrl,
             suffix: Icon(
               Icons.edit,
-              size: 14,
+              size: 16,
               color: ColorPalette.green,
             ),
             hintText: "Enter drug note",
@@ -254,7 +254,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
           "Sessions",
           style: TextStyle(
             color: ColorPalette.blue,
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -285,14 +285,19 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        width: 90,
-        height: 90,
+        width: 100,
+        height: 100,
         decoration: borderSessionContainer(s),
         child: Column(
           children: <Widget>[
             Utils.getSessionIcon(s, 30),
             SizedBox(height: 5),
-            Text(Utils.convertSessionToString(s)),
+            Text(
+              Utils.convertSessionToString(s),
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
           ],
           mainAxisAlignment: MainAxisAlignment.center,
         ),
@@ -306,7 +311,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
         return BoxDecoration(
           border:
               Border.all(color: ColorPalette.blue.withOpacity(0.65), width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(45)),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
         );
       else
         return null;
@@ -317,7 +322,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
         return BoxDecoration(
           border:
               Border.all(color: ColorPalette.blue.withOpacity(0.65), width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(45)),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
         );
       else
         return null;

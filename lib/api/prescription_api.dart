@@ -44,7 +44,7 @@ class PrescriptionApi {
     else return null;
   }
 
-  Future<DocumentReference> addPresc(Prescription prescription) async {
+  Future<void> addPresc(Prescription prescription) async {
     String uid = await SecureStorage.instance.read(key: 'uid');
 
     prescription.userID = uid;
@@ -67,3 +67,5 @@ class PrescriptionApi {
     return await ref.document(presc.id).delete();
   }
 }
+
+PrescriptionApi prescAPI = PrescriptionApi();

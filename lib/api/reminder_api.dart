@@ -14,12 +14,11 @@ class ReminderAPI {
     ref = _db.collection(COLLECTION_NAME);
   }
 
-  Future<List<Reminder>> getActiveReminder() async {
+  Future<List<Reminder>> getAllReminders() async {
     String uid = await SecureStorage.instance.read(key: 'uid');
 
     QuerySnapshot q = await ref
         .where("userID", isEqualTo: uid)
-        .where("isActive", isEqualTo: true)
         .getDocuments();
 
     List<Reminder> listReminder = [];
@@ -51,14 +50,15 @@ class ReminderAPI {
     return listReminder;
   }
 
-  Future<DocumentReference> addReminder(Reminder reminder) async {
+  Future<void> addReminder(Reminder reminder) async {
     String uid = await SecureStorage.instance.read(key: 'uid');
     reminder.userID = uid;
 
     var jsonReminder = reminder.toJson();
     var data = jsonDecode(jsonEncode(jsonReminder));
 
-    return await ref.add(data);
+    DocumentReference doc = await ref.add(data);
+    reminder.id = doc.documentID;
   }
 
   updateReminder(Reminder reminder) async {
@@ -79,3 +79,5 @@ class ReminderAPI {
     return;
   }
 }
+
+ReminderAPI reminderAPI = ReminderAPI();

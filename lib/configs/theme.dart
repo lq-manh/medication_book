@@ -11,6 +11,7 @@ class ColorPalette {
   static const Color blue = Color(0xFF42A3E3);
   static const Color green = Color(0xFF58D6B4);
   static const Color red = Color(0xFFFF3400);
+  static const Color gray = Colors.black26;
   static const Color sunOrange = Color(0xFFFF9100);
 
   static const Color textBody = ColorPalette.darkGrey;

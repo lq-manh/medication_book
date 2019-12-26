@@ -1,16 +1,18 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
+import 'package:medication_book/bloc/add_presc_bloc.dart';
+import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
-import 'package:medication_book/models/reminder.dart';
-import 'package:medication_book/models/session.dart';
 import 'package:medication_book/ui/screen/add_presc/add_drug_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
@@ -19,12 +21,22 @@ import 'package:medication_book/ui/widgets/top_bar.dart';
 import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/utils.dart';
 
-class AddPrescScreen extends StatefulWidget {
+class AddPrescScreen extends StatelessWidget {
   @override
-  _AddPrescScreenState createState() => _AddPrescScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      bloc: AddPrescBloc(),
+      child: AddPresc(),
+    );
+  }
 }
 
-class _AddPrescScreenState extends State<AddPrescScreen> {
+class AddPresc extends StatefulWidget {
+  @override
+  _AddPrescState createState() => _AddPrescState();
+}
+
+class _AddPrescState extends State<AddPresc> {
   Prescription presc;
   List<Drug> listDrug;
 
@@ -45,6 +57,8 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   TextEditingController drugNoteCtrl;
   TextEditingController drugAmountCtrl;
   TextEditingController drugDosageCtrl;
+
+  AddPrescBloc _bloc;
 
   @override
   void initState() {
@@ -72,6 +86,8 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
 
     prescEndDayCtrl = new TextEditingController(
         text: Utils.getNextDay(presc.date, presc.duration));
+
+    _bloc = BlocProvider.of<AddPrescBloc>(context);
   }
 
   @override
@@ -97,7 +113,15 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
             child: Column(
               children: <Widget>[
                 SizedBox(height: 10),
-                renderPrescEdit(),
+                Heading(
+                  title: "Prescription",
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: RoundedCard(
+                    child: renderPrescEdit(),
+                  ),
+                ),
                 SizedBox(height: 20),
                 renderDrugsEdit(),
                 SizedBox(height: 20),
@@ -114,12 +138,8 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   renderPrescEdit() {
     return Column(
       children: <Widget>[
-        Heading(
-          title: "Prescription",
-        ),
-        SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: <Widget>[
               TextInput(
@@ -157,18 +177,36 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
               TextInput(
                 label: "Duration",
                 ctrl: prescDurationCtrl,
-                suffix: Icon(
-                  Icons.edit,
-                  size: 14,
-                  color: ColorPalette.green,
+                suffix: Row(
+                  children: <Widget>[
+                    Text(
+                      "day(s)",
+                      style: TextStyle(
+                        color: ColorPalette.darkerGrey,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(
+                      Icons.edit,
+                      size: 14,
+                      color: ColorPalette.green,
+                    ),
+                  ],
+                  mainAxisSize: MainAxisSize.min,
                 ),
                 textInputType: TextInputType.number,
                 onSubmitted: (number) {
                   int duration = int.parse(number);
 
-                  presc.duration = duration;
+                  if (duration > 0) {
+                    presc.duration = duration;
 
-                  prescEndDayCtrl.text = Utils.getNextDay(presc.date, duration);
+                    prescEndDayCtrl.text =
+                        Utils.getNextDay(presc.date, duration);
+                  } else {
+                    prescDurationCtrl.text = presc.duration.toString();
+                    Fluttertoast.showToast(msg: "Duration <= 0 is not allowed");
+                  }
                 },
               ),
               SizedBox(height: 10),
@@ -176,13 +214,11 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
                 label: "Start Day",
                 ctrl: prescStartDayCtrl,
                 enabled: false,
-                inputFontSize: 16,
               ),
               TextInput(
                 label: "End Day",
                 ctrl: prescEndDayCtrl,
                 enabled: false,
-                inputFontSize: 16,
               ),
             ],
           ),
@@ -221,6 +257,11 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
               return DrugItem(
                 drug: drug,
                 showSession: true,
+                removable: true,
+                onRemove: () {
+                  listDrug.removeAt(index);
+                  setState(() {});
+                },
               );
             },
           ),
@@ -239,98 +280,22 @@ class _AddPrescScreenState extends State<AddPrescScreen> {
   }
 
   createPresc() async {
+    if (listDrug.length <= 0) {
+      Fluttertoast.showToast(msg: "Please add some drugs");
+      return;
+    }
+
+    if (presc.duration == null) {
+      Fluttertoast.showToast(msg: "Please enter duration");
+      return;
+    }
+
     setState(() {
       isSaving = true;
     });
 
-    presc.listDrugs = listDrug;
-    presc.drugStore = new DrugStore(
-        name: "Medication Book App",
-        address: "Some where",
-        phoneNumber: "0123456789");
-
-    List<Reminder> listReminder = analyzePresc(presc);
-
-    await reCtrl.init();
-    await prescAPI.addPresc(presc);
-
-    for (Reminder re in listReminder) {
-      re.prescID = presc.id;
-      re.content = "It's time to take medicine " + presc.name;
-      if (re.listDrug.length > 0) await reminderAPI.addReminder(re);
-
-      if (re.isActive) await reCtrl.addDailyReminder(re);
-    }
+    await _bloc.createPresc(presc, listDrug);
 
     Navigator.pop(context);
-  }
-
-  List<Reminder> analyzePresc(Prescription presc) {
-    List<Drug> listDrug = presc.listDrugs;
-    Random ran = new Random();
-
-    Reminder morningReminder = new Reminder(
-        notiID: ran.nextInt(99999),
-        isActive: false,
-        hour: 8,
-        minute: 0,
-        session: Session.MORNING,
-        listDrug: []);
-
-    Reminder eveningReminder = new Reminder(
-        notiID: ran.nextInt(99999) + 1,
-        isActive: false,
-        hour: 20,
-        minute: 0,
-        session: Session.EVENING,
-        listDrug: []);
-
-    for (int i = 0; i < listDrug.length; i++) {
-      Drug drug = listDrug[i];
-
-      if (drug.sessions.contains(Session.MORNING)) {
-        morningReminder.listDrug.add(drug);
-      }
-
-      if (drug.sessions.contains(Session.EVENING)) {
-        eveningReminder.listDrug.add(drug);
-      }
-    }
-
-    if (morningReminder.listDrug.length > 0) morningReminder.isActive = true;
-    if (eveningReminder.listDrug.length > 0) eveningReminder.isActive = true;
-
-    return [morningReminder, eveningReminder];
-  }
-}
-
-class Heading extends StatelessWidget {
-  final String title;
-  final Widget action;
-
-  Heading({Key key, this.title, this.action}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      padding: EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.black12, width: 1))),
-      child: Row(
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              color: ColorPalette.blue,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          action == null ? Container() : action,
-        ],
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      ),
-    );
   }
 }

@@ -19,7 +19,7 @@ class _QuickActionMenuState extends State<QuickActionMenu>
     super.initState();
 
     controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     scaleAnimation = CurvedAnimation(parent: controller, curve: Curves.ease);
 
     controller.addListener(() {
@@ -32,40 +32,45 @@ class _QuickActionMenuState extends State<QuickActionMenu>
   @override
   Widget build(BuildContext context) {
     return ScaleTransition(
-        scale: scaleAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-              color: ColorPalette.white,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              children: <Widget>[
-                ItemAction(
-                    image: 'assets/image/medicineIcon.png',
-                    title: "Medical",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddPrescScreen()));
-                    }),
-                ItemAction(
-                    image: 'assets/image/cameraIcon.png',
-                    title: "Scan bill",
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Scanning()));
-                    }),
-                ItemAction(
-                    image: 'assets/image/noteIcon.png',
-                    title: "Note",
-                    onTap: () {}),
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
+      scale: scaleAnimation,
+      child: Container(
+        width: MediaQuery.of(context).size.width*0.7,
+        decoration: BoxDecoration(
+          color: ColorPalette.white.withOpacity(0.5),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            children: <Widget>[
+              ItemAction(
+                image: 'assets/image/medicineIcon.png',
+                title: "New Presc",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddPrescScreen()));
+                },
+              ),
+              ItemAction(
+                image: 'assets/image/cameraIcon.png',
+                title: "Scan bill",
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Scanning()));
+                },
+              ),
+              // ItemAction(
+              //     image: 'assets/image/noteIcon.png',
+              //     title: "Note",
+              //     onTap: () {}),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -97,14 +102,14 @@ class _ItemActionState extends State<ItemAction> {
                   children: <Widget>[
                     Image(
                       image: AssetImage(widget.image),
-                      width: 50,
+                      width: 70,
                     ),
                     Text(
                       widget.title,
                       style: TextStyle(
-                          color: ColorPalette.darkerGrey,
-                          fontWeight: FontWeight.w300,
-                          fontSize: 12),
+                        color: ColorPalette.darkerGrey,
+                        fontWeight: FontWeight.w300,
+                      ),
                     )
                   ],
                 ),

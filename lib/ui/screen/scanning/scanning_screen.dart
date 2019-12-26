@@ -29,8 +29,6 @@ class _ScanningState extends State<Scanning>
   initScanner() async {
     cameras = await availableCameras();
 
-    //await Future.delayed(Duration(milliseconds: 500));
-
     if (cameras.length > 0) {
       scanQRCodeController = new QRReaderController(
           cameras[0], ResolutionPreset.medium, [CodeFormat.qr],
@@ -266,17 +264,45 @@ class _ScanningState extends State<Scanning>
                                 color: Colors.black45.withOpacity(0.5)),
                           ),
                           Container(
-                              width: MediaQuery.of(context).size.width * 0.6),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: ColorPalette.white.withOpacity(0.5),
+                                width: 2,
+                              ),
+                            ),
+                          ),
                           Expanded(
                             child: Container(
-                                color: Colors.black45.withOpacity(0.5)),
+                              color: Colors.black45.withOpacity(0.5),
+                            ),
                           ),
                         ],
                       ),
                     ),
                     Expanded(
-                      child: Container(color: Colors.black45.withOpacity(0.5)),
                       flex: 2,
+                      child: Container(
+                        color: Colors.black45.withOpacity(0.5),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              margin: EdgeInsets.all(20), 
+                              child: Text(
+                                "Move camera to QR Code to get the prescription",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: ColorPalette.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ))
