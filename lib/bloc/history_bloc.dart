@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/application_bloc.dart';
@@ -41,6 +42,8 @@ class HistoryBloc extends BlocBase {
     ApplicationBloc().updatePrescList(prescList);
 
     _prescListController.sink.add(prescList);
+
+    Fluttertoast.showToast(msg: "Deleted");
   }
 
   @override

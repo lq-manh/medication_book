@@ -45,7 +45,7 @@ class LoginBloc {
 
       await SecureStorage.instance.write(key: 'uid', value: user.uid);
 
-      await ApplicationBloc().init();
+      // await ApplicationBloc().init();
 
       _googleLoginStream.sink.add(LoginStatus.FINISH_LOGIN);
       return LoginStatus.FINISH_LOGIN;
@@ -72,7 +72,7 @@ class LoginBloc {
 
       await SecureStorage.instance.write(key: 'uid', value: user.uid);
 
-      await ApplicationBloc().init();
+      // await ApplicationBloc().init();
 
       _facebookLoginStream.sink.add(LoginStatus.FINISH_LOGIN);
       return LoginStatus.FINISH_LOGIN;

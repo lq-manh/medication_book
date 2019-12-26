@@ -30,6 +30,12 @@ class _QuickActionMenuState extends State<QuickActionMenu>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: scaleAnimation,
@@ -102,13 +108,14 @@ class _ItemActionState extends State<ItemAction> {
                   children: <Widget>[
                     Image(
                       image: AssetImage(widget.image),
-                      width: 70,
+                      width: 50,
                     ),
                     Text(
                       widget.title,
                       style: TextStyle(
                         color: ColorPalette.darkerGrey,
                         fontWeight: FontWeight.w300,
+                        fontSize: 14
                       ),
                     )
                   ],
