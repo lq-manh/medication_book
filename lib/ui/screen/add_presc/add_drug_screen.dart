@@ -151,7 +151,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
                     type.name,
                     style: TextStyle(
                       fontSize: 12,
-                      color: ColorPalette.blacklight,
+                      color: ColorPalette.darkerGrey,
                     ),
                   ),
                 ],
@@ -209,7 +209,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
             suffix: Text(
               currentType.unit,
               style: TextStyle(
-                color: ColorPalette.blacklight,
+                color: ColorPalette.darkerGrey,
               ),
             ),
             hintText: "Enter amount",
@@ -228,7 +228,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
             suffix: Text(
               currentType.unit,
               style: TextStyle(
-                color: ColorPalette.blacklight,
+                color: ColorPalette.darkerGrey,
               ),
             ),
             hintText: "Enter dosage",

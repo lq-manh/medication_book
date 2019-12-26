@@ -25,7 +25,12 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
+  @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
   DashBoardBloc dashboardBloc;
   BuildContext ctx;
 
@@ -65,7 +70,7 @@ class Dashboard extends StatelessWidget {
                 ],
               ),
             ),
-            height: 180,
+            height: 190,
             child: DateSlider(
               onDateChanged: (date) async {
                 bloc.getData(date);
@@ -112,14 +117,15 @@ class Dashboard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Row(
             children: <Widget>[
-              Utils.getSessionIcon(session, 24),
+              Utils.getSessionIcon(session, 30),
               SizedBox(width: 10),
               Text(
                 Utils.convertSessionToString(session),
                 style: TextStyle(
-                    color: ColorPalette.blacklight,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w300),
+                  color: ColorPalette.darkerGrey,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -185,7 +191,7 @@ class Dashboard extends StatelessWidget {
               style: TextStyle(
                 color: ColorPalette.blue,
                 fontSize: 20,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

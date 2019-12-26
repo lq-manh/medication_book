@@ -34,12 +34,12 @@ class _TextInputState extends State<TextInput> {
   Widget build(BuildContext context) {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.w500,
     );
 
     TextStyle fieldStyle2 = TextStyle(
-      color: ColorPalette.blacklight,
+      color: ColorPalette.darkerGrey,
       fontSize: widget.inputFontSize,
       fontWeight: FontWeight.w300,
     );
@@ -54,19 +54,18 @@ class _TextInputState extends State<TextInput> {
               controller: widget.ctrl,
               textAlign: TextAlign.end,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 5),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: ColorPalette.blue, width: 1),
-                ),
-                enabledBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                suffix: Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: widget.suffix,
-                ),
-                hintText: widget.hintText,
-                hintStyle: TextStyle(color: Colors.black26)
-              ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 5),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorPalette.blue, width: 1),
+                  ),
+                  enabledBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  suffix: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: widget.suffix,
+                  ),
+                  hintText: widget.hintText,
+                  hintStyle: TextStyle(color: Colors.black26)),
               style: fieldStyle2,
               onSubmitted: widget.onSubmitted,
               onChanged: widget.onChanged,

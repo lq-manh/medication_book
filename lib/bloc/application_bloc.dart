@@ -48,16 +48,12 @@ class ApplicationBloc implements BlocBase {
 
     notiController = new ReminderController();
     await notiController.init();
-    await notiController.cancelAllDailyReminder();
+    // notiController.cancelRange(
+    //   ReminderController.medicineNotiIDRange[0],
+    //   ReminderController.medicineNotiIDRange[1],
+    // );
 
     await disableOverduePresc();
-
-    // for (Reminder re in reminderList) {
-    //   if (re.isActive)
-    //     await notiController.addDailyReminder(re);
-    //   else
-    //     await notiController.cancelDailyReminder(re);
-    // }
   }
 
   disableOverduePresc() async {
@@ -67,6 +63,7 @@ class ApplicationBloc implements BlocBase {
           if (re.prescID == p.id) {
             re.isActive = false;
             await reminderAPI.updateReminder(re);
+            await notiController.cancelDailyReminder(re);
           } else {
             if (re.isActive)
               await notiController.addDailyReminder(re);

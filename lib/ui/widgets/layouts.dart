@@ -2,35 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 
-class ContentLayout extends StatefulWidget {
+class ContentLayout extends StatelessWidget {
   final TopBar topBar;
   final Widget main;
+  final BoxDecoration backgroundDecoration;
 
-  ContentLayout({this.topBar, this.main});
+  ContentLayout({@required this.topBar, this.main, this.backgroundDecoration});
 
-  @override
-  _ContentLayoutState createState() => _ContentLayoutState();
-}
-
-class _ContentLayoutState extends State<ContentLayout> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [
-        //     ColorPalette.blue.withOpacity(0.2),
-        //     ColorPalette.green.withOpacity(0.2),
-        //   ],
-        // ),
-        color: Colors.white10
-      ),
+      decoration: this.backgroundDecoration ??
+          BoxDecoration(color: ColorPalette.lightGrey),
       child: Column(
         children: <Widget>[
-          widget.topBar,
-          if (widget.main != null) Expanded(child: widget.main),
+          this.topBar,
+          if (this.main != null) Expanded(child: this.main),
         ],
       ),
     );

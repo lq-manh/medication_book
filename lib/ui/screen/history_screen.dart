@@ -24,7 +24,12 @@ class HistoryScreen extends StatelessWidget {
   }
 }
 
-class History extends StatelessWidget {
+class History extends StatefulWidget {
+  @override
+  _HistoryState createState() => _HistoryState();
+}
+
+class _HistoryState extends State<History> {
   BuildContext ctx;
   HistoryBloc bloc;
 
@@ -91,7 +96,10 @@ class History extends StatelessWidget {
         Text(
           "No Prescription",
           style: TextStyle(
-              color: Colors.black26, fontWeight: FontWeight.w500, fontSize: 18),
+            color: Colors.black26,
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+          ),
         )
       ],
       mainAxisAlignment: MainAxisAlignment.center,
@@ -117,12 +125,12 @@ class History extends StatelessWidget {
                     size: 40,
                     color: ColorPalette.green,
                   )
-                else 
+                else
                   Icon(
-                  FontAwesomeIcons.heartbeat,
-                  size: 40,
-                  color: ColorPalette.gray,
-                ),
+                    FontAwesomeIcons.heartbeat,
+                    size: 40,
+                    color: ColorPalette.gray,
+                  ),
                 SizedBox(width: 20),
                 Expanded(
                   child: Column(
@@ -134,7 +142,7 @@ class History extends StatelessWidget {
                         style: TextStyle(
                           color: ColorPalette.blue,
                           fontWeight: FontWeight.w500,
-                          fontSize: 18,
+                          fontSize: 20,
                         ),
                       ),
                       SizedBox(height: 5),
@@ -143,19 +151,18 @@ class History extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: ColorPalette.blacklight,
+                          color: ColorPalette.darkerGrey,
                           fontWeight: FontWeight.w300,
-                          fontSize: 14,
                         ),
                       ),
                       SizedBox(height: 5),
                       Text(
                         Utils.convertDatetime(presc.date),
                         style: TextStyle(
-                            color: ColorPalette.blacklight,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 14,
-                            fontStyle: FontStyle.italic),
+                          color: ColorPalette.darkerGrey,
+                          fontWeight: FontWeight.w300,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,9 +198,8 @@ class History extends StatelessWidget {
               Text(
                 'View details',
                 style: TextStyle(
-                  color: ColorPalette.blacklight,
+                  color: ColorPalette.darkerGrey,
                   fontWeight: FontWeight.w300,
-                  fontSize: 16,
                 ),
               ),
               Icon(
@@ -212,7 +218,6 @@ class History extends StatelessWidget {
             style: TextStyle(
               color: ColorPalette.red,
               fontWeight: FontWeight.w300,
-              fontSize: 16,
             ),
           ),
         ),

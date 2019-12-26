@@ -19,6 +19,7 @@ class BlurredOverlay extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.grey.shade500.withOpacity(0.5),
             ),
@@ -28,7 +29,7 @@ class BlurredOverlay extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 50,
-                    horizontal: 40,
+                    // horizontal: 40,
                   ),
                   child: QuickActionMenu(),
                 )

@@ -4,6 +4,8 @@ import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/ui/screen/scanning/reminder_analyzer_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
@@ -55,28 +57,20 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
       child: Column(
         children: <Widget>[
           SizedBox(height: 20),
+          Heading(
+            title: "Prescription",
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-            child: Text(
-              "Prescription Information",
-              style: TextStyle(
-                color: ColorPalette.blacklight,
-                fontSize: 24,
-              ),
+            padding: const EdgeInsets.all(15),
+            child: RoundedCard(
+              child: renderPrescBasicInfo(),
             ),
           ),
-          renderPrescBasicInfo(),
           SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Text(
-              "Drug list",
-              style: TextStyle(
-                color: ColorPalette.blacklight,
-                fontSize: 24,
-              ),
-            ),
+          Heading(
+            title: "Drugs",
           ),
+          SizedBox(height: 20),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: renderDrugTable(),
@@ -98,14 +92,12 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
   renderPrescBasicInfo() {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.w500,
     );
 
-    TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
-        fontSize: 18,
-        fontWeight: FontWeight.w300);
+    TextStyle fieldStyle2 =
+        TextStyle(color: ColorPalette.darkerGrey, fontWeight: FontWeight.w300);
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -181,7 +173,7 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
 
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.w500,
     );
 
@@ -223,9 +215,9 @@ class _PrescriptionDetailsScreenState extends State<PrescriptionDetailsScreen> {
 
   renderDrudRows(List<Drug> listDrug) {
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
-        fontSize: 16,
-        fontWeight: FontWeight.w400);
+      color: ColorPalette.darkerGrey,
+      fontSize: 16,
+    );
 
     return listDrug.map((drug) {
       return DataRow(

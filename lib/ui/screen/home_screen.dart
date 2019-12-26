@@ -60,7 +60,7 @@ class _FloatingActionButton extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
+        color: ColorPalette.white,
       ),
       child: Padding(
         padding: const EdgeInsets.all(15),

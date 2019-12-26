@@ -10,8 +10,6 @@ import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
 
 class AddPrescBloc extends BlocBase {
-  AddPrescBloc() {}
-
   createPresc(Prescription presc, List<Drug> listDrug) async {
     presc.listDrugs = listDrug;
     presc.drugStore = new DrugStore(name: "Medication Book App");
@@ -69,10 +67,18 @@ class AddPrescBloc extends BlocBase {
       }
     }
 
-    if (morningReminder.listDrug.length > 0) morningReminder.isActive = true;
-    if (eveningReminder.listDrug.length > 0) eveningReminder.isActive = true;
+    List<Reminder> reminderList = [];
 
-    return [morningReminder, eveningReminder];
+    if (morningReminder.listDrug.length > 0) {
+      morningReminder.isActive = true;
+      reminderList.add(morningReminder);
+    }
+    if (eveningReminder.listDrug.length > 0) {
+      eveningReminder.isActive = true;
+      reminderList.add(eveningReminder);
+    }
+
+    return reminderList;
   }
 
   @override

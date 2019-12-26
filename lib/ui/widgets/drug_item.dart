@@ -29,19 +29,19 @@ class _DrugItemState extends State<DrugItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding:
-            const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 20),
-        child: RoundedCard(
-          child: Container(
-            width: 250,
-            child: Stack(
-              children: <Widget>[
-                renderBody(),
-                if (widget.removable) renderRemoveBtn()
-              ],
-            ),
+      padding: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 20),
+      child: RoundedCard(
+        child: Container(
+          width: 250,
+          child: Stack(
+            children: <Widget>[
+              renderBody(),
+              if (widget.removable) renderRemoveBtn()
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   renderBody() {
@@ -69,9 +69,9 @@ class _DrugItemState extends State<DrugItem> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      color: ColorPalette.blacklight,
-                      fontWeight: FontWeight.w300,
-                      fontSize: 16),
+                    color: ColorPalette.darkerGrey,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
                 if (widget.showSession)
                   Column(
@@ -96,10 +96,8 @@ class _DrugItemState extends State<DrugItem> {
               Text(
                 "${Utils.convertDoubletoString(widget.drug.dosage)} ${widget.drug.unit}",
                 style: TextStyle(
-                  color: ColorPalette.blacklight,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 16,
-                ),
+                    color: ColorPalette.darkerGrey,
+                    fontWeight: FontWeight.w300),
               )
             ],
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +7,8 @@ import 'package:medication_book/models/drug_type.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
+
+final _rand = Random();
 
 class Utils {
   static List<DrugType> listType = [
@@ -19,7 +22,7 @@ class Utils {
   static String getImageType(String type) {
     if (type == null) return "assets/image/pill.png";
 
-    return "assets/image/${type}.png";
+    return "assets/image/$type.png";
   }
 
   static String convertSessionToString(Session session) {
@@ -28,6 +31,7 @@ class Utils {
         return "Day time";
       case Session.EVENING:
         return "Night time";
+      default: return null;
     }
   }
 
@@ -45,6 +49,7 @@ class Utils {
           color: ColorPalette.blue,
           size: size,
         );
+      default: return null;
     }
   }
 
@@ -106,8 +111,11 @@ class Utils {
     if (today.isAfter(endDate)) {
       return false;
     }
+    
+    return true;
+  }
 
-    if (today.isAfter(startDate) && today.isBefore(endDate))
-      return true;
+  static int randomInRange(int min, int max) {
+    return min + _rand.nextInt(max - min);
   }
 }

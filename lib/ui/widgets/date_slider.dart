@@ -34,17 +34,17 @@ class _DateSliderState extends State<DateSlider> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        SizedBox(height: 5),
         if (curIndex != todayIndex)
           renderGoTodayBtn()
         else
           Container(
-            height: 25,
+            height: 30,
             child: Text(
               "Today",
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: ColorPalette.white.withOpacity(0.65),
-                fontSize: 16,
               ),
             ),
           ),
@@ -113,7 +113,7 @@ class _DateSliderState extends State<DateSlider> {
         _scrollController.move(todayIndex, animation: true);
       },
       child: Container(
-        height: 25,
+        height: 30,
         decoration: BoxDecoration(
             border: Border.all(
                 color: ColorPalette.white.withOpacity(0.65), width: 1),
@@ -124,7 +124,6 @@ class _DateSliderState extends State<DateSlider> {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: ColorPalette.white.withOpacity(0.65),
-            fontSize: 14,
           ),
         ),
       ),
@@ -169,7 +168,6 @@ class _DateSliderState extends State<DateSlider> {
       color:
           highlight ? ColorPalette.white : ColorPalette.white.withOpacity(0.7),
       fontWeight: FontWeight.w500,
-      fontSize: 16,
     );
 
     return Container(

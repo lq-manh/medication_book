@@ -9,7 +9,9 @@ import 'package:medication_book/bloc/reminder_settings_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/reminder.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
 import 'package:medication_book/ui/widgets/time_picker.dart';
@@ -91,8 +93,21 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                renderPrescInfo(),
+                SizedBox(height: 10),
+                Heading(
+                  title: "Prescription",
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: RoundedCard(
+                    child: renderPrescInfo(),
+                  ),
+                ),
                 SizedBox(height: 30),
+                Heading(
+                  title: "Reminders",
+                ),
+                SizedBox(height: 20),
                 renderReminderItem(_bloc.clonedDayReminder),
                 SizedBox(height: 20),
                 renderReminderItem(_bloc.clonedNightReminder),
@@ -122,8 +137,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
         child: Text(
           "Save",
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
+            color: ColorPalette.white,
           ),
           // textAlign: TextAlign.center,
         ),
@@ -134,14 +148,15 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
   renderPrescInfo() {
     TextStyle fieldStyle = TextStyle(
       color: ColorPalette.blue,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.w500,
     );
 
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
-        fontSize: 18,
-        fontWeight: FontWeight.w300);
+      color: ColorPalette.darkerGrey,
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+    );
 
     return Padding(
         padding: const EdgeInsets.all(20),
@@ -176,9 +191,8 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                         ),
                       ),
                       style: TextStyle(
-                        fontSize: 20,
                         fontWeight: FontWeight.w300,
-                        color: ColorPalette.blacklight,
+                        color: ColorPalette.darkerGrey,
                       ),
                       onSubmitted: (text) {
                         _bloc.clonedPresc.name = text;
@@ -268,14 +282,15 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Utils.getSessionIcon(re.session, 24),
+                    Utils.getSessionIcon(re.session, 30),
                     SizedBox(width: 10),
                     Text(
                       Utils.convertSessionToString(re.session),
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w300),
+                        color: ColorPalette.darkerGrey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),

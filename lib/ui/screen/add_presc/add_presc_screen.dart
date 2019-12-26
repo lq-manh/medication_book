@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,11 +9,10 @@ import 'package:medication_book/bloc/bloc_provider.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
-import 'package:medication_book/models/reminder.dart';
-import 'package:medication_book/models/session.dart';
 import 'package:medication_book/ui/screen/add_presc/add_drug_screen.dart';
-import 'package:medication_book/ui/screen/home_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
@@ -116,7 +113,15 @@ class _AddPrescState extends State<AddPresc> {
             child: Column(
               children: <Widget>[
                 SizedBox(height: 10),
-                renderPrescEdit(),
+                Heading(
+                  title: "Prescription",
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: RoundedCard(
+                    child: renderPrescEdit(),
+                  ),
+                ),
                 SizedBox(height: 20),
                 renderDrugsEdit(),
                 SizedBox(height: 20),
@@ -133,12 +138,8 @@ class _AddPrescState extends State<AddPresc> {
   renderPrescEdit() {
     return Column(
       children: <Widget>[
-        Heading(
-          title: "Prescription",
-        ),
-        SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: <Widget>[
               TextInput(
@@ -181,7 +182,7 @@ class _AddPrescState extends State<AddPresc> {
                     Text(
                       "day(s)",
                       style: TextStyle(
-                        color: ColorPalette.blacklight,
+                        color: ColorPalette.darkerGrey,
                       ),
                     ),
                     SizedBox(width: 5),
@@ -213,13 +214,11 @@ class _AddPrescState extends State<AddPresc> {
                 label: "Start Day",
                 ctrl: prescStartDayCtrl,
                 enabled: false,
-                inputFontSize: 16,
               ),
               TextInput(
                 label: "End Day",
                 ctrl: prescEndDayCtrl,
                 enabled: false,
-                inputFontSize: 16,
               ),
             ],
           ),
@@ -298,36 +297,5 @@ class _AddPrescState extends State<AddPresc> {
     await _bloc.createPresc(presc, listDrug);
 
     Navigator.pop(context);
-  }
-}
-
-class Heading extends StatelessWidget {
-  final String title;
-  final Widget action;
-
-  Heading({Key key, this.title, this.action}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      padding: EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.black12, width: 1))),
-      child: Row(
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              color: ColorPalette.blue,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          action == null ? Container() : action,
-        ],
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      ),
-    );
   }
 }

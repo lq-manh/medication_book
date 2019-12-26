@@ -8,7 +8,9 @@ import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/ui/screen/home_screen.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/drug_item.dart';
+import 'package:medication_book/ui/widgets/heading.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/loading_circle.dart';
@@ -65,22 +67,27 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                renderPrescInfo(),
-                SizedBox(
-                  height: 20,
+                SizedBox(height: 10),
+                Heading(
+                  title: "Prescription",
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: RoundedCard(
+                    child: renderPrescInfo(),
+                  ),
+                ),
+                SizedBox(height: 30),
+                Heading(
+                  title: "Reminders",
+                ),
+                SizedBox(height: 20),
                 renderReminderItem(listReminder[0]),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 renderReminderItem(listReminder[1]),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 renderDoneBtn(),
-                SizedBox(
-                  height: 30,
-                ),
+                SizedBox(height: 30),
               ],
             ),
           ),
@@ -97,8 +104,8 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
     );
 
     TextStyle fieldStyle2 = TextStyle(
-        color: ColorPalette.blacklight,
-        fontSize: 18,
+        color: ColorPalette.darkerGrey,
+        fontSize: 14,
         fontWeight: FontWeight.w300);
 
     return Padding(
@@ -135,7 +142,7 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w300,
-                        color: ColorPalette.blacklight,
+                        color: ColorPalette.darkerGrey,
                       ),
                       onSubmitted: (text) {
                         widget.prescription.name = text;
@@ -196,7 +203,8 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                 Text("End Date", style: fieldStyle),
                 Expanded(
                   child: Text(
-                    Utils.getNextDay(widget.prescription.date, widget.prescription.duration),
+                    Utils.getNextDay(
+                        widget.prescription.date, widget.prescription.duration),
                     textAlign: TextAlign.right,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -224,9 +232,9 @@ class _ReminderAnalyzerScreenState extends State<ReminderAnalyzerScreen> {
                     Text(
                       Utils.convertSessionToString(re.session),
                       style: TextStyle(
-                          color: ColorPalette.blacklight,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w300),
+                          color: ColorPalette.darkerGrey,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
