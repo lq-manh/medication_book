@@ -23,7 +23,7 @@ class ScanningBloc {
       // pre-process data - hardcode
       data.remove("id");
       data["duration"] = 5;
-      data["desc"] = "Flu headache";
+      data["desc"] = "No description";
 
     } catch (e) {
       return null;
