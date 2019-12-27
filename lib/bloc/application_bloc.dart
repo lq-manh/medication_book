@@ -63,12 +63,12 @@ class ApplicationBloc implements BlocBase {
           if (re.prescID == p.id) {
             re.isActive = false;
             await reminderAPI.updateReminder(re);
-            await notiController.cancelDailyReminder(re);
+            await notiController.cancel(re.notiID);
           } else {
             if (re.isActive)
               await notiController.addDailyReminder(re);
             else
-              await notiController.cancelDailyReminder(re);
+              await notiController.cancel(re.notiID);
           }
         }
       }
