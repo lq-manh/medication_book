@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medication_book/bloc/login_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/home_screen.dart';
+import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:medication_book/ui/widgets/buttons.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
@@ -53,7 +54,7 @@ class _LoginState extends State<LoginScreen> {
                       final status = await _loginBloc.loginViaGoogle();
                       if (status == LoginStatus.FINISH_LOGIN) {
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => HomeScreen()),
+                          MaterialPageRoute(builder: (_) => SplashPage()),
                         );
                       }
                     },
@@ -71,7 +72,7 @@ class _LoginState extends State<LoginScreen> {
                       final status = await _loginBloc.loginViaFacebook();
                       if (status == LoginStatus.FINISH_LOGIN) {
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => HomeScreen()),
+                          MaterialPageRoute(builder: (_) => SplashPage()),
                         );
                       }
                     },

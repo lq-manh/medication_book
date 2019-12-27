@@ -226,7 +226,6 @@ class _HistoryState extends State<History> {
   }
 
   onActionSelected(dynamic value, Prescription presc) async {
-    print(value);
     if (value == "detail")
       Navigator.push(
           ctx,
@@ -234,7 +233,78 @@ class _HistoryState extends State<History> {
               builder: (context) => PrescriptionDetailsScreen(presc, true)));
 
     if (value == "delete") {
-      bloc.deletePresc(presc);
+      showDialogDelete(presc);
+      // bloc.deletePresc(presc);
     }
+  }
+
+  bool isLoading = false;
+
+  showDialogDelete(Prescription presc) {
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation1, animation2) {},
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
+                ),
+              ),
+              title: new Text("Delete this prescription ?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: new Text(
+                    "Cancel",
+                    style: TextStyle(color: ColorPalette.grey),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                SizedBox(width: 15),
+                if (isLoading)
+                  LoadingCircle(
+                    color: ColorPalette.red,
+                    size: 24,
+                  )
+                else
+                  FlatButton(
+                    color: ColorPalette.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    child: new Text(
+                      "Delete",
+                      style: TextStyle(color: ColorPalette.white),
+                    ),
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      await bloc.deletePresc(presc);
+
+                      isLoading = false;
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                SizedBox(width: 15),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

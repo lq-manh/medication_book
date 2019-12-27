@@ -67,7 +67,18 @@ class _FloatingActionButton extends StatelessWidget {
         child: FloatingActionButton(
           backgroundColor: ColorPalette.blue,
           elevation: 5,
-          child: Icon(Icons.add),
+          child: StreamBuilder(
+            stream: ApplicationBloc().blurredStream,
+            initialData: false,
+            builder: (context, snapshot) {
+              if (snapshot.data == false) {
+                return Icon(Icons.add);
+              } else {
+                return Icon(Icons.close);
+              }
+              
+            },
+          ),
           onPressed: this.onPressed,
         ),
       ),
@@ -181,7 +192,7 @@ class _HomeScreenBottom extends StatelessWidget {
         ),
         Text(
           text,
-          style: TextStyle(fontWeight: FontWeight.w400),
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
         )
       ],
       mainAxisAlignment: MainAxisAlignment.center,
