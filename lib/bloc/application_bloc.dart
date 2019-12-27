@@ -48,11 +48,7 @@ class ApplicationBloc implements BlocBase {
 
     notiController = new ReminderController();
     await notiController.init();
-    // notiController.cancelRange(
-    //   ReminderController.medicineNotiIDRange[0],
-    //   ReminderController.medicineNotiIDRange[1],
-    // );
-
+    notiController.cancelAll();
     await disableOverduePresc();
   }
 

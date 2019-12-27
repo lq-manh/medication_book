@@ -98,9 +98,13 @@ class _Menu extends StatelessWidget {
       itemBuilder: (BuildContext context) => [
         this.mode == _Modes.viewing
             ? PopupMenuItem(
-                value: _MenuButtons.edit, child: Text('Edit profile'))
+                value: _MenuButtons.edit,
+                child: Text('Edit profile'),
+              )
             : PopupMenuItem(
-                value: _MenuButtons.view, child: Text('View profile')),
+                value: _MenuButtons.view,
+                child: Text('View profile'),
+              ),
         PopupMenuItem(
           value: _MenuButtons.logOut,
           child: InkWell(

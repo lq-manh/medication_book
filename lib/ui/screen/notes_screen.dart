@@ -13,9 +13,9 @@ import 'package:medication_book/utils/reminder_controller.dart';
 import 'package:medication_book/utils/secure_store.dart';
 import 'package:medication_book/utils/utils.dart';
 
-final formatter = DateFormat("MMMM dd, yyyy HH:mm");
-final CollectionReference notesCollection =
-    Firestore.instance.collection('notes');
+final _reCtrl = ReminderController();
+final _formatter = DateFormat("MMMM dd, yyyy HH:mm");
+final _notesCollection = Firestore.instance.collection('notes');
 
 class NotesScreen extends StatefulWidget {
   @override
@@ -72,27 +72,23 @@ class _Notes extends StatefulWidget {
 
 class _NotesState extends State<_Notes> {
   Stream<QuerySnapshot> _dataStream;
-  final ReminderController _reCtrl = ReminderController();
-  final int _minNotiID = ReminderController.noteNotiIDRange[0];
-  final int _maxNotiID = ReminderController.noteNotiIDRange[1];
 
   @override
   void initState() {
     super.initState();
-    this._reCtrl.init();
-    this._dataStream =
-        notesCollection.where('userID', isEqualTo: this.widget.uid).snapshots();
+    this._dataStream = _notesCollection
+        .where('userID', isEqualTo: this.widget.uid)
+        .snapshots();
   }
 
-  void _removeNote(String id) {
-    notesCollection.document(id).delete();
+  void _removeNote(Note note) async {
+    if (note.reminder != null) _reCtrl.cancel(note.reminderNotiID);
+    _notesCollection.document(note.id).delete();
     this.setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    this._reCtrl.cancelRange(this._minNotiID, this._maxNotiID);
-
     return StreamBuilder(
       stream: this._dataStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
@@ -123,15 +119,6 @@ class _NotesState extends State<_Notes> {
           (DocumentSnapshot doc) {
             final Note n = Note.fromJson(doc.data);
             n.id = doc.documentID;
-
-            if (n.reminder != null && DateTime.now().isBefore(n.reminder)) {
-              this._reCtrl.addNoteReminder(
-                    Utils.randomInRange(this._minNotiID, this._maxNotiID),
-                    n.reminder,
-                    n.content,
-                  );
-            }
-
             return _NoteCard(n, onRemove: this._removeNote);
           },
         ).toList();
@@ -149,7 +136,7 @@ enum _NoteMenuButtons { edit, remove }
 
 class _NoteCard extends StatelessWidget {
   final Note note;
-  final Function(String) onRemove;
+  final Function(Note) onRemove;
 
   _NoteCard(this.note, {this.onRemove});
 
@@ -173,7 +160,7 @@ class _NoteCard extends StatelessWidget {
                 ),
                 Padding(padding: EdgeInsets.only(bottom: 10)),
                 Text(
-                  note.reminder != null ? formatter.format(note.reminder) : '',
+                  note.reminder != null ? _formatter.format(note.reminder) : '',
                   style: TextStyle(
                     color: ColorPalette.textBody,
                     fontStyle: FontStyle.italic,
@@ -200,8 +187,7 @@ class _NoteCard extends StatelessWidget {
                     onPop: () {},
                   ),
                 );
-              else if (button == _NoteMenuButtons.remove)
-                this.onRemove(note.id);
+              else if (button == _NoteMenuButtons.remove) this.onRemove(note);
             },
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
@@ -261,14 +247,35 @@ class _NoteDialogState extends State<_NoteDialog> {
       ..content = this._formState.value['content']
       ..reminder = this._formState.value['reminder']
       ..createdAt = DateTime.now();
-    notesCollection.add(note.toJson());
+
+    if (note.reminder != null) {
+      note.reminderNotiID = Utils.randomInRange(
+        ReminderController.noteNotiIDRange[0],
+        ReminderController.noteNotiIDRange[1],
+      );
+      _reCtrl.addNoteReminder(note.reminderNotiID, note.reminder, note.content);
+    }
+
+    _notesCollection.add(note.toJson());
   }
 
-  void _updateNote(Note note) {
+  void _updateNote(Note note) async {
     note
       ..content = this._formState.value['content']
       ..reminder = this._formState.value['reminder'];
-    notesCollection.document(note.id).updateData(note.toJson());
+
+    if (note.reminder != null) {
+      if (note.reminderNotiID == null)
+        note.reminderNotiID = Utils.randomInRange(
+          ReminderController.noteNotiIDRange[0],
+          ReminderController.noteNotiIDRange[1],
+        );
+      _reCtrl.addNoteReminder(note.reminderNotiID, note.reminder, note.content);
+    } else if (note.reminderNotiID != null) {
+      _reCtrl.cancel(note.reminderNotiID);
+    }
+
+    _notesCollection.document(note.id).updateData(note.toJson());
   }
 
   @override
@@ -357,7 +364,7 @@ class _NoteFormState extends State<_NoteForm> {
           FormBuilderDateTimePicker(
             attribute: 'reminder',
             decoration: InputDecoration(labelText: 'Reminder (optional)'),
-            format: formatter,
+            format: _formatter,
           ),
         ],
       ),
