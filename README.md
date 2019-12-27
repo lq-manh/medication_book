@@ -1,11 +1,18 @@
-# medication_book
+# Medication Book
 
-Pill reminder and alarm for medication. 
+Prescription scanner, medicine manager and reminder app for Android and iOS.
 
-## Getting Started
+## BUILD
 
-This project is a starting point for a Flutter application.
+### Requirements
 
-## Script
-  Auto generate model `flutter packages pub run build_runner build`
-  
+- Flutter >= 1.12.13
+
+### Instructions
+
+```bash
+$ flutter pub get
+$ ...
+```
+
+## USAGE
