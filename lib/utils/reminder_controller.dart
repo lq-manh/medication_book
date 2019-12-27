@@ -48,10 +48,6 @@ class ReminderController {
     );
   }
 
-  Future<void> cancelDailyReminder(Reminder re) async {
-    await _notificationsPlugin.cancel(re.notiID);
-  }
-
   void addNoteReminder(int id, DateTime time, String content) {
     final androidNotificationDetails = AndroidNotificationDetails(
       'medicationbook-notes',
@@ -72,13 +68,11 @@ class ReminderController {
     );
   }
 
-  void cancel(int id) {
-    _notificationsPlugin.cancel(id);
+  Future<void> cancel(int id) async {
+    await _notificationsPlugin.cancel(id);
   }
 
-  void cancelRange(int start, int end) {
-    for (int id = start; id < end; ++id) {
-      _notificationsPlugin.cancel(id);
-    }
+  Future<void> cancelAll() async {
+    await _notificationsPlugin.cancelAll();
   }
 }

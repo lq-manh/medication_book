@@ -18,9 +18,10 @@ class HistoryBloc extends BlocBase {
     });
   }
 
-  BehaviorSubject<List<Prescription>> _prescListController = BehaviorSubject<List<Prescription>>();
+  BehaviorSubject<List<Prescription>> _prescListController =
+      BehaviorSubject<List<Prescription>>();
   Stream<List<Prescription>> get prescListStream => _prescListController.stream;
-  
+
   StreamSubscription _prescSub;
 
   List<Prescription> prescList;
@@ -34,7 +35,7 @@ class HistoryBloc extends BlocBase {
 
     List<Reminder> listReminder = ApplicationBloc().reminderList;
     for (Reminder re in listReminder) {
-      await ApplicationBloc().notiController.cancelDailyReminder(re);
+      await ApplicationBloc().notiController.cancel(re.notiID);
     }
     listReminder.removeWhere((re) => re.prescID == presc.id);
 
