@@ -50,6 +50,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   this._changeMode(_Modes.editing);
                 else if (button == _MenuButtons.view)
                   this._changeMode(_Modes.viewing);
+                else if (button == _MenuButtons.logOut) {
+                  SecureStorage.instance.deleteAll();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ));
+                }
               },
             ),
             bottom: Container(
@@ -83,12 +89,6 @@ class _Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void logOut() async {
-      await SecureStorage.instance.deleteAll();
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()));
-    }
-
     return PopupMenuButton<_MenuButtons>(
       icon: Icon(Icons.menu, color: ColorPalette.white),
       shape: RoundedRectangleBorder(
@@ -98,18 +98,16 @@ class _Menu extends StatelessWidget {
       itemBuilder: (BuildContext context) => [
         this.mode == _Modes.viewing
             ? PopupMenuItem(
-                value: _MenuButtons.edit, child: Text('Edit profile'))
+                value: _MenuButtons.edit,
+                child: Text('Edit profile'),
+              )
             : PopupMenuItem(
-                value: _MenuButtons.view, child: Text('View profile')),
+                value: _MenuButtons.view,
+                child: Text('View profile'),
+              ),
         PopupMenuItem(
           value: _MenuButtons.logOut,
-          child: InkWell(
-            child: Text(
-              'Log out',
-              style: TextStyle(color: ColorPalette.red),
-            ),
-            onTap: logOut,
-          ),
+          child: Text('Log out', style: TextStyle(color: ColorPalette.red)),
         ),
       ],
     );

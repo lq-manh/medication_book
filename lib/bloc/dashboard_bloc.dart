@@ -21,8 +21,10 @@ class DashBoardBloc implements BlocBase {
     });
   }
 
-  BehaviorSubject<List<Prescription>> prescListController = ApplicationBloc().prescListStream;
-  BehaviorSubject<List<Reminder>> reminderListController = ApplicationBloc().reminderListStream;
+  BehaviorSubject<List<Prescription>> prescListController =
+      ApplicationBloc().prescListStream;
+  BehaviorSubject<List<Reminder>> reminderListController =
+      ApplicationBloc().reminderListStream;
 
   StreamSubscription _prescSub;
   StreamSubscription _reminderSub;
@@ -56,7 +58,7 @@ class DashBoardBloc implements BlocBase {
         if (re.session == Session.EVENING) nightReminders.add(re);
       } else {
         if (!date.isBefore(endDate)) {
-          // reCtrl.cancelDailyReminder(re);
+          // reCtrl.cancel(re.notiID);
           // re.isActive = false;
           // await reminderAPI.updateReminder(re);
         }

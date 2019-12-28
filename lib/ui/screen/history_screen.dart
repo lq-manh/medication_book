@@ -247,7 +247,7 @@ class _HistoryState extends State<History> {
       transitionDuration: Duration(milliseconds: 200),
       barrierDismissible: true,
       barrierLabel: '',
-      pageBuilder: (context, animation1, animation2) {},
+      pageBuilder: (context, animation1, animation2) => Container(),
       transitionBuilder: (context, a1, a2, widget) {
         return Transform.scale(
           scale: a1.value,

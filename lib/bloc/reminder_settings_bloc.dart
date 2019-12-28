@@ -51,15 +51,19 @@ class ReminderSettingsBloc extends BlocBase {
     if (dayReminder != null) {
       dayReminder.content = "It's time to take medicine " + presc.name;
       await reminderAPI.updateReminder(dayReminder);
-      if (dayReminder.isActive) await ApplicationBloc().notiController.addDailyReminder(dayReminder);
-      else await ApplicationBloc().notiController.cancelDailyReminder(dayReminder);
+      if (dayReminder.isActive)
+        await ApplicationBloc().notiController.addDailyReminder(dayReminder);
+      else
+        await ApplicationBloc().notiController.cancel(dayReminder.notiID);
     }
 
     if (nightReminder != null) {
       nightReminder.content = "It's time to take medicine " + presc.name;
       await reminderAPI.updateReminder(nightReminder);
-      if (nightReminder.isActive) await ApplicationBloc().notiController.addDailyReminder(nightReminder);
-      else await ApplicationBloc().notiController.cancelDailyReminder(nightReminder);
+      if (nightReminder.isActive)
+        await ApplicationBloc().notiController.addDailyReminder(nightReminder);
+      else
+        await ApplicationBloc().notiController.cancel(nightReminder.notiID);
     }
 
     List<Prescription> listPresc = ApplicationBloc().prescList;

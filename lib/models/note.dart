@@ -14,6 +14,8 @@ class Note {
   @JsonKey(fromJson: Note._parseDate, toJson: Note._parseTimestamp)
   DateTime reminder;
 
+  int reminderNotiID;
+
   @JsonKey(fromJson: Note._parseDate, toJson: Note._parseTimestamp)
   DateTime createdAt;
 
@@ -25,6 +27,7 @@ class Note {
     this.userID,
     this.content,
     this.reminder,
+    this.reminderNotiID,
     this.createdAt,
     this.updatedAt,
   });
