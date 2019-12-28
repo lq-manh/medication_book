@@ -70,6 +70,23 @@ class Utils {
     return reminders;
   }
 
+  static List<Prescription> sortTimePrescription(List<Prescription> prescs) {
+    for (int i = 0; i < prescs.length; i++) {
+      for (int j = i; j < prescs.length; j++) {
+        DateTime t1 = convertStringToDate(prescs[i].date);
+        DateTime t2 = convertStringToDate(prescs[j].date);
+
+        if (t1.isBefore(t2)) {
+          var tmp = prescs[i];
+          prescs[i] = prescs[j];
+          prescs[j] = tmp;
+        }
+      }
+    }
+
+    return prescs;
+  }
+
   static String convertDatetime(String dateTimeStr) {
     var dateTimeInt = int.parse(dateTimeStr);
 

@@ -3,6 +3,7 @@ import 'package:medication_book/bloc/login_bloc.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/ui/screen/splash_screen.dart';
 import 'package:medication_book/ui/widgets/buttons.dart';
+import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/top_bar.dart';
 
@@ -104,6 +105,7 @@ class _SignInButton extends StatelessWidget {
     return CustomRaisedButton(
       color: ColorPalette.white,
       onPressed: this.onPresssed,
+      radius: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

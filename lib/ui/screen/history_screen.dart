@@ -72,8 +72,7 @@ class _HistoryState extends State<History> {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: IconButton(
         icon: new Icon(
-          FontAwesomeIcons.plus,
-          size: 20,
+          Icons.add,
           color: ColorPalette.white,
         ),
         onPressed: () async {
@@ -181,7 +180,7 @@ class _HistoryState extends State<History> {
     return PopupMenuButton(
       icon: Icon(
         FontAwesomeIcons.ellipsisV,
-        color: Colors.black38,
+        color: ColorPalette.gray,
         size: 18,
       ),
       shape: RoundedRectangleBorder(
@@ -214,7 +213,7 @@ class _HistoryState extends State<History> {
         PopupMenuItem(
           value: "delete",
           child: Text(
-            'Delete',
+            'Remove',
             style: TextStyle(
               color: ColorPalette.red,
               fontWeight: FontWeight.w300,

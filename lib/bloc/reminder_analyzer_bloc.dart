@@ -1,35 +1,40 @@
-import 'dart:math';
-
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/application_bloc.dart';
+import 'package:medication_book/configs/configs.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'dart:async';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
+import 'package:medication_book/utils/utils.dart';
 
 class ReminderAnalyzerBloc {
   List<Reminder> analyzePresc(Prescription presc) {
     List<Drug> listDrug = presc.listDrugs;
-    Random ran = new Random();
 
     Reminder morningReminder = new Reminder(
-      notiID: ran.nextInt(99999),
+      notiID: Utils.randomInRange(
+        Configs.medicineNotiIDRange[0],
+        Configs.medicineNotiIDRange[1],
+      ),
       isActive: false,
       hour: 8,
       minute: 0,
       session: Session.MORNING,
-      listDrug: []
+      listDrug: [],
     );
 
     Reminder eveningReminder = new Reminder(
-      notiID: ran.nextInt(99999) + 1,
+      notiID: Utils.randomInRange(
+        Configs.medicineNotiIDRange[0],
+        Configs.medicineNotiIDRange[1],
+      ),
       isActive: false,
       hour: 20,
       minute: 0,
       session: Session.EVENING,
-      listDrug: []
+      listDrug: [],
     );
     
     for (int i = 0; i < listDrug.length; i++) {
@@ -66,7 +71,7 @@ class ReminderAnalyzerBloc {
     }
 
     List<Prescription> prescList = ApplicationBloc().prescList;
-    prescList.add(presc);
+    Utils.sortTimePrescription(prescList);
     ApplicationBloc().updatePrescList(prescList);
 
     List<Reminder> reminderList = ApplicationBloc().reminderList;

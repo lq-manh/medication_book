@@ -51,7 +51,7 @@ class _QuickActionMenuState extends State<QuickActionMenu>
             children: <Widget>[
               ItemAction(
                 image: 'assets/image/medicineIcon.png',
-                title: "New Presc",
+                title: "Presc",
                 onTap: () {
                   Navigator.push(
                       context,
@@ -108,7 +108,7 @@ class _ItemActionState extends State<ItemAction> {
                   children: <Widget>[
                     Image(
                       image: AssetImage(widget.image),
-                      width: 50,
+                      width: 60,
                     ),
                     Text(
                       widget.title,

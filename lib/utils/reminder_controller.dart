@@ -7,9 +7,6 @@ final FlutterLocalNotificationsPlugin _notificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 class ReminderController {
-  static const medicineNotiIDRange = [1000, 1100];
-  static const noteNotiIDRange = [2000, 2100];
-
   ReminderController() {
     WidgetsFlutterBinding.ensureInitialized();
   }

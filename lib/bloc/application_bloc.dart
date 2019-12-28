@@ -41,6 +41,7 @@ class ApplicationBloc implements BlocBase {
     _blurredController.sink.add(isBlurred);
 
     prescList = await prescAPI.getAllPresc();
+    Utils.sortTimePrescription(prescList);
     _prescController.sink.add(prescList);
 
     reminderList = await reminderAPI.getAllReminders();
@@ -48,11 +49,15 @@ class ApplicationBloc implements BlocBase {
 
     notiController = new ReminderController();
     await notiController.init();
-    notiController.cancelAll();
-    await disableOverduePresc();
+    await notiController.cancelAll();
+
+    await analyzePresc();
   }
 
-  disableOverduePresc() async {
+  /*
+   *  Disable expired Presc and enable active Presc. 
+  */
+  analyzePresc() async {
     for (Prescription p in prescList) {
       if (Utils.checkActive(p) == false) {
         for (Reminder re in reminderList) {

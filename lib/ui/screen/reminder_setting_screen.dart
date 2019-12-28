@@ -42,6 +42,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
 
   bool loading = true;
   bool isSaving = false;
+  bool expired = false;
 
   ReminderController reCtrl = new ReminderController();
 
@@ -52,6 +53,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
     _bloc = ReminderSettingsBloc(widget.prescID);
 
     prescNameCtrl = new TextEditingController(text: _bloc.clonedPresc.name);
+    expired = !Utils.checkActive(_bloc.clonedPresc);
   }
 
   updatePrescReminder() async {
@@ -79,13 +81,15 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
             width: 50,
             height: 50,
             margin: EdgeInsets.only(right: 10),
-            child: isSaving
-                ? LoadingCircle(
-                    color: ColorPalette.white,
-                    size: 20,
-                    strokeWidth: 2,
-                  )
-                : renderSaveAction(),
+            child: expired
+                ? Container()
+                : isSaving
+                    ? LoadingCircle(
+                        color: ColorPalette.white,
+                        size: 20,
+                        strokeWidth: 2,
+                      )
+                    : renderSaveAction(),
           ),
         ),
         main: Container(
@@ -93,6 +97,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                renderExprired(),
                 SizedBox(height: 10),
                 Heading(
                   title: "Prescription",
@@ -118,6 +123,32 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
         ),
       ),
     );
+  }
+
+  renderExprired() {
+    if (expired) {
+      return Container(
+        color: ColorPalette.white,
+        padding: EdgeInsets.all(15),
+        child: Row(
+          children: <Widget>[
+            Icon(
+              Icons.warning,
+              color: ColorPalette.sunOrange,
+            ),
+            SizedBox(width: 5),
+            Text(
+              "This prescription is expired",
+              style: TextStyle(
+                  color: ColorPalette.sunOrange, fontWeight: FontWeight.w600),
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+        ),
+      );
+    }
+
+    return Container();
   }
 
   renderSaveAction() {
@@ -200,6 +231,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       onChanged: (text) {
                         _bloc.clonedPresc.name = text;
                       },
+                      enabled: !expired,
                     ),
                   ),
                 )
@@ -312,15 +344,19 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                     ],
                   ),
                   onTap: () {
-                    showTimePicker(re);
+                    if (!expired) {
+                      showTimePicker(re);
+                    }
                   },
                 ),
                 CupertinoSwitch(
                   value: re.isActive,
                   activeColor: ColorPalette.blue,
                   onChanged: (value) async {
-                    re.isActive = value;
-                    setState(() {});
+                    if (!expired) {
+                      re.isActive = value;
+                      setState(() {});
+                    }
                   },
                 ),
               ],
