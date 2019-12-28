@@ -233,8 +233,7 @@ class _AddPrescState extends State<AddPresc> {
         Heading(
           title: "Drugs",
           action: IconButton(
-            icon: Icon(FontAwesomeIcons.plusCircle),
-            iconSize: 20,
+            icon: Icon(Icons.add_circle),
             color: ColorPalette.green,
             onPressed: () {
               Navigator.push(

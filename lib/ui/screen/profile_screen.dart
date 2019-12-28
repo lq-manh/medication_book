@@ -163,8 +163,6 @@ class _ProfileState extends State<_Profile> {
 
   Widget _viewingWidget(User user) {
     return RoundedCard(
-      hasBorder: true,
-      hasShadow: false,
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: <Widget>[
@@ -234,7 +232,7 @@ class _ProfileState extends State<_Profile> {
         final User user = User.fromJson(doc.data);
 
         return SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 50),
           child: this.widget.mode == _Modes.viewing
               ? this._viewingWidget(user)
               : this._editingWidget(doc.reference, user),

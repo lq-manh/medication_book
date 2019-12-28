@@ -1,13 +1,13 @@
-import 'dart:math';
-
 import 'package:medication_book/api/prescription_api.dart';
 import 'package:medication_book/api/reminder_api.dart';
 import 'package:medication_book/bloc/application_bloc.dart';
 import 'package:medication_book/bloc/bloc_provider.dart';
+import 'package:medication_book/configs/configs.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/prescription.dart';
 import 'package:medication_book/models/reminder.dart';
 import 'package:medication_book/models/session.dart';
+import 'package:medication_book/utils/utils.dart';
 
 class AddPrescBloc extends BlocBase {
   createPresc(Prescription presc, List<Drug> listDrug) async {
@@ -27,7 +27,7 @@ class AddPrescBloc extends BlocBase {
     }
 
     List<Prescription> prescList = ApplicationBloc().prescList;
-    prescList.add(presc);
+    prescList.insert(0, presc);
     ApplicationBloc().updatePrescList(prescList);
 
     List<Reminder> reminderList = ApplicationBloc().reminderList;
@@ -37,23 +37,30 @@ class AddPrescBloc extends BlocBase {
 
   List<Reminder> analyzePresc(Prescription presc) {
     List<Drug> listDrug = presc.listDrugs;
-    Random ran = new Random();
 
     Reminder morningReminder = new Reminder(
-        notiID: ran.nextInt(99999),
-        isActive: false,
-        hour: 8,
-        minute: 0,
-        session: Session.MORNING,
-        listDrug: []);
+      notiID: Utils.randomInRange(
+        Configs.medicineNotiIDRange[0],
+        Configs.medicineNotiIDRange[1],
+      ),
+      isActive: false,
+      hour: 8,
+      minute: 0,
+      session: Session.MORNING,
+      listDrug: [],
+    );
 
     Reminder eveningReminder = new Reminder(
-        notiID: ran.nextInt(99999) + 1,
-        isActive: false,
-        hour: 20,
-        minute: 0,
-        session: Session.EVENING,
-        listDrug: []);
+      notiID: Utils.randomInRange(
+        Configs.medicineNotiIDRange[0],
+        Configs.medicineNotiIDRange[1],
+      ),
+      isActive: false,
+      hour: 20,
+      minute: 0,
+      session: Session.EVENING,
+      listDrug: [],
+    );
 
     for (int i = 0; i < listDrug.length; i++) {
       Drug drug = listDrug[i];

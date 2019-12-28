@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:medication_book/configs/configs.dart';
 import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/note.dart';
 import 'package:medication_book/ui/widgets/buttons.dart';
@@ -124,7 +125,7 @@ class _NotesState extends State<_Notes> {
         ).toList();
 
         return ListView(
-          padding: EdgeInsets.fromLTRB(40, 20, 40, 50),
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 50),
           children: noteCards,
         );
       },
@@ -172,7 +173,7 @@ class _NoteCard extends StatelessWidget {
           PopupMenuButton<_NoteMenuButtons>(
             icon: Icon(
               FontAwesomeIcons.ellipsisV,
-              color: ColorPalette.textBody,
+              color: ColorPalette.gray,
               size: 18,
             ),
             shape: RoundedRectangleBorder(
@@ -250,8 +251,8 @@ class _NoteDialogState extends State<_NoteDialog> {
 
     if (note.reminder != null) {
       note.reminderNotiID = Utils.randomInRange(
-        ReminderController.noteNotiIDRange[0],
-        ReminderController.noteNotiIDRange[1],
+        Configs.noteNotiIDRange[0],
+        Configs.noteNotiIDRange[1],
       );
       _reCtrl.addNoteReminder(note.reminderNotiID, note.reminder, note.content);
     }
@@ -267,8 +268,8 @@ class _NoteDialogState extends State<_NoteDialog> {
     if (note.reminder != null) {
       if (note.reminderNotiID == null)
         note.reminderNotiID = Utils.randomInRange(
-          ReminderController.noteNotiIDRange[0],
-          ReminderController.noteNotiIDRange[1],
+          Configs.noteNotiIDRange[0],
+          Configs.noteNotiIDRange[1],
         );
       _reCtrl.addNoteReminder(note.reminderNotiID, note.reminder, note.content);
     } else if (note.reminderNotiID != null) {
