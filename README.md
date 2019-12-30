@@ -17,9 +17,19 @@ $ ...
 
 ## USAGE
 
+1. Prescription Management
+2. Medical Note Management
+3. Medicine Reminder
+4. Medicine Bill Scanner
+
 ----------------------------------------------------------------------------
 # Medication Book - User Manual
-Medication Book helps you store your prescriptions, medical notes and remind medicine time. You have two ways to get your prescriptions: **scan QR Code** appears on the medicine bill or **create manually**.
+
+Medication Book helps you store, manage your prescriptions, medical notes and remind medicine time. You have two ways to get your prescriptions: **scan QR Code** appears on the medicine bill or **create manually**.
+
+## Note
+
+! Recommend use app when internet is connected.
 
 ## Features
 
@@ -27,9 +37,10 @@ Medication Book helps you store your prescriptions, medical notes and remind med
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1214.PNG?raw=true" width="300">
 
-Choose account you will use for app. It helps you store your data in cloud, so you can use app with many devices
+Choose account you will use for app. It helps you store your data in cloud, so you can use app with many devices.
 
 ### **2. Reminders Dashboard**
+
 After logging in successfully, reminders information will be displayed.
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1215.PNG?raw=true" width="300">
@@ -40,6 +51,7 @@ It is filtered by "Date Slider" on the top of screen.
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1230.PNG?raw=true" width="300">
 
 ### **3. Scan QR code on medicine bill to get Prescription**
+
 Tap "+" button to open quick menu. Choose "Scan Bill" to try this feature.
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1216.PNG?raw=true" width="300">
@@ -97,6 +109,7 @@ Tap "Add prescription" to finish. Prescription will be save and remind to you at
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1226.jpeg?raw=true" width="300">
 
 ### **6. Add Notes**
+
 On "Notes" Tab, you can create medical notes, set the time to remind and manage them easily.
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1227.PNG?raw=true" width="300">
@@ -104,9 +117,12 @@ On "Notes" Tab, you can create medical notes, set the time to remind and manage 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1222.jpeg?raw=true" width="300">
 
 ### **7. User Profile**
+
 On "User" Tab, you can setup your medical profile.
 You can edit profile or log out by tap "menu" icon on the top right corner.
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1223.jpeg?raw=true" width="300">
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1228.PNG?raw=true" width="300">
+
+*To be continued ...*
