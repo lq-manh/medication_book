@@ -50,6 +50,10 @@ It is filtered by "Date Slider" on the top of screen.
 
 <img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1230.PNG?raw=true" width="300">
 
+If the prescription is expired, It will be display like below. 
+
+<img src="https://github.com/vanduong185/medication_book/blob/fix/resources/demo/IMG_1229.PNG?raw=true" width="300">
+
 ### **3. Scan QR code on medicine bill to get Prescription**
 
 Tap "+" button to open quick menu. Choose "Scan Bill" to try this feature.
@@ -101,7 +105,7 @@ You can choose type of drug: pill, capsule, drop, sirup, ...
 Fill the drug name, amount, dosage, choose session you need to take.
 Then tap "add drug" button to finish.
 
-<img src="https://github.com/vanduong185/medication_book/blob/update-readme/resources/demo/IMG_1225.jpeg?raw=true" width="300">
+<img src="https://github.com/vanduong185/medication_book/blob/fix/resources/demo/IMG_1236.PNG?raw=true" width="300">
 
 Drug created in previous step is displayed. You can add more or remove it.
 Tap "Add prescription" to finish. Prescription will be save and remind to you at default time. 
