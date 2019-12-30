@@ -38,14 +38,19 @@ class _LoginState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset('assets/image/app_icon_no_padding.png', width: 256),
-              Padding(padding: EdgeInsets.only(bottom: 100)),
-              Text(
-                'By sign in via a social network, your data will be backed up in the cloud and you will be able to sync them across your devices.',
-                style: TextStyle(color: ColorPalette.white),
-                textAlign: TextAlign.justify,
+              Image(
+                image: AssetImage('assets/image/app_icon_no_padding.png'),
+                width: 256,
               ),
-              Padding(padding: EdgeInsets.only(bottom: 20)),
+              Text(
+                "Medication Book",
+                style: TextStyle(
+                  color: ColorPalette.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 80)),
               StreamBuilder(
                 stream: _loginBloc.googleLoginStream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -31,7 +31,7 @@ class _ScanningState extends State<Scanning>
 
     if (cameras.length > 0) {
       scanQRCodeController = new QRReaderController(
-          cameras[0], ResolutionPreset.medium, [CodeFormat.qr],
+          cameras[0], ResolutionPreset.high, [CodeFormat.qr],
           (dynamic value) async {
         scanQRCodeController.stopScanning();
         print(value);
