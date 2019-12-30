@@ -71,7 +71,7 @@ class ReminderAnalyzerBloc {
     }
 
     List<Prescription> prescList = ApplicationBloc().prescList;
-    Utils.sortTimePrescription(prescList);
+    prescList.insert(0, presc);
     ApplicationBloc().updatePrescList(prescList);
 
     List<Reminder> reminderList = ApplicationBloc().reminderList;

@@ -58,20 +58,18 @@ class ApplicationBloc implements BlocBase {
    *  Disable expired Presc and enable active Presc. 
   */
   analyzePresc() async {
-    for (Prescription p in prescList) {
-      if (Utils.checkActive(p) == false) {
-        for (Reminder re in reminderList) {
-          if (re.prescID == p.id) {
-            re.isActive = false;
-            await reminderAPI.updateReminder(re);
-            await notiController.cancel(re.notiID);
-          } else {
-            if (re.isActive)
-              await notiController.addDailyReminder(re);
-            else
-              await notiController.cancel(re.notiID);
-          }
-        }
+    for (Reminder re in reminderList) {
+      Prescription p = prescList.firstWhere((p) => p.id == re.prescID);
+      if (Utils.checkActive(p)) {
+        if (re.isActive)
+          await notiController.addDailyReminder(re);
+        else
+          await notiController.cancel(re.notiID);
+      }
+      else {
+        re.isActive = false;
+        await reminderAPI.updateReminder(re);
+        await notiController.cancel(re.notiID);
       }
     }
   }

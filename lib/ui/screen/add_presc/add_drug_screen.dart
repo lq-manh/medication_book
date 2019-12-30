@@ -254,7 +254,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
           "Sessions",
           style: TextStyle(
             color: ColorPalette.blue,
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
         ),
