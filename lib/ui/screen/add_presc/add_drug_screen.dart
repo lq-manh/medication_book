@@ -4,6 +4,7 @@ import 'package:medication_book/configs/theme.dart';
 import 'package:medication_book/models/drug.dart';
 import 'package:medication_book/models/drug_type.dart';
 import 'package:medication_book/models/session.dart';
+import 'package:medication_book/ui/widgets/cards.dart';
 import 'package:medication_book/ui/widgets/large_button.dart';
 import 'package:medication_book/ui/widgets/layouts.dart';
 import 'package:medication_book/ui/widgets/text_input.dart';
@@ -85,7 +86,13 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
                 SizedBox(height: 20),
                 renderDrugTypeSwiper(),
                 SizedBox(height: 20),
-                renderDrugForm(),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: RoundedCard(
+                    child: renderDrugForm(),
+                  ),
+                ),
+                
                 SizedBox(height: 20),
                 LargeButton(
                   title: "Add",
@@ -166,7 +173,7 @@ class _AddDrugScreenState extends State<AddDrugScreen> {
 
   renderDrugForm() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       child: Column(
         children: <Widget>[
           TextInput(
