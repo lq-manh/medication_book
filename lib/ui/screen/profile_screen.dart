@@ -137,10 +137,7 @@ class _AvatarState extends State<_Avatar> {
 
         final DocumentSnapshot doc = snap.data.documents[0];
         final User user = User.fromJson(doc.data);
-        if (this.widget.mode == _Modes.viewing) {
-          return CircleAvatar(backgroundImage: NetworkImage(user.avatar));
-        }
-        return CircleAvatar(backgroundColor: ColorPalette.white);
+        return CircleAvatar(backgroundImage: NetworkImage(user.avatar));
       },
     );
   }
