@@ -27,6 +27,8 @@ $ ...
 
 Medication Book helps you store, manage your prescriptions, medical notes and remind medicine time. You have two ways to get your prescriptions: **scan QR Code** appears on the medicine bill or **create manually**.
 
+[LINK Download APK](https://drive.google.com/open?id=1uZpAWtCNTB23lZiT8vyD9WRsKUpCmlTi)
+
 ## Note
 
 ! Recommend use app when internet is connected.
